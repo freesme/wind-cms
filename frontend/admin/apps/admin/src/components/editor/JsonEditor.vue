@@ -145,8 +145,6 @@ watch(
       return;
     }
 
-    console.log('jsonData.value', newVal);
-
     // 正常对象/数组：序列化为字符串
     try {
       const newValue = JSON.stringify(newVal, null, 2);
