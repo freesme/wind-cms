@@ -75,7 +75,7 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void;
 }>();
 
-const languageMap = {
+const languageMap: Record<string, EditorLanguage> = {
   javascript: 'javascript',
   js: 'javascript',
   typescript: 'typescript',
@@ -116,8 +116,10 @@ const detectLanguage = (content: string): EditorLanguage => {
       } catch {}
     }
     // 2. 使用language-detect识别
-    const detected = detect.detect(content);
-    const detectedKey = detected ? detected.toLowerCase() : '';
+    const detected =
+      typeof detect === 'function' ? detect(content) : detect.detect(content);
+    const detectedKey =
+      typeof detected === 'string' ? detected.toLowerCase() : '';
     // 3. 映射为monaco支持的语言ID，未匹配则返回纯文本
     return languageMap[detectedKey] || 'plaintext';
   } catch (error) {
@@ -239,7 +241,10 @@ watch(
 onMounted(async () => {
   try {
     if (!editorContainer.value) {
-      throw new Error('Editor container element not found');
+      const error = new Error('Editor container element not found');
+      emit('error', error);
+      console.error('Monaco editor initialization failed:', error);
+      return;
     }
 
     await nextTick(); // 确保容器已挂载

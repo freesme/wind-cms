@@ -11,14 +11,15 @@ import {
 
 import { preferences } from '@vben/preferences';
 
-import Vue3JsonEditor from 'json-editor-vue';
+import VueJsonEditor from 'json-editor-vue';
 
 import { isDarkMode } from './utils';
 
 import 'jsoneditor/dist/jsoneditor.min.css';
 
-// 类型定义抽离
+// 类型定义
 type EditorMode = 'code' | 'form' | 'text' | 'tree' | 'view';
+
 interface Props {
   modelValue: string;
   height?: number | string;
@@ -31,7 +32,6 @@ interface Props {
   };
 }
 
-// Props定义（移除冗余类型断言）
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   height: 500,
@@ -56,9 +56,9 @@ const jsonData = ref<any[] | null | Record<string, any>>(null);
 const parseError = ref<string>('');
 const isValidJson = ref(true);
 const instance = getCurrentInstance();
-let observer: MutationObserver | null = null; // 声明观察者变量，便于销毁
+let observer: MutationObserver | null = null;
 
-// 验证格式化JSON（优化逻辑）
+// 验证并格式化 JSON
 const validateAndFormat = (value: string) => {
   try {
     if (!value?.trim()) {
@@ -84,10 +84,15 @@ const validateAndFormat = (value: string) => {
 const initData = () => {
   const { parsed, formatted } = validateAndFormat(props.modelValue);
   localValue.value = formatted || props.placeholder;
-  try {
-    jsonData.value = parsed || JSON.parse(props.placeholder);
-  } catch {
+
+  // 🛡️ 确保 jsonData 是对象类型
+  if (parsed !== null && typeof parsed === 'object') {
+    jsonData.value = parsed;
+  } else if (parsed === null) {
     jsonData.value = {};
+  } else {
+    // 兜底：非对象值包装处理
+    jsonData.value = { value: parsed };
   }
 };
 
@@ -98,6 +103,7 @@ watch(
     if (newVal !== localValue.value) {
       const { parsed, formatted } = validateAndFormat(newVal);
       localValue.value = formatted || newVal || props.placeholder;
+      console.log('props.modelValue');
       try {
         jsonData.value = parsed || JSON.parse(props.placeholder);
       } catch {
@@ -113,6 +119,19 @@ watch(
   () => jsonData.value,
   (newVal) => {
     if (newVal === null) return;
+
+    if (typeof newVal === 'string') {
+      if (newVal !== localValue.value) {
+        localValue.value = newVal;
+        emit('update:modelValue', newVal);
+        emit('change', newVal);
+      }
+      return;
+    }
+
+    console.log('jsonData.value', newVal);
+
+    // 正常对象/数组：序列化为字符串
     try {
       const newValue = JSON.stringify(newVal, null, 2);
       if (newValue !== localValue.value) {
@@ -135,24 +154,42 @@ watch(
 // 高度计算（优化类型安全）
 const editorHeight = computed(() => {
   let baseHeight = 500;
+
   if (typeof props.height === 'number') {
     baseHeight = props.height;
   } else if (typeof props.height === 'string') {
-    const parsedHeight = Number.parseInt(props.height, 10);
-    baseHeight = Number.isNaN(parsedHeight) ? 500 : parsedHeight;
+    const numericHeight = Number(props.height);
+    if (!Number.isNaN(numericHeight)) {
+      baseHeight = numericHeight;
+    } else if (props.height.endsWith('px')) {
+      const pxValue = Number(props.height.replace('px', ''));
+      if (!Number.isNaN(pxValue)) {
+        baseHeight = pxValue;
+      }
+    } else {
+      // 百分比等非数值高度直接返回原字符串
+      return props.height;
+    }
   }
+
   const finalHeight = Math.max(baseHeight - 40, 200);
   return `${finalHeight}px`;
 });
 
-// 暗黑模式类名
-const editorClass = computed(() => ({
-  'json-editor-container': true,
-  'json-editor-dark': isDarkMode(),
-}));
+// 刷新编辑器样式
+const refreshEditor = () => {
+  nextTick(() => {
+    if (!instance?.el) return;
+    const container = instance.el as HTMLElement;
+    const editorEl = container.querySelector('.json-editor-core');
 
-// 优化刷新逻辑：移除内联样式硬编码，完全依赖CSS
-const refreshEditor = () => {};
+    if (editorEl && editorEl instanceof HTMLElement) {
+      editorEl.classList.remove('jsoneditor');
+      void editorEl.offsetWidth; // 触发重绘
+      editorEl.classList.add('jsoneditor');
+    }
+  });
+};
 
 // 监听主题变化
 watch(
@@ -172,8 +209,25 @@ watch(
 );
 
 // 编辑器change事件处理
-const handleEditorChange = (value: any[] | Record<string, any>) => {
-  jsonData.value = value;
+const handleEditorChange = (value: any) => {
+  if (typeof value === 'string') {
+    const rawValue = value;
+    localValue.value = rawValue;
+    emit('update:modelValue', rawValue);
+    emit('change', rawValue);
+
+    const { parsed } = validateAndFormat(rawValue);
+    if (parsed !== null && typeof parsed === 'object') {
+      jsonData.value = parsed;
+    }
+    return;
+  }
+
+  if (Array.isArray(value) || (value !== null && typeof value === 'object')) {
+    return;
+  }
+
+  jsonData.value = { value };
   refreshEditor();
 };
 
@@ -184,35 +238,32 @@ onMounted(() => {
     emit('ready');
     refreshEditor();
 
-    // 初始化MutationObserver（优化销毁逻辑）
-    if (instance?.el) {
-      const container = instance.el as HTMLElement;
-      const editorEl = container.querySelector('.json-editor-core');
-      if (editorEl) {
-        observer = new MutationObserver((mutations) => {
-          // 仅在样式/类名变化且暗黑模式开启时刷新
-          const hasStyleChange = mutations.some(
-            (m) =>
-              m.type === 'attributes' &&
-              ['class', 'style'].includes(m.attributeName || ''),
-          );
-          if (isDarkMode() && hasStyleChange) {
-            refreshEditor();
-          }
-        });
+    if (!instance?.el) return;
+    const container = instance.el as HTMLElement;
+    const editorEl = container.querySelector('.json-editor-core');
 
-        observer.observe(editorEl, {
-          childList: true,
-          subtree: true,
-          attributes: true,
-          attributeFilter: ['class', 'style'],
-        });
-      }
+    if (editorEl) {
+      observer = new MutationObserver((mutations) => {
+        const hasStyleChange = mutations.some(
+          (m) =>
+            m.type === 'attributes' &&
+            ['class', 'style'].includes(m.attributeName || ''),
+        );
+        if (isDarkMode() && hasStyleChange) {
+          refreshEditor();
+        }
+      });
+
+      observer.observe(editorEl, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class', 'style'],
+      });
     }
   });
 });
 
-// 销毁观察者，防止内存泄漏
 onUnmounted(() => {
   if (observer) {
     observer.disconnect();
@@ -222,17 +273,18 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div :class="editorClass">
+  <div
+    class="json-editor-container"
+    :class="{ 'json-editor-dark': isDarkMode() }"
+  >
     <!-- 错误提示 -->
     <div v-if="parseError" class="error-message">
       {{ parseError }}
     </div>
 
-    <!-- 核心编辑器：移除所有冗余类型断言 -->
-    <Vue3JsonEditor
+    <VueJsonEditor
       v-model="jsonData"
       :mode="options.mode"
-      :modes="options.modes"
       :disabled="disabled"
       :search="options.search"
       :placeholder="placeholder"
@@ -244,7 +296,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/* 基础容器样式：合并类名，简化结构 */
 .json-editor-container {
   border: 1px solid #e5e7eb;
   border-radius: 6px;
@@ -256,7 +307,6 @@ onUnmounted(() => {
   transition: all 0.2s ease;
 }
 
-/* 暗黑模式变量：统一管理，提升优先级 */
 .json-editor-dark {
   --bg-primary: #0f172a !important;
   --bg-secondary: #1e293b !important;
@@ -272,7 +322,6 @@ onUnmounted(() => {
   background-color: var(--bg-primary) !important;
 }
 
-/* 错误提示样式 */
 .error-message {
   padding: 8px 12px;
   margin: 0;
@@ -289,14 +338,13 @@ onUnmounted(() => {
   color: var(--error-text) !important;
 }
 
-/* 编辑器核心样式 */
 :deep(.json-editor-core) {
   flex: 1;
   overflow: hidden;
   width: 100%;
 }
 
-/* 暗黑模式全覆盖：补充所有模式的样式 */
+/* 暗黑模式 - 基础样式 */
 .json-editor-dark :deep(.jsoneditor) {
   background-color: var(--bg-primary) !important;
   color: var(--text-primary) !important;
@@ -305,12 +353,11 @@ onUnmounted(() => {
   font-size: 14px !important;
 }
 
-/* 覆盖所有子容器背景 */
 .json-editor-dark :deep(.jsoneditor > *) {
   background-color: var(--bg-primary) !important;
 }
 
-/* 菜单样式 */
+/* 暗黑模式 - 菜单样式 */
 .json-editor-dark :deep(.jsoneditor-menu) {
   background-color: var(--bg-secondary) !important;
   border-bottom: 1px solid var(--border-primary) !important;
@@ -330,7 +377,7 @@ onUnmounted(() => {
   background-color: var(--border-secondary) !important;
 }
 
-/* 树状视图样式 */
+/* 暗黑模式 - 树状视图 */
 .json-editor-dark :deep(.jsoneditor-tree) {
   background-color: var(--bg-primary) !important;
   color: var(--text-primary) !important;
@@ -359,7 +406,7 @@ onUnmounted(() => {
   color: #94a3b8 !important;
 }
 
-/* 代码/文本模式样式（核心修复） */
+/* 暗黑模式 - 代码/文本模式 */
 .json-editor-dark :deep(.jsoneditor-code) {
   background-color: var(--bg-primary) !important;
   color: var(--text-primary) !important;
@@ -380,7 +427,7 @@ onUnmounted(() => {
   border-radius: 2px !important;
 }
 
-/* 表单模式样式 */
+/* 暗黑模式 - 表单模式 */
 .json-editor-dark :deep(.jsoneditor-form) {
   background-color: var(--bg-primary) !important;
   color: var(--text-primary) !important;
@@ -395,7 +442,7 @@ onUnmounted(() => {
   border-radius: 4px !important;
 }
 
-/* 搜索框样式 */
+/* 暗黑模式 - 搜索框 */
 .json-editor-dark :deep(.jsoneditor-search) {
   background-color: var(--bg-secondary) !important;
   border: 1px solid var(--border-primary) !important;
@@ -410,7 +457,7 @@ onUnmounted(() => {
   opacity: 1 !important;
 }
 
-/* 输入框样式 */
+/* 暗黑模式 - 输入框 */
 .json-editor-dark :deep(.jsoneditor-text-input) {
   background-color: var(--bg-secondary) !important;
   color: var(--text-primary) !important;
@@ -432,7 +479,7 @@ onUnmounted(() => {
   background-color: #1a2436 !important;
 }
 
-/* 滚动条样式 */
+/* 暗黑模式 - 滚动条 */
 .json-editor-dark :deep(.jsoneditor-tree::-webkit-scrollbar),
 .json-editor-dark :deep(.jsoneditor-code::-webkit-scrollbar) {
   width: 8px !important;

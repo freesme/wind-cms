@@ -125,7 +125,6 @@ const applyDarkModeStyles = () => {
   }
 };
 
-// 监听主题变化，实时更新样式（关键修复）
 watch(
   () => preferences.theme.mode,
   () => {

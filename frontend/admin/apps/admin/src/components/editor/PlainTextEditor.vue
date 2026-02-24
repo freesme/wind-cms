@@ -86,12 +86,7 @@ defineExpose({
   padding: 12px;
   border: 1px solid var(--border-color, #d9d9d9);
   border-radius: 4px;
-  font-family:
-    'Monaco',
-    'Menlo',
-    'Ubuntu Mono',
-    'Consolas',
-    'source-code-pro',
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro',
     monospace;
   font-size: 14px;
   line-height: 1.6;
@@ -128,4 +123,3 @@ defineExpose({
   box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
 }
 </style>
-
