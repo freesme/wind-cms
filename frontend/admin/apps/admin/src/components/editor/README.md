@@ -236,12 +236,13 @@ const handleUploadImage = async (file: File): Promise<string> => {
 - ✅ 上标、下标
 - ✅ 文字颜色、高亮背景
 - ✅ 列表：无序列表、有序列表、任务列表
-- ✅ 引用块、代码块
+- ✅ 引用块、**代码块（支持语法高亮，200+ 种编程语言）**
 - ✅ 表格：插入、删除、行列操作、合并拆分、表头切换
 - ✅ 水平分割线
 - ✅ 文本对齐：左、中、右、两端对齐
 - ✅ 插入链接、图片上传
 - ✅ **导入 Markdown 文档**（.md 文件）
+- ✅ **插入代码块**（支持 JavaScript、TypeScript、Python、Java、C++、Go 等 200+ 种语言，右上角内联语言选择器）
 - ✅ 撤销/重做
 - ✅ 清除格式、清空内容
 - ✅ 暗黑模式适配
@@ -519,6 +520,65 @@ const handleUploadImage = async (file: File): Promise<string> => {
   />
 </template>
 ```
+
+### 插入代码块功能
+
+Tiptap Editor 支持插入带语法高亮的代码块，使用 `lowlight` 的 `all` 预设支持 **200+ 种编程语言**：
+
+**常用语言列表（部分）：**
+- JavaScript, TypeScript, Python, Java, C++, C, C#
+- Go, Rust, PHP, Ruby, Swift, Kotlin
+- HTML, CSS, SCSS, Less, JSON, YAML, XML
+- SQL, Bash, Shell, PowerShell, Markdown, Plain Text
+- 以及其他 180+ 种语言
+
+**技术实现：**
+```typescript
+import { all, createLowlight } from 'lowlight';
+// all 预设包含所有 200+ 种语言，无需额外注册
+const lowlight = createLowlight(all);
+```
+
+> **注意**：使用 `all` 预设会包含所有语言，打包体积较大（~500KB）。如果需要优化体积，可以改用 `common` 预设 + 按需注册：
+> ```typescript
+> import { common, createLowlight } from 'lowlight';
+> import python from 'highlight.js/lib/languages/python';
+> const lowlight = createLowlight(common);
+> lowlight.register('python', python); // 仅注册需要的语言
+> ```
+
+**使用方式：**
+
+#### 方式 1：通过工具栏插入
+1. 点击工具栏中的"代码块"按钮（`</>`图标）
+2. 在弹出的对话框中选择编程语言
+3. 输入代码内容
+4. 点击确认插入
+
+#### 方式 2：直接在代码块内切换语言（推荐✨）
+1. 点击代码块进入编辑状态
+2. 在代码块右上角的下拉框中选择语言
+3. 语法高亮会自动更新
+4. 无需重新插入代码块
+
+**代码示例：**
+
+```vue
+<template>
+  <TiptapEditor
+    v-model="content"
+    :height="600"
+  />
+</template>
+```
+
+**功能特性：**
+- ✅ 语法高亮显示（200+ 种语言）
+- ✅ **右上角内联语言选择器**（实时切换语言）
+- ✅ 使用等宽字体
+- ✅ 支持代码块内编辑
+- ✅ 暗黑模式自动适配
+- ✅ 悬停效果和交互反馈
 
 ### 在 Post 编辑页面中使用
 

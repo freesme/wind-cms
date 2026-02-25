@@ -7,6 +7,8 @@ import { LucideCircleAlert } from '@vben/icons';
 import { $t } from '@vben/locales';
 import { preferences } from '@vben/preferences';
 
+import { mergeAttributes } from '@tiptap/core';
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 import Color from '@tiptap/extension-color';
 import Highlight from '@tiptap/extension-highlight';
 import HorizontalRule from '@tiptap/extension-horizontal-rule';
@@ -27,6 +29,7 @@ import Underline from '@tiptap/extension-underline';
 import StarterKit from '@tiptap/starter-kit';
 import { EditorContent, useEditor } from '@tiptap/vue-3';
 import { Input, Modal } from 'ant-design-vue';
+import { all, createLowlight } from 'lowlight';
 import { marked } from 'marked';
 
 interface Props {
@@ -59,6 +62,137 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void;
 }>();
 
+// 创建 lowlight 实例（all 已包含 200+ 种语言，无需额外注册）
+const lowlight = createLowlight(all);
+
+// 扩展 CodeBlockLowlight，添加 data-language 属性以便 CSS 和 JS 识别
+const CustomCodeBlockLowlight = CodeBlockLowlight.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      language: {
+        default: 'javascript',
+        parseHTML: (element) => element.dataset.language,
+        renderHTML: (attributes) => {
+          return {
+            'data-language': attributes.language || 'javascript',
+            class: `language-${attributes.language || 'javascript'}`,
+          };
+        },
+      },
+    };
+  },
+  renderHTML({ HTMLAttributes }) {
+    return [
+      'pre',
+      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
+      ['code', {}, 0],
+    ];
+  },
+  addNodeView() {
+    return ({ node, getPos, editor: editorInstance }) => {
+      const dom = document.createElement('pre');
+      const contentDOM = document.createElement('code');
+
+      // 设置属性
+      dom.dataset.language = node.attrs.language || 'javascript';
+      dom.className = `language-${node.attrs.language || 'javascript'}`;
+
+      // 创建语言选择器容器
+      const selectorWrapper = document.createElement('div');
+      selectorWrapper.className = 'code-block-language-selector';
+      selectorWrapper.contentEditable = 'false';
+
+      // 创建 select 元素
+      const select = document.createElement('select');
+      select.contentEditable = 'false';
+
+      // 添加语言选项
+      const languageOptions = [
+        { value: 'javascript', label: 'JavaScript' },
+        { value: 'typescript', label: 'TypeScript' },
+        { value: 'python', label: 'Python' },
+        { value: 'java', label: 'Java' },
+        { value: 'cpp', label: 'C++' },
+        { value: 'c', label: 'C' },
+        { value: 'csharp', label: 'C#' },
+        { value: 'go', label: 'Go' },
+        { value: 'rust', label: 'Rust' },
+        { value: 'php', label: 'PHP' },
+        { value: 'ruby', label: 'Ruby' },
+        { value: 'swift', label: 'Swift' },
+        { value: 'kotlin', label: 'Kotlin' },
+        { value: 'html', label: 'HTML' },
+        { value: 'css', label: 'CSS' },
+        { value: 'scss', label: 'SCSS' },
+        { value: 'json', label: 'JSON' },
+        { value: 'yaml', label: 'YAML' },
+        { value: 'sql', label: 'SQL' },
+        { value: 'bash', label: 'Bash' },
+        { value: 'shell', label: 'Shell' },
+        { value: 'markdown', label: 'Markdown' },
+        { value: 'plaintext', label: 'Plain Text' },
+      ];
+
+      languageOptions.forEach((lang) => {
+        const option = document.createElement('option');
+        option.value = lang.value;
+        option.textContent = lang.label;
+        if (lang.value === node.attrs.language) {
+          option.selected = true;
+        }
+        select.append(option);
+      });
+
+      // 监听语言变化
+      select.addEventListener('change', (e) => {
+        const newLanguage = (e.target as HTMLSelectElement).value;
+        if (typeof getPos === 'function') {
+          const pos = getPos();
+          if (typeof pos === 'number') {
+            editorInstance.view.dispatch(
+              editorInstance.view.state.tr.setNodeMarkup(pos, undefined, {
+                ...node.attrs,
+                language: newLanguage,
+              }),
+            );
+
+            // 更新 DOM 属性
+            dom.dataset.language = newLanguage;
+            dom.className = `language-${newLanguage}`;
+          }
+        }
+      });
+
+      selectorWrapper.append(select);
+      dom.append(selectorWrapper);
+      dom.append(contentDOM);
+
+      return {
+        dom,
+        contentDOM,
+        update: (updatedNode) => {
+          if (updatedNode.type !== node.type) {
+            return false;
+          }
+
+          // 更新选择器的值
+          if (updatedNode.attrs.language !== node.attrs.language) {
+            select.value = updatedNode.attrs.language;
+            dom.dataset.language = updatedNode.attrs.language;
+            dom.className = `language-${updatedNode.attrs.language}`;
+          }
+
+          return true;
+        },
+      };
+    };
+  },
+}).configure({
+  lowlight,
+  defaultLanguage: 'javascript',
+});
+
 // 响应式数据
 const isDark = ref(preferences.theme.mode === 'dark');
 const contentRef = ref(props.modelValue);
@@ -69,6 +203,37 @@ const markdownInputRef = ref<HTMLInputElement>();
 // Modal 状态
 const linkModalVisible = ref(false);
 const linkUrl = ref('');
+
+const codeBlockModalVisible = ref(false);
+const codeBlockLanguage = ref('javascript');
+const codeBlockContent = ref('');
+
+// 常用编程语言列表
+const languages = [
+  { value: 'javascript', label: 'JavaScript' },
+  { value: 'typescript', label: 'TypeScript' },
+  { value: 'python', label: 'Python' },
+  { value: 'java', label: 'Java' },
+  { value: 'cpp', label: 'C++' },
+  { value: 'c', label: 'C' },
+  { value: 'csharp', label: 'C#' },
+  { value: 'go', label: 'Go' },
+  { value: 'rust', label: 'Rust' },
+  { value: 'php', label: 'PHP' },
+  { value: 'ruby', label: 'Ruby' },
+  { value: 'swift', label: 'Swift' },
+  { value: 'kotlin', label: 'Kotlin' },
+  { value: 'html', label: 'HTML' },
+  { value: 'css', label: 'CSS' },
+  { value: 'scss', label: 'SCSS' },
+  { value: 'json', label: 'JSON' },
+  { value: 'yaml', label: 'YAML' },
+  { value: 'sql', label: 'SQL' },
+  { value: 'bash', label: 'Bash' },
+  { value: 'shell', label: 'Shell' },
+  { value: 'markdown', label: 'Markdown' },
+  { value: 'plaintext', label: 'Plain Text' },
+];
 
 // 文本颜色状态
 const textColor = ref('#000000');
@@ -82,6 +247,7 @@ const editor = useEditor({
       link: false,
       underline: false,
       horizontalRule: false,
+      codeBlock: false, // 禁用默认的 codeBlock，使用 CodeBlockLowlight
     }),
     Underline,
     Subscript,
@@ -94,6 +260,7 @@ const editor = useEditor({
     Highlight.configure({ multicolor: true }),
     Color,
     TextStyle,
+    CustomCodeBlockLowlight,
     Table.configure({
       resizable: true,
     }),
@@ -235,6 +402,12 @@ const openLinkModal = () => {
   linkModalVisible.value = true;
 };
 
+const openCodeBlockModal = () => {
+  codeBlockLanguage.value = 'javascript';
+  codeBlockContent.value = '';
+  codeBlockModalVisible.value = true;
+};
+
 const toolbarActions = {
   toggleBold: () => editor.value?.chain().focus().toggleBold().run(),
   toggleItalic: () => editor.value?.chain().focus().toggleItalic().run(),
@@ -248,7 +421,7 @@ const toolbarActions = {
   toggleOrderedList: () =>
     editor.value?.chain().focus().toggleOrderedList().run(),
   toggleTaskList: () => editor.value?.chain().focus().toggleTaskList().run(),
-  toggleCodeBlock: () => editor.value?.chain().focus().toggleCodeBlock().run(),
+  insertCodeBlock: () => openCodeBlockModal(),
   toggleBlockquote: () =>
     editor.value?.chain().focus().toggleBlockquote().run(),
   toggleSubscript: () => editor.value?.chain().focus().toggleSubscript().run(),
@@ -363,6 +536,32 @@ const handleLinkOk = () => {
 const handleLinkCancel = () => {
   linkModalVisible.value = false;
   linkUrl.value = '';
+  editor.value?.chain().focus().run();
+};
+
+// 处理代码块 Modal
+const handleCodeBlockOk = () => {
+  const code = codeBlockContent.value.trim();
+  if (code && editor.value) {
+    editor.value
+      .chain()
+      .focus()
+      .insertContent({
+        type: 'codeBlock',
+        attrs: { language: codeBlockLanguage.value },
+        content: [{ type: 'text', text: code }],
+      })
+      .run();
+  }
+  codeBlockModalVisible.value = false;
+  codeBlockContent.value = '';
+  codeBlockLanguage.value = 'javascript';
+};
+
+const handleCodeBlockCancel = () => {
+  codeBlockModalVisible.value = false;
+  codeBlockContent.value = '';
+  codeBlockLanguage.value = 'javascript';
   editor.value?.chain().focus().run();
 };
 
@@ -688,8 +887,8 @@ onUnmounted(() => {
           type="button"
           class="toolbar-btn"
           :class="{ active: isActive('codeBlock') }"
-          @click="toolbarActions.toggleCodeBlock"
-          :title="$t('page.editor.codeBlock')"
+          @click="toolbarActions.insertCodeBlock"
+          :title="$t('page.editor.insertCodeBlock')"
         >
           <svg
             class="icon"
@@ -1168,6 +1367,44 @@ onUnmounted(() => {
         @focus="() => {}"
       />
     </Modal>
+
+    <!-- Code Block Insert Modal -->
+    <Modal
+      v-model:open="codeBlockModalVisible"
+      :title="$t('page.editor.insertCodeBlock')"
+      @ok="handleCodeBlockOk"
+      @cancel="handleCodeBlockCancel"
+      :ok-text="$t('common.confirm') || 'OK'"
+      :cancel-text="$t('common.cancel') || 'Cancel'"
+      :mask-closable="false"
+      width="600px"
+    >
+      <div class="code-block-modal">
+        <div class="modal-field">
+          <label class="field-label">
+            {{ $t('page.editor.codeLanguage') }}
+          </label>
+          <a-select
+            v-model:value="codeBlockLanguage"
+            :options="languages"
+            :placeholder="$t('page.editor.selectLanguage')"
+            show-search
+            class="language-select"
+          />
+        </div>
+        <div class="modal-field">
+          <label class="field-label">
+            {{ $t('page.editor.codeContent') }}
+          </label>
+          <textarea
+            v-model="codeBlockContent"
+            :placeholder="$t('page.editor.codeContentPlaceholder')"
+            class="code-textarea"
+            rows="10"
+          ></textarea>
+        </div>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -1431,12 +1668,122 @@ onUnmounted(() => {
   border-radius: 6px;
   overflow-x: auto;
   margin: 8px 0;
+  position: relative;
 }
 :deep(.ProseMirror pre code) {
   background: none;
   color: inherit;
   padding: 0;
   border-radius: 0;
+  display: block;
+  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* Code Block Language Selector */
+:deep(.ProseMirror pre) {
+  position: relative;
+  padding-top: 36px; /* 为语言选择器留出空间 */
+}
+
+:deep(.ProseMirror pre .code-block-language-selector) {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+}
+
+:deep(.ProseMirror pre .code-block-language-selector select) {
+  padding: 2px 20px 2px 8px;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #9ca3af;
+  font-size: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239ca3af' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 4px center;
+  background-size: 8px;
+}
+
+:deep(.ProseMirror pre .code-block-language-selector select:hover) {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+:deep(.ProseMirror pre .code-block-language-selector select:focus) {
+  border-color: #3b82f6;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.tiptap-editor-dark,
+:deep(.ProseMirror pre .code-block-language-selector select) {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.tiptap-editor-dark,
+:deep(.ProseMirror pre .code-block-language-selector select:hover) {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Syntax Highlighting (lowlight) */
+:deep(.ProseMirror .hljs-comment),
+:deep(.ProseMirror .hljs-quote) {
+  color: #6b7280;
+  font-style: italic;
+}
+
+:deep(.ProseMirror .hljs-keyword),
+:deep(.ProseMirror .hljs-selector-tag),
+:deep(.ProseMirror .hljs-literal),
+:deep(.ProseMirror .hljs-type) {
+  color: #c678dd;
+}
+
+:deep(.ProseMirror .hljs-string),
+:deep(.ProseMirror .hljs-number) {
+  color: #98c379;
+}
+
+:deep(.ProseMirror .hljs-title),
+:deep(.ProseMirror .hljs-function) {
+  color: #61afef;
+}
+
+:deep(.ProseMirror .hljs-params) {
+  color: #d19a66;
+}
+
+:deep(.ProseMirror .hljs-built_in),
+:deep(.ProseMirror .hljs-class) {
+  color: #e6c07b;
+}
+
+:deep(.ProseMirror .hljs-attr),
+:deep(.ProseMirror .hljs-variable),
+:deep(.ProseMirror .hljs-property) {
+  color: #e06c75;
+}
+
+:deep(.ProseMirror .hljs-tag),
+:deep(.ProseMirror .hljs-name) {
+  color: #e06c75;
+}
+
+:deep(.ProseMirror .hljs-regexp) {
+  color: #56b6c2;
+}
+
+:deep(.ProseMirror .hljs-meta) {
+  color: #abb2bf;
 }
 
 .tiptap-editor-dark :deep(.ProseMirror code),
@@ -1615,5 +1962,61 @@ onUnmounted(() => {
 /* ============ Utility ============ */
 .hidden {
   display: none;
+}
+
+/* ============ Code Block Modal ============ */
+.code-block-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.tiptap-editor-dark .field-label {
+  color: var(--tte-text-primary) !important;
+}
+
+.language-select {
+  width: 100%;
+}
+
+.code-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  resize: vertical;
+  transition: border-color 0.2s ease;
+}
+
+.code-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.tiptap-editor-dark .code-textarea {
+  background-color: var(--tte-bg-secondary) !important;
+  border-color: var(--tte-border-secondary) !important;
+  color: var(--tte-text-primary) !important;
+}
+
+.tiptap-editor-dark .code-textarea:focus {
+  border-color: var(--tte-link) !important;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2) !important;
 }
 </style>
