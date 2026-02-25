@@ -7,7 +7,7 @@ import { $t } from '@vben/locales';
 import { notification } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter/form';
-import { usePostStore } from "#/stores";
+import { usePostStore } from '#/stores';
 
 const postStore = usePostStore();
 

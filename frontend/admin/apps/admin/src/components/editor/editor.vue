@@ -15,7 +15,7 @@ const props = withDefaults(defineProps<EditorProps>(), {
 const emit = defineEmits<EditorEmits>();
 
 // 懒加载编辑器组件
-const UEditor = defineAsyncComponent(() => import('./UEditor.vue'));
+const TiptapEditor = defineAsyncComponent(() => import('./TiptapEditor.vue'));
 const MarkdownEditor = defineAsyncComponent(
   () => import('./MarkdownEditor.vue'),
 );
@@ -48,7 +48,7 @@ const currentEditorComponent = computed(() => {
     }
 
     case EditorType.RICH_TEXT: {
-      return UEditor;
+      return TiptapEditor;
     }
 
     default: {
