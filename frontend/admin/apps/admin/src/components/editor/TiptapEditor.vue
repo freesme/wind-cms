@@ -19,6 +19,8 @@ import { Table } from '@tiptap/extension-table';
 import TableCell from '@tiptap/extension-table-cell';
 import TableHeader from '@tiptap/extension-table-header';
 import TableRow from '@tiptap/extension-table-row';
+import TaskItem from '@tiptap/extension-task-item';
+import TaskList from '@tiptap/extension-task-list';
 import TextAlign from '@tiptap/extension-text-align';
 import { TextStyle } from '@tiptap/extension-text-style';
 import Underline from '@tiptap/extension-underline';
@@ -82,6 +84,10 @@ const editor = useEditor({
     Underline,
     Subscript,
     Superscript,
+    TaskList,
+    TaskItem.configure({
+      nested: true,
+    }),
     HorizontalRule,
     Highlight.configure({ multicolor: true }),
     Color,
@@ -202,6 +208,11 @@ const handleImageUpload = async (event: Event) => {
 };
 
 // 工具栏操作
+const openLinkModal = () => {
+  linkUrl.value = '';
+  linkModalVisible.value = true;
+};
+
 const toolbarActions = {
   toggleBold: () => editor.value?.chain().focus().toggleBold().run(),
   toggleItalic: () => editor.value?.chain().focus().toggleItalic().run(),
@@ -220,6 +231,9 @@ const toolbarActions = {
   toggleSubscript: () => editor.value?.chain().focus().toggleSubscript().run(),
   toggleSuperscript: () =>
     editor.value?.chain().focus().toggleSuperscript().run(),
+  setParagraph: () => editor.value?.chain().focus().setParagraph().run(),
+  clearFormatting: () =>
+    editor.value?.chain().focus().unsetAllMarks().clearNodes().run(),
   insertHorizontalRule: () =>
     editor.value?.chain().focus().setHorizontalRule().run(),
   insertTable: () =>
@@ -229,13 +243,21 @@ const toolbarActions = {
       .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
       .run(),
   deleteTable: () => editor.value?.chain().focus().deleteTable().run(),
+  addRowBefore: () => editor.value?.chain().focus().addRowBefore().run(),
+  addRowAfter: () => editor.value?.chain().focus().addRowAfter().run(),
+  deleteRow: () => editor.value?.chain().focus().deleteRow().run(),
+  addColumnBefore: () => editor.value?.chain().focus().addColumnBefore().run(),
+  addColumnAfter: () => editor.value?.chain().focus().addColumnAfter().run(),
+  deleteColumn: () => editor.value?.chain().focus().deleteColumn().run(),
+  mergeCells: () => editor.value?.chain().focus().mergeCells().run(),
+  splitCell: () => editor.value?.chain().focus().splitCell().run(),
+  toggleHeaderRow: () => editor.value?.chain().focus().toggleHeaderRow().run(),
+  toggleHeaderColumn: () =>
+    editor.value?.chain().focus().toggleHeaderColumn().run(),
+  toggleHeaderCell: () =>
+    editor.value?.chain().focus().toggleHeaderCell().run(),
   setAlign: (align: 'center' | 'justify' | 'left' | 'right') =>
     editor.value?.chain().focus().setTextAlign(align).run(),
-  setLink: () => {
-    linkUrl.value = '';
-    linkModalVisible.value = true;
-  },
-  unsetLink: () => editor.value?.chain().focus().unsetLink().run(),
   setTextColor: (color: string) =>
     editor.value?.chain().focus().setColor(color).run(),
   setHighlight: (color: string) =>
@@ -365,6 +387,15 @@ onUnmounted(() => {
           :title="$t('page.editor.h3')"
         >
           H3
+        </button>
+        <button
+          type="button"
+          class="toolbar-btn"
+          :class="{ active: isActive('paragraph') }"
+          @click="toolbarActions.setParagraph"
+          :title="$t('page.editor.paragraph')"
+        >
+          P
         </button>
       </div>
 
@@ -760,67 +791,120 @@ onUnmounted(() => {
             />
           </svg>
         </button>
+        <button
+          type="button"
+          class="toolbar-btn"
+          :class="{ active: isActive('textAlign', { textAlign: 'justify' }) }"
+          @click="toolbarActions.setAlign('justify')"
+          :title="$t('page.editor.justify')"
+        >
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </button>
       </div>
 
       <div class="toolbar-divider"></div>
 
-      <div class="toolbar-group">
+      <div class="toolbar-group" v-if="isActive('table')">
         <button
           type="button"
           class="toolbar-btn"
-          :class="{ active: isActive('link') }"
-          @click="
-            isActive('link')
-              ? toolbarActions.unsetLink()
-              : toolbarActions.setLink()
-          "
-          :title="
-            isActive('link')
-              ? $t('page.editor.removeUrl')
-              : $t('page.editor.insertUrl')
-          "
+          @click="toolbarActions.addRowBefore"
+          :title="$t('page.editor.addRowBefore')"
         >
-          <svg
-            class="icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
-            />
-          </svg>
+          R+
         </button>
         <button
           type="button"
           class="toolbar-btn"
-          @click="toolbarActions.uploadImage"
-          :title="$t('page.editor.uploadImage')"
+          @click="toolbarActions.addRowAfter"
+          :title="$t('page.editor.addRowAfter')"
         >
-          <svg
-            class="icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-            />
-          </svg>
+          +R
         </button>
-        <input
-          ref="fileInputRef"
-          type="file"
-          accept="image/*"
-          class="hidden"
-          @change="handleImageUpload"
-        />
+        <button
+          type="button"
+          class="toolbar-btn"
+          @click="toolbarActions.deleteRow"
+          :title="$t('page.editor.deleteRow')"
+        >
+          R-
+        </button>
+        <button
+          type="button"
+          class="toolbar-btn"
+          @click="toolbarActions.addColumnBefore"
+          :title="$t('page.editor.addColumnBefore')"
+        >
+          C+
+        </button>
+        <button
+          type="button"
+          class="toolbar-btn"
+          @click="toolbarActions.addColumnAfter"
+          :title="$t('page.editor.addColumnAfter')"
+        >
+          +C
+        </button>
+        <button
+          type="button"
+          class="toolbar-btn"
+          @click="toolbarActions.deleteColumn"
+          :title="$t('page.editor.deleteColumn')"
+        >
+          C-
+        </button>
+        <button
+          type="button"
+          class="toolbar-btn"
+          @click="toolbarActions.mergeCells"
+          :title="$t('page.editor.mergeCells')"
+        >
+          M
+        </button>
+        <button
+          type="button"
+          class="toolbar-btn"
+          @click="toolbarActions.splitCell"
+          :title="$t('page.editor.splitCell')"
+        >
+          S
+        </button>
+        <button
+          type="button"
+          class="toolbar-btn"
+          @click="toolbarActions.toggleHeaderRow"
+          :title="$t('page.editor.toggleHeaderRow')"
+        >
+          HR
+        </button>
+        <button
+          type="button"
+          class="toolbar-btn"
+          @click="toolbarActions.toggleHeaderColumn"
+          :title="$t('page.editor.toggleHeaderColumn')"
+        >
+          HC
+        </button>
+        <button
+          type="button"
+          class="toolbar-btn"
+          @click="toolbarActions.toggleHeaderCell"
+          :title="$t('page.editor.toggleHeaderCell')"
+        >
+          H
+        </button>
       </div>
 
       <div class="toolbar-divider"></div>
@@ -870,6 +954,26 @@ onUnmounted(() => {
         </button>
         <button
           type="button"
+          class="toolbar-btn"
+          @click="toolbarActions.clearFormatting"
+          :title="$t('page.editor.clearFormatting')"
+        >
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M8 6l8 12M6 18h12"
+            />
+          </svg>
+        </button>
+        <button
+          type="button"
           class="toolbar-btn text-red-500"
           @click="toolbarActions.clearContent"
           :title="$t('page.editor.clearContent')"
@@ -888,6 +992,67 @@ onUnmounted(() => {
             />
           </svg>
         </button>
+      </div>
+
+      <div class="toolbar-divider"></div>
+
+      <div class="toolbar-group">
+        <button
+          type="button"
+          class="toolbar-btn"
+          :class="{ active: isActive('link') }"
+          @click="
+            isActive('link')
+              ? editor?.chain().focus().unsetLink().run()
+              : openLinkModal()
+          "
+          :title="
+            isActive('link')
+              ? $t('page.editor.removeUrl')
+              : $t('page.editor.insertUrl')
+          "
+        >
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+            />
+          </svg>
+        </button>
+        <button
+          type="button"
+          class="toolbar-btn"
+          @click="toolbarActions.uploadImage"
+          :title="$t('page.editor.uploadImage')"
+        >
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
+          </svg>
+        </button>
+        <input
+          ref="fileInputRef"
+          type="file"
+          accept="image/*"
+          class="hidden"
+          @change="handleImageUpload"
+        />
       </div>
     </div>
 
