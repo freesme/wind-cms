@@ -401,26 +401,26 @@ defineExpose({
 
 <style scoped>
 .code-editor-wrapper {
-  width: 100%;
-  height: 100%;
   position: relative;
   box-sizing: border-box;
+  width: 100%;
+  height: 100%;
 }
 
 .code-editor-container {
+  box-sizing: border-box;
   width: 100%;
   min-height: 200px; /* 最小高度 */
+  overflow: hidden;
   border: 1px solid var(--border-color, #d9d9d9);
   border-radius: 6px; /* 优化圆角 */
-  overflow: hidden;
   transition: border-color 0.2s ease;
-  box-sizing: border-box;
 }
 
 /* 禁用状态样式 */
 .code-editor-disabled {
-  opacity: 0.85;
   cursor: not-allowed;
+  opacity: 0.85;
 }
 
 /* Monaco编辑器样式穿透（优化默认样式） */

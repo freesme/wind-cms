@@ -459,9 +459,9 @@ async function handleEnableChanged(row: any, checked: boolean) {
 
 <style scoped>
 .btn-start-all {
+  color: #fff !important;
   background-color: #52c41a !important;
   border-color: #52c41a !important;
-  color: #fff !important;
 }
 
 .btn-start-all:hover,
@@ -471,10 +471,10 @@ async function handleEnableChanged(row: any, checked: boolean) {
 }
 
 .btn-start-all[disabled] {
-  background-color: #c2e7b0 !important;
-  border-color: #c2e7b0 !important;
   color: #86b379 !important;
   cursor: not-allowed !important;
+  background-color: #c2e7b0 !important;
+  border-color: #c2e7b0 !important;
 }
 
 :deep(.green-link-btn) {

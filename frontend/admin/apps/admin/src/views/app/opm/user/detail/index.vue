@@ -81,9 +81,9 @@ function handleEditPassword() {
       <div
         style="
           display: flex;
-          justify-content: flex-start;
-          align-items: center;
           gap: 10px;
+          align-items: center;
+          justify-content: flex-start;
         "
       >
         <a-button type="text" @click="goBack">

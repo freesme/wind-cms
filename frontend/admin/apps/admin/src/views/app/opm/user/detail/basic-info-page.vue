@@ -150,40 +150,41 @@ reload();
 <style scoped>
 .basic-info-container {
   display: flex;
+  flex-wrap: wrap; /* 小屏幕自动换行 */
   gap: 32px; /* 头像与信息的间距 */
   padding: 24px;
-  flex-wrap: wrap; /* 小屏幕自动换行 */
 }
 
 .avatar-section {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 16px;
+  align-items: center;
 }
 
 .avatar {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%; /* 确保是正圆形（部分组件可能默认非圆形） */
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 140px;
+  height: 140px;
   overflow: hidden; /* 防止头像或文字溢出圆形 */
+  border-radius: 50%; /* 确保是正圆形（部分组件可能默认非圆形） */
 }
 
 /* 首字母占位样式：占满容器并居中 */
 .avatar-placeholder {
-  /* 充满整个头像容器 */
-  width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  /* 充满整个头像容器 */
+  width: 100%;
+  height: 100%;
   font-size: 85px;
   font-weight: 700;
-  color: #fff;
   line-height: 1; /* 消除行高带来的垂直偏移 */
+  color: #fff;
   text-transform: uppercase; /* 统一转为大写，视觉更规整 */
 }
 
@@ -203,8 +204,8 @@ reload();
 }
 
 :deep(.ant-descriptions-item-label) {
-  font-weight: 500;
   width: 120px;
+  font-weight: 500;
 }
 
 .mt-4 {

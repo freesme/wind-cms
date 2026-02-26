@@ -287,9 +287,9 @@ onUnmounted(() => {
 
 <style scoped>
 .md-editor-wrapper {
+  box-sizing: border-box;
   width: 100%;
   min-height: 1px;
-  box-sizing: border-box;
   overflow: hidden;
 }
 
@@ -310,8 +310,8 @@ onUnmounted(() => {
 
 .md-editor-wrapper :deep(.m-md-editor .m-md-preview),
 .md-editor-wrapper :deep(.m-md-editor .m-md-edit-area) {
-  height: 100% !important;
   width: 100% !important;
+  height: 100% !important;
 }
 
 .md-editor-wrapper :deep(.m-md-editor.dark) {

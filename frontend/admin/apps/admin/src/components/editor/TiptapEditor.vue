@@ -818,10 +818,12 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <!-- prettier-ignore -->
   <div
     class="tiptap-editor-wrapper"
     :class="{ 'tiptap-editor-dark': isDark }"
     :data-theme="isDark ? 'dark' : 'light'"
+    :style="{ height: typeof props.height === 'number' ? `${props.height}px` : props.height }"
   >
     <!-- Toolbar -->
     <div
@@ -1602,11 +1604,13 @@ onUnmounted(() => {
     </div>
 
     <!-- Editor Content -->
-    <EditorContent
-      :editor="editor"
-      class="tiptap-editor-content"
-      :class="{ dark: isDark }"
-    />
+    <div class="tiptap-editor-content-wrapper">
+      <EditorContent
+        :editor="editor"
+        class="tiptap-editor-content"
+        :class="{ dark: isDark }"
+      />
+    </div>
 
     <!-- Status Bar -->
     <div
@@ -1802,7 +1806,7 @@ onUnmounted(() => {
           <label class="field-label">
             {{ $t('page.editor.allowFullscreen') }}
           </label>
-          <div style="display: flex; align-items: center; gap: 12px">
+          <div style="display: flex; gap: 12px; align-items: center">
             <a-switch v-model:checked="iframeAllowFullscreen" />
             <span>{{
               iframeAllowFullscreen
@@ -1819,17 +1823,19 @@ onUnmounted(() => {
 <style scoped>
 /* ============ 基础容器 ============ */
 .tiptap-editor-wrapper {
-  width: 100%;
-  height: 100%;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  background-color: #ffffff;
-  transition: all 0.2s ease;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  box-sizing: border-box;
+  background-color: #fff;
+  border: none !important;
+  border-radius: 0 !important;
+  transition: all 0.2s ease;
 }
 
 /* ============ 暗黑模式变量 ============ */
@@ -1863,13 +1869,13 @@ onUnmounted(() => {
 /* ============ Toolbar ============ */
 .tiptap-toolbar {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
   gap: 4px;
+  align-items: center;
   padding: 6px 8px;
+  user-select: none;
   background-color: #f8fafc;
   border-bottom: 1px solid #e5e7eb;
-  flex-wrap: wrap;
-  user-select: none;
 }
 
 .tiptap-editor-dark .tiptap-toolbar {
@@ -1879,15 +1885,15 @@ onUnmounted(() => {
 
 .toolbar-group {
   display: flex;
-  align-items: center;
   gap: 2px;
+  align-items: center;
 }
 
 .toolbar-divider {
   width: 1px;
   height: 24px;
-  background-color: #e5e7eb;
   margin: 0 4px;
+  background-color: #e5e7eb;
 }
 
 .tiptap-editor-dark .toolbar-divider {
@@ -1901,44 +1907,44 @@ onUnmounted(() => {
   width: 28px;
   height: 28px;
   padding: 0;
-  border: none;
-  border-radius: 4px;
-  background: transparent;
-  color: #475569;
   font-size: 12px;
   font-weight: 500;
+  color: #475569;
   cursor: pointer;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
   transition: all 0.15s ease;
 }
 
 .toolbar-btn:hover:not(:disabled) {
-  background-color: #e2e8f0;
   color: #1e293b;
+  background-color: #e2e8f0;
 }
 
 .toolbar-btn.active {
-  background-color: #bfdbfe;
   color: #1e40af;
+  background-color: #bfdbfe;
 }
 
 .toolbar-btn:disabled {
-  opacity: 0.4;
   cursor: not-allowed;
+  opacity: 0.4;
 }
 
 .toolbar-color-picker {
   width: 28px;
   height: 28px;
   padding: 2px;
+  cursor: pointer;
   border: 1px solid #e5e7eb;
   border-radius: 4px;
-  cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .toolbar-color-picker:hover {
-  transform: scale(1.05);
   border-color: #94a3b8;
+  transform: scale(1.05);
 }
 
 .tiptap-editor-dark .toolbar-color-picker {
@@ -1954,13 +1960,13 @@ onUnmounted(() => {
 }
 
 .tiptap-editor-dark .toolbar-btn:hover:not(:disabled) {
-  background-color: var(--tte-toolbar-btn-hover) !important;
   color: var(--tte-text-primary) !important;
+  background-color: var(--tte-toolbar-btn-hover) !important;
 }
 
 .tiptap-editor-dark .toolbar-btn.active {
+  color: #fff !important;
   background-color: var(--tte-toolbar-btn-active) !important;
-  color: #ffffff !important;
 }
 
 .toolbar-btn .icon {
@@ -1969,73 +1975,96 @@ onUnmounted(() => {
 }
 
 /* ============ Editor Content ============ */
+.tiptap-editor-content-wrapper {
+  display: flex !important;
+  flex: 1 !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  background-color: #ffffff !important;
+}
+
+.tiptap-editor-dark .tiptap-editor-content-wrapper {
+  background-color: var(--tte-bg-primary) !important;
+}
+
 .tiptap-editor-content {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  width: 100%;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
+  display: flex !important;
+  flex: 1 !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  background-color: #ffffff !important;
+}
+
+.tiptap-editor-dark .tiptap-editor-content {
+  background-color: var(--tte-bg-primary) !important;
 }
 
 .tiptap-editor-wrapper :deep(.ProseMirror) {
+  box-sizing: border-box;
+  flex: 1 !important;
+  width: 100% !important;
+  height: 100% !important;
   padding: 16px;
-  outline: none;
-  flex: 1;
-  min-height: 100%;
   font-size: 14px;
   line-height: 1.6;
   color: #1f2937;
-  white-space: pre-wrap;
   word-wrap: break-word;
+  white-space: pre-wrap;
   background-color: transparent;
+  outline: none;
   transition:
     background-color 0.2s ease,
     color 0.2s ease !important;
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .tiptap-editor-dark :deep(.ProseMirror),
 .tiptap-editor-content.dark :deep(.ProseMirror) {
-  background-color: var(--tte-bg-primary) !important;
   color: var(--tte-text-primary) !important;
+  background-color: var(--tte-bg-primary) !important;
 }
 
 /* Placeholder */
-.tiptap-editor-wrapper,
-:deep(.ProseMirror p.is-editor-empty:first-child::before) {
-  color: #9ca3af;
-  content: attr(data-placeholder);
+/* prettier-ignore */
+.tiptap-editor-wrapper :deep(.ProseMirror p.is-editor-empty:first-child::before) {
   float: left;
   height: 0;
+  color: #9ca3af;
   pointer-events: none;
+  content: attr(data-placeholder);
 }
 
+/* prettier-ignore */
 .tiptap-editor-dark :deep(.ProseMirror p.is-editor-empty:first-child::before),
-.tiptap-editor-content.dark,
-:deep(.ProseMirror p.is-editor-empty:first-child::before) {
+.tiptap-editor-content.dark :deep(.ProseMirror p.is-editor-empty:first-child::before) {
   color: var(--tte-text-secondary) !important;
 }
 
 /* Headings */
 .tiptap-editor-wrapper :deep(.ProseMirror h1) {
+  margin: 16px 0;
   font-size: 28px;
   font-weight: 700;
-  margin: 16px 0;
   color: #111827;
 }
+
 .tiptap-editor-wrapper :deep(.ProseMirror h2) {
+  margin: 12px 0;
   font-size: 24px;
   font-weight: 700;
-  margin: 12px 0;
   color: #1f2937;
 }
+
 .tiptap-editor-wrapper :deep(.ProseMirror h3) {
+  margin: 8px 0;
   font-size: 20px;
   font-weight: 700;
-  margin: 8px 0;
   color: #374151;
 }
 
@@ -2052,42 +2081,46 @@ onUnmounted(() => {
 .tiptap-editor-wrapper :deep(.ProseMirror p) {
   margin: 8px 0;
 }
+
 .tiptap-editor-wrapper :deep(.ProseMirror ul),
 .tiptap-editor-wrapper :deep(.ProseMirror ol) {
-  margin: 8px 0;
   padding-left: 24px;
+  margin: 8px 0;
 }
+
 .tiptap-editor-wrapper :deep(.ProseMirror li) {
   margin: 4px 0;
 }
 
 /* Code */
 .tiptap-editor-wrapper :deep(.ProseMirror code) {
-  background-color: #f3f4f6;
   padding: 2px 6px;
-  border-radius: 3px;
-  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  font-family: Monaco, Menlo, 'Courier New', monospace;
   font-size: 13px;
   color: #ef4444;
+  background-color: #f3f4f6;
+  border-radius: 3px;
 }
+
 .tiptap-editor-wrapper :deep(.ProseMirror pre) {
-  background-color: #1f2937;
-  color: #f3f4f6;
-  padding: 12px;
-  border-radius: 6px;
-  overflow-x: auto;
-  margin: 8px 0;
   position: relative;
+  padding: 12px;
+  margin: 8px 0;
+  overflow-x: auto;
+  color: #f3f4f6;
+  background-color: #1f2937;
+  border-radius: 6px;
 }
+
 .tiptap-editor-wrapper :deep(.ProseMirror pre code) {
-  background: none;
-  color: inherit;
-  padding: 0;
-  border-radius: 0;
   display: block;
-  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  padding: 0;
+  font-family: Monaco, Menlo, 'Courier New', monospace;
   font-size: 13px;
   line-height: 1.6;
+  color: inherit;
+  background: none;
+  border-radius: 0;
 }
 
 /* Code Block Language Selector */
@@ -2106,51 +2139,51 @@ onUnmounted(() => {
 .tiptap-editor-wrapper,
 :deep(.ProseMirror pre .code-block-language-selector select) {
   padding: 2px 20px 2px 8px;
-  background-color: rgba(0, 0, 0, 0.3);
-  color: #9ca3af;
-  font-size: 11px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
-  text-transform: uppercase;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  cursor: pointer;
-  outline: none;
+  font-size: 11px;
+  color: #9ca3af;
+  text-transform: uppercase;
   appearance: none;
+  cursor: pointer;
+  background-color: rgb(0 0 0 / 30%);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239ca3af' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 4px center;
   background-size: 8px;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 3px;
+  outline: none;
 }
 
-.tiptap-editor-wrapper,
-:deep(.ProseMirror pre .code-block-language-selector select:hover) {
-  background-color: rgba(0, 0, 0, 0.5);
-  border-color: rgba(255, 255, 255, 0.2);
+/* prettier-ignore */
+.tiptap-editor-wrapper :deep(.ProseMirror pre .code-block-language-selector select:hover) {
+  background-color: rgb(0 0 0 / 50%);
+  border-color: rgb(255 255 255 / 20%);
 }
 
-.tiptap-editor-wrapper,
-:deep(.ProseMirror pre .code-block-language-selector select:focus) {
+/* prettier-ignore */
+.tiptap-editor-wrapper :deep(.ProseMirror pre .code-block-language-selector select:focus) {
+  background-color: rgb(0 0 0 / 60%);
   border-color: #3b82f6;
-  background-color: rgba(0, 0, 0, 0.6);
 }
 
-.tiptap-editor-dark,
-:deep(.ProseMirror pre .code-block-language-selector select) {
-  background-color: rgba(255, 255, 255, 0.1);
+/* prettier-ignore */
+.tiptap-editor-dark :deep(.ProseMirror pre .code-block-language-selector select) {
   color: #cbd5e1;
-  border-color: rgba(255, 255, 255, 0.2);
+  background-color: rgb(255 255 255 / 10%);
+  border-color: rgb(255 255 255 / 20%);
 }
 
-.tiptap-editor-dark,
-:deep(.ProseMirror pre .code-block-language-selector select:hover) {
-  background-color: rgba(255, 255, 255, 0.15);
+/* prettier-ignore */
+.tiptap-editor-dark :deep(.ProseMirror pre .code-block-language-selector select:hover) {
+  background-color: rgb(255 255 255 / 15%);
 }
 
 /* Syntax Highlighting (lowlight) */
 .tiptap-editor-wrapper :deep(.ProseMirror .hljs-comment),
 .tiptap-editor-wrapper :deep(.ProseMirror .hljs-quote) {
-  color: #6b7280;
   font-style: italic;
+  color: #6b7280;
 }
 
 .tiptap-editor-wrapper :deep(.ProseMirror .hljs-keyword),
@@ -2200,28 +2233,30 @@ onUnmounted(() => {
 
 .tiptap-editor-dark :deep(.ProseMirror code),
 .tiptap-editor-content.dark :deep(.ProseMirror code) {
-  background-color: var(--tte-code-bg) !important;
   color: var(--tte-code-text) !important;
+  background-color: var(--tte-code-bg) !important;
 }
+
 .tiptap-editor-dark :deep(.ProseMirror pre),
 .tiptap-editor-content.dark :deep(.ProseMirror pre) {
-  background-color: var(--tte-bg-secondary) !important;
   color: var(--tte-text-primary) !important;
+  background-color: var(--tte-bg-secondary) !important;
   border: 1px solid var(--tte-border-secondary) !important;
 }
 
 /* Blockquote */
 .tiptap-editor-wrapper :deep(.ProseMirror blockquote) {
-  border-left: 4px solid #d1d5db;
   padding-left: 12px;
-  color: #6b7280;
   margin: 8px 0;
   font-style: italic;
+  color: #6b7280;
+  border-left: 4px solid #d1d5db;
 }
+
 .tiptap-editor-dark :deep(.ProseMirror blockquote),
 .tiptap-editor-content.dark :deep(.ProseMirror blockquote) {
-  border-left-color: var(--tte-blockquote-border) !important;
   color: var(--tte-blockquote-text) !important;
+  border-left-color: var(--tte-blockquote-border) !important;
 }
 
 /* Links */
@@ -2230,13 +2265,16 @@ onUnmounted(() => {
   text-decoration: underline;
   cursor: pointer;
 }
+
 .tiptap-editor-wrapper :deep(.ProseMirror a:hover) {
   color: #2563eb;
 }
+
 .tiptap-editor-dark :deep(.ProseMirror a),
 .tiptap-editor-content.dark :deep(.ProseMirror a) {
   color: var(--tte-link) !important;
 }
+
 .tiptap-editor-dark :deep(.ProseMirror a:hover),
 .tiptap-editor-content.dark :deep(.ProseMirror a:hover) {
   color: var(--tte-link-hover) !important;
@@ -2244,19 +2282,20 @@ onUnmounted(() => {
 
 /* Selection */
 .tiptap-editor-wrapper :deep(.ProseMirror ::selection) {
-  background-color: rgba(59, 130, 246, 0.3);
+  background-color: rgb(59 130 246 / 30%);
 }
+
 .tiptap-editor-dark :deep(.ProseMirror ::selection),
 .tiptap-editor-content.dark :deep(.ProseMirror ::selection) {
-  background-color: rgba(96, 165, 250, 0.4) !important;
+  background-color: rgb(96 165 250 / 40%) !important;
 }
 
 /* Images */
 .tiptap-editor-wrapper :deep(.ProseMirror img) {
   max-width: 100%;
   height: auto;
-  border-radius: 4px;
   margin: 8px 0;
+  border-radius: 4px;
 }
 
 /* ============ Status Bar ============ */
@@ -2265,22 +2304,22 @@ onUnmounted(() => {
   align-items: center;
   justify-content: space-between;
   padding: 4px 12px;
-  background-color: #f8fafc;
-  border-top: 1px solid #e5e7eb;
   font-size: 12px;
   color: #64748b;
+  background-color: #f8fafc;
+  border-top: 1px solid #e5e7eb;
 }
 
 .tiptap-editor-dark .tiptap-statusbar {
+  color: var(--tte-text-secondary) !important;
   background-color: var(--tte-statusbar-bg) !important;
   border-top-color: var(--tte-border-primary) !important;
-  color: var(--tte-text-secondary) !important;
 }
 
 .status-info {
   display: flex;
-  align-items: center;
   gap: 8px;
+  align-items: center;
 }
 
 .status-item {
@@ -2297,15 +2336,15 @@ onUnmounted(() => {
 
 .mode-badge {
   padding: 2px 8px;
-  border-radius: 4px;
-  background-color: #e2e8f0;
-  color: #475569;
   font-size: 11px;
+  color: #475569;
+  background-color: #e2e8f0;
+  border-radius: 4px;
 }
 
 .tiptap-editor-dark .mode-badge {
-  background-color: var(--tte-bg-tertiary) !important;
   color: var(--tte-text-secondary) !important;
+  background-color: var(--tte-bg-tertiary) !important;
 }
 
 /* ============ Scrollbar ============ */
@@ -2313,13 +2352,16 @@ onUnmounted(() => {
   width: 8px;
   height: 8px;
 }
+
 .tiptap-editor-content::-webkit-scrollbar-track {
   background: #f1f5f9;
 }
+
 .tiptap-editor-content::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 4px;
 }
+
 .tiptap-editor-content::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
@@ -2328,19 +2370,22 @@ onUnmounted(() => {
 .tiptap-editor-content.dark::-webkit-scrollbar-track {
   background: var(--tte-bg-primary) !important;
 }
+
 .tiptap-editor-dark .tiptap-editor-content::-webkit-scrollbar-thumb,
 .tiptap-editor-content.dark::-webkit-scrollbar-thumb {
   background: var(--tte-border-secondary) !important;
 }
+
 .tiptap-editor-dark .tiptap-editor-content::-webkit-scrollbar-thumb:hover,
 .tiptap-editor-content.dark::-webkit-scrollbar-thumb:hover {
   background: #64748b !important;
 }
 
 .tiptap-editor-content {
-  scrollbar-width: thin;
   scrollbar-color: #cbd5e1 #f1f5f9;
+  scrollbar-width: thin;
 }
+
 .tiptap-editor-dark .tiptap-editor-content,
 .tiptap-editor-content.dark {
   scrollbar-color: var(--tte-border-secondary) var(--tte-bg-primary) !important;
@@ -2348,18 +2393,19 @@ onUnmounted(() => {
 
 /* ============ Disabled State ============ */
 .tiptap-editor-wrapper:has(.ProseMirror[contenteditable='false']) {
-  opacity: 0.7;
   cursor: not-allowed;
+  opacity: 0.7;
 }
 
 /* ============ Focus State ============ */
 .tiptap-editor-wrapper:focus-within {
   border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 3px rgb(59 130 246 / 10%);
 }
+
 .tiptap-editor-dark:focus-within {
   border-color: var(--tte-link) !important;
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2) !important;
+  box-shadow: 0 0 0 3px rgb(96 165 250 / 20%) !important;
 }
 
 /* ============ Transitions ============ */
@@ -2406,30 +2452,30 @@ onUnmounted(() => {
 .code-textarea {
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  font-family: Monaco, Menlo, 'Courier New', monospace;
   font-size: 13px;
   line-height: 1.5;
   resize: vertical;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
   transition: border-color 0.2s ease;
 }
 
 .code-textarea:focus {
-  outline: none;
   border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(59 130 246 / 10%);
 }
 
 .tiptap-editor-dark .code-textarea {
+  color: var(--tte-text-primary) !important;
   background-color: var(--tte-bg-secondary) !important;
   border-color: var(--tte-border-secondary) !important;
-  color: var(--tte-text-primary) !important;
 }
 
 .tiptap-editor-dark .code-textarea:focus {
   border-color: var(--tte-link) !important;
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2) !important;
+  box-shadow: 0 0 0 3px rgb(96 165 250 / 20%) !important;
 }
 
 /* ============ Video Modal ============ */
@@ -2445,16 +2491,16 @@ onUnmounted(() => {
 
 /* ============ Video Styles ============ */
 .tiptap-editor-wrapper :deep(.ProseMirror video) {
+  display: block;
   max-width: 100%;
   height: auto;
-  border-radius: 6px;
   margin: 12px 0;
-  display: block;
   cursor: pointer;
+  border-radius: 6px;
 }
 
 .tiptap-editor-wrapper :deep(.ProseMirror video:hover) {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
 }
 
 .tiptap-editor-wrapper :deep(.ProseMirror .ProseMirror-selectednode video) {
@@ -2463,7 +2509,7 @@ onUnmounted(() => {
 }
 
 .tiptap-editor-dark :deep(.ProseMirror video) {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 30%);
 }
 
 .tiptap-editor-dark :deep(.ProseMirror .ProseMirror-selectednode video) {

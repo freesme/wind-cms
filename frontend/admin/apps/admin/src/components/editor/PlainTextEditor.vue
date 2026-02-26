@@ -77,37 +77,37 @@ defineExpose({
 
 <style scoped>
 .plain-text-editor-container {
+  position: relative;
   width: 100%;
   height: 100%;
-  position: relative;
 }
 
 .plain-text-editor-textarea {
   width: 100%;
   min-height: 300px;
   padding: 12px;
-  border: 1px solid var(--border-color, #d9d9d9);
-  border-radius: 4px;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro',
+  font-family: Monaco, Menlo, 'Ubuntu Mono', Consolas, source-code-pro,
     monospace;
   font-size: 14px;
   line-height: 1.6;
+  color: var(--text-color, #333);
   resize: vertical;
+  background-color: var(--bg-color, #fff);
+  border: 1px solid var(--border-color, #d9d9d9);
+  border-radius: 4px;
   outline: none;
   transition: border-color 0.3s;
-  background-color: var(--bg-color, #fff);
-  color: var(--text-color, #333);
 }
 
 .plain-text-editor-textarea:focus {
   border-color: var(--primary-color, #1890ff);
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+  box-shadow: 0 0 0 2px rgb(24 144 255 / 10%);
 }
 
 .plain-text-editor-textarea:disabled {
-  background-color: var(--disabled-bg-color, #f5f5f5);
   color: var(--disabled-text-color, #999);
   cursor: not-allowed;
+  background-color: var(--disabled-bg-color, #f5f5f5);
 }
 
 /* 暗黑模式支持 - 仅作用于当前组件 */
@@ -121,7 +121,8 @@ defineExpose({
 
 .plain-text-editor-container.dark .plain-text-editor-textarea:focus {
   --primary-color: #1890ff;
+
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  box-shadow: 0 0 0 2px rgb(24 144 255 / 20%);
 }
 </style>

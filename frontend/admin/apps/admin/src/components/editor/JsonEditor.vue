@@ -320,60 +320,60 @@ onUnmounted(() => {
 
 <style scoped>
 .json-editor-container {
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
   display: flex;
   flex-direction: column;
+  width: 100%;
   height: 100%;
   overflow: hidden;
-  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
   transition: all 0.2s ease;
 }
 
 .json-editor-dark {
   --bg-primary: #0f172a !important;
   --bg-secondary: #1e293b !important;
-  --text-primary: #ffffff !important;
+  --text-primary: #fff !important;
   --text-secondary: #94a3b8 !important;
   --border-primary: #1e293b !important;
   --border-secondary: #334155 !important;
   --error-bg: #2a1a1a !important;
-  --error-text: #ff8888 !important;
+  --error-text: #f88 !important;
   --error-border: #4a2222 !important;
 
-  border-color: var(--border-primary) !important;
   background-color: var(--bg-primary) !important;
+  border-color: var(--border-primary) !important;
 }
 
 .error-message {
   padding: 8px 12px;
   margin: 0;
-  background-color: #fee;
-  border-bottom: 1px solid #fcc;
-  color: #c33;
   font-size: 12px;
   line-height: 1.4;
+  color: #c33;
+  background-color: #fee;
+  border-bottom: 1px solid #fcc;
 }
 
 .json-editor-dark .error-message {
+  color: var(--error-text) !important;
   background-color: var(--error-bg) !important;
   border-bottom-color: var(--error-border) !important;
-  color: var(--error-text) !important;
 }
 
 .json-editor-container :deep(.json-editor-core) {
   flex: 1;
-  overflow: hidden;
   width: 100%;
+  overflow: hidden;
 }
 
 /* 暗黑模式 - 基础样式 */
 .json-editor-dark :deep(.jsoneditor) {
-  background-color: var(--bg-primary) !important;
-  color: var(--text-primary) !important;
-  border: none !important;
   font-family: Monaco, Consolas, 'Courier New', monospace !important;
   font-size: 14px !important;
+  color: var(--text-primary) !important;
+  background-color: var(--bg-primary) !important;
+  border: none !important;
 }
 
 .json-editor-dark :deep(.jsoneditor > *) {
@@ -382,17 +382,17 @@ onUnmounted(() => {
 
 /* 暗黑模式 - 菜单样式 */
 .json-editor-dark :deep(.jsoneditor-menu) {
+  padding: 4px !important;
   background-color: var(--bg-secondary) !important;
   border-bottom: 1px solid var(--border-primary) !important;
-  padding: 4px !important;
 }
 
 .json-editor-dark :deep(.jsoneditor-menu button) {
+  padding: 4px 8px !important;
+  margin: 0 2px !important;
   color: var(--text-primary) !important;
   border: none !important;
   border-radius: 4px !important;
-  padding: 4px 8px !important;
-  margin: 0 2px !important;
   transition: background-color 0.2s ease !important;
 }
 
@@ -402,15 +402,15 @@ onUnmounted(() => {
 
 /* 暗黑模式 - 树状视图 */
 .json-editor-dark :deep(.jsoneditor-tree) {
-  background-color: var(--bg-primary) !important;
-  color: var(--text-primary) !important;
   padding: 8px !important;
+  color: var(--text-primary) !important;
+  background-color: var(--bg-primary) !important;
 }
 
 .json-editor-dark :deep(.jsoneditor-tree .jsoneditor-field) {
-  color: #93c5fd !important;
-  font-weight: 500 !important;
   margin-right: 4px !important;
+  font-weight: 500 !important;
+  color: #93c5fd !important;
 }
 
 .json-editor-dark :deep(.jsoneditor-tree .jsoneditor-string) {
@@ -431,48 +431,48 @@ onUnmounted(() => {
 
 /* 暗黑模式 - 代码/文本模式 */
 .json-editor-dark :deep(.jsoneditor-code) {
-  background-color: var(--bg-primary) !important;
   color: var(--text-primary) !important;
+  background-color: var(--bg-primary) !important;
 }
 
 .json-editor-dark :deep(.jsoneditor-code textarea) {
-  background-color: var(--bg-primary) !important;
-  color: var(--text-primary) !important;
-  border: none !important;
-  font-family: Monaco, Consolas, 'Courier New', monospace !important;
   padding: 8px !important;
+  font-family: Monaco, Consolas, 'Courier New', monospace !important;
+  color: var(--text-primary) !important;
   resize: none !important;
+  background-color: var(--bg-primary) !important;
+  border: none !important;
 }
 
 .json-editor-dark :deep(.jsoneditor-code textarea:focus) {
-  outline: none !important;
   border: 1px solid #60a5fa !important;
   border-radius: 2px !important;
+  outline: none !important;
 }
 
 /* 暗黑模式 - 表单模式 */
 .json-editor-dark :deep(.jsoneditor-form) {
-  background-color: var(--bg-primary) !important;
   color: var(--text-primary) !important;
+  background-color: var(--bg-primary) !important;
 }
 
 .json-editor-dark :deep(.jsoneditor-form input),
 .json-editor-dark :deep(.jsoneditor-form textarea),
 .json-editor-dark :deep(.jsoneditor-form select) {
-  background-color: var(--bg-secondary) !important;
   color: var(--text-primary) !important;
+  background-color: var(--bg-secondary) !important;
   border: 1px solid var(--border-secondary) !important;
   border-radius: 4px !important;
 }
 
 /* 暗黑模式 - 搜索框 */
 .json-editor-dark :deep(.jsoneditor-search) {
-  background-color: var(--bg-secondary) !important;
-  border: 1px solid var(--border-primary) !important;
-  color: var(--text-primary) !important;
-  border-radius: 4px !important;
   padding: 4px 8px !important;
   margin: 0 4px !important;
+  color: var(--text-primary) !important;
+  background-color: var(--bg-secondary) !important;
+  border: 1px solid var(--border-primary) !important;
+  border-radius: 4px !important;
 }
 
 .json-editor-dark :deep(.jsoneditor-search::placeholder) {
@@ -482,24 +482,24 @@ onUnmounted(() => {
 
 /* 暗黑模式 - 输入框 */
 .json-editor-dark :deep(.jsoneditor-text-input) {
-  background-color: var(--bg-secondary) !important;
+  padding: 2px 4px !important;
   color: var(--text-primary) !important;
+  background-color: var(--bg-secondary) !important;
   border: 1px solid var(--border-secondary) !important;
   border-radius: 2px !important;
-  padding: 2px 4px !important;
 }
 
 .json-editor-dark :deep(.jsoneditor-text-input:focus) {
+  background-color: #1a2436 !important;
   border-color: #60a5fa !important;
   outline: none !important;
-  background-color: #1a2436 !important;
 }
 
 /* 禁用状态 */
 .json-editor-container :deep(.jsoneditor-disabled) {
-  opacity: 0.8 !important;
   cursor: not-allowed !important;
   background-color: #1a2436 !important;
+  opacity: 0.8 !important;
 }
 
 /* 暗黑模式 - 滚动条 */
@@ -536,7 +536,7 @@ onUnmounted(() => {
 }
 
 .json-editor-container :deep(.jsoneditor-menu button) {
-  border-radius: 4px !important;
   padding: 4px 8px !important;
+  border-radius: 4px !important;
 }
 </style>

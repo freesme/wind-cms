@@ -112,7 +112,7 @@ const currentOptions = computed(() => {
 <style scoped>
 .editor-container {
   width: 100%;
-  min-height: 300px;
   height: 100%;
+  min-height: 300px;
 }
 </style>
