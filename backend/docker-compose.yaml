@@ -43,8 +43,8 @@ services:
       - REDIS_AOF_ENABLED=no
       - REDIS_IO_THREADS_DO_READS=yes
       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL,CONFIG
-    volumes:
-      - /root/app/redis/data:/bitnami/redis/data
+#    volumes:
+#      - ${APP_ROOT:-/root/app}/redis/data:/bitnami/redis/data
 
   minio:
     image: docker.io/minio/minio:latest
@@ -60,8 +60,8 @@ services:
       - MINIO_DEFAULT_BUCKETS=images
       - MINIO_FORCE_NEW_KEYS=yes
       - BITNAMI_DEBUG=true
-    volumes:
-      - /root/app/minio/data:/data
+#    volumes:
+#      - ${APP_ROOT:-/root/app}/minio/data:/data
     command: server /data --console-address ':9001'
 
 #  consul:
@@ -126,6 +126,7 @@ services:
   admin-service:
     image: go-wind-cms/admin-service:1.0.0
     restart: always
+    pull_policy: never
     networks:
       - app-tier
     ports:
@@ -137,6 +138,8 @@ services:
       - minio
       - etcd
       - jaeger
+    environment:
+      - TZ=Asia/Shanghai
     build:
       context: ./  # 指定 Dockerfile 所在的上下文路径
       dockerfile: Dockerfile
@@ -146,6 +149,7 @@ services:
 
   app-service:
     image: go-wind-cms/app-service:1.0.0
+    pull_policy: never
     restart: always
     networks:
       - app-tier
@@ -158,6 +162,8 @@ services:
       - minio
       - etcd
       - jaeger
+    environment:
+      - TZ=Asia/Shanghai
     build:
       context: ./  # 指定 Dockerfile 所在的上下文路径
       dockerfile: Dockerfile
@@ -167,6 +173,7 @@ services:
 
   core-service:
     image: go-wind-cms/core-service:1.0.0
+    pull_policy: never
     restart: always
     networks:
       - app-tier
@@ -176,6 +183,8 @@ services:
       - minio
       - etcd
       - jaeger
+    environment:
+      - TZ=Asia/Shanghai
     build:
       context: ./  # 指定 Dockerfile 所在的上下文路径
       dockerfile: Dockerfile

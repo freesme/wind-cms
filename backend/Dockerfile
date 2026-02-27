@@ -3,7 +3,8 @@
 ##################################
 
 # 使用官方的 Go 基础镜像作为构建环境
-FROM golang:1.24.6 AS builder
+ARG GO_VERSION=1.25.3
+FROM golang:${GO_VERSION}-alpine AS builder
 
 ARG SERVICE_NAME=app
 ARG APP_VERSION=1.0.0
@@ -14,8 +15,9 @@ WORKDIR /src
 # 复制项目源代码到工作目录
 COPY . /src
 
-# 下载依赖，在中国国内，请使用国内代理。有可能会出现下载失败的情况，多试几次即可。
-RUN GOPROXY=https://goproxy.cn go mod download
+# 下载依赖，国内代理链：首选 goproxy.cn，备选 direct（直接下载）
+# 增加 GOSUMDB 配置避免校验服务器访问失败
+RUN GOPROXY=https://goproxy.cn,direct GOSUMDB=off go mod download
 
 # 编译可执行文件（使用WORKDIR和相对路径，而不是cd）
 RUN CGO_ENABLED=0 \
@@ -35,7 +37,7 @@ RUN mkdir -p /src/bin/configs && \
 ##################################
 
 # 使用 Alpine 作为基础镜像，因为它非常轻量级
-FROM alpine:3.18
+FROM docker.io/alpine:latest
 
 ARG SERVICE_NAME=app
 

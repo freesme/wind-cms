@@ -43,8 +43,8 @@ services:
       - REDIS_AOF_ENABLED=no
       - REDIS_IO_THREADS_DO_READS=yes
       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL,CONFIG
-    volumes:
-      - /root/app/redis/data:/bitnami/redis/data
+#    volumes:
+#      - ${APP_ROOT:-/root/app}/redis/data:/bitnami/redis/data
 
   minio:
     image: docker.io/minio/minio:latest
@@ -60,8 +60,8 @@ services:
       - MINIO_DEFAULT_BUCKETS=images
       - MINIO_FORCE_NEW_KEYS=yes
       - BITNAMI_DEBUG=true
-    volumes:
-      - /root/app/minio/data:/data
+#    volumes:
+#      - ${APP_ROOT:-/root/app}/minio/data:/data
     command: server /data --console-address ':9001'
 
 #  consul:

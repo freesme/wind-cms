@@ -162,10 +162,11 @@ func (s *FileTransferService) directUploadFile(ctx context.Context, req *storage
 		)
 	}
 
-	info, downloadUrl, err := s.mc.UploadFile(
+	info, _, downloadUrl, err := s.mc.UploadFile(
 		ctx,
 		req.GetStorageObject().GetBucketName(),
 		req.GetStorageObject().GetObjectName(),
+		req.GetMime(),
 		req.GetFile(),
 	)
 	if err != nil {
@@ -359,7 +360,13 @@ func (s *FileTransferService) UEditorUploadFile(ctx context.Context, req *storag
 		bucketName = "videos"
 	}
 
-	info, downloadUrl, err := s.mc.UploadFile(ctx, bucketName, req.GetSourceFileName(), req.GetFile())
+	info, _, downloadUrl, err := s.mc.UploadFile(
+		ctx,
+		bucketName,
+		req.GetSourceFileName(),
+		req.GetMime(),
+		req.GetFile(),
+	)
 	if err != nil {
 		return &storageV1.UEditorUploadResponse{
 			State: trans.Ptr(err.Error()),
