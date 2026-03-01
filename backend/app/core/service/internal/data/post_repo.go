@@ -146,7 +146,11 @@ func (r *PostRepo) Get(ctx context.Context, req *contentV1.GetPostRequest) (*con
 		return nil, contentV1.ErrorBadRequest("invalid parameter")
 	}
 
-	entity, err := r.entClient.Client().Post.Get(ctx, req.GetId())
+	build := r.entClient.Client().Post.Query()
+
+	build.Where(post.IDEQ(req.GetId()))
+
+	entity, err := build.Only(ctx)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, contentV1.ErrorFileNotFound("post not found")
@@ -159,12 +163,23 @@ func (r *PostRepo) Get(ctx context.Context, req *contentV1.GetPostRequest) (*con
 
 	dto := r.mapper.ToDTO(entity)
 
-	translations, err := r.postTranslationRepo.ListTranslations(ctx, dto.GetId())
-	if err != nil {
-		r.log.Errorf("query translations failed: %s", err.Error())
-		return nil, contentV1.ErrorInternalServerError("query translations failed")
+	if req.LanguageCode == nil {
+		translations, err := r.postTranslationRepo.ListTranslations(ctx, dto.GetId())
+		if err != nil {
+			r.log.Errorf("query translations failed: %s", err.Error())
+			return nil, contentV1.ErrorInternalServerError("query translations failed")
+		}
+		dto.Translations = translations
+	} else {
+		translation, err := r.postTranslationRepo.GetTranslation(ctx, dto.GetId(), *req.LanguageCode)
+		if err != nil {
+			r.log.Errorf("query translation failed: %s", err.Error())
+			return nil, contentV1.ErrorInternalServerError("query translation failed")
+		}
+		if translation != nil {
+			dto.Translations = append(dto.Translations, translation)
+		}
 	}
-	dto.Translations = translations
 
 	return dto, nil
 }

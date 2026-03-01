@@ -6732,6 +6732,9 @@ export function createPostServiceClient(
       const path = `admin/v1/posts/${request.id}`; // eslint-disable-line quotes
       const body = null;
       const queryParams: string[] = [];
+      if (request.languageCode) {
+        queryParams.push(`languageCode=${encodeURIComponent(request.languageCode.toString())}`)
+      }
       if (request.viewMask) {
         queryParams.push(`viewMask=${encodeURIComponent(request.viewMask.toString())}`)
       }
@@ -6878,6 +6881,7 @@ export type contentservicev1_PostTranslation = {
 // 请求 - 帖子数据
 export type contentservicev1_GetPostRequest = {
   id: number | undefined;
+  languageCode?: string;
   viewMask?: wellKnownFieldMask;
 };
 

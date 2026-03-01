@@ -904,6 +904,10 @@ paths:
                   schema:
                     type: integer
                     format: uint32
+                - name: languageCode
+                  in: query
+                  schema:
+                    type: string
                 - name: viewMask
                   in: query
                   schema:

@@ -641,7 +641,8 @@ func (x *ListPostResponse) GetTotal() uint64 {
 type GetPostRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	ViewMask      *fieldmaskpb.FieldMask `protobuf:"bytes,100,opt,name=view_mask,json=viewMask,proto3,oneof" json:"view_mask,omitempty"` // 视图字段过滤器，用于控制返回的字段
+	LanguageCode  *string                `protobuf:"bytes,2,opt,name=language_code,json=languageCode,proto3,oneof" json:"language_code,omitempty"` // 语言代码
+	ViewMask      *fieldmaskpb.FieldMask `protobuf:"bytes,100,opt,name=view_mask,json=viewMask,proto3,oneof" json:"view_mask,omitempty"`           // 视图字段过滤器，用于控制返回的字段
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -681,6 +682,13 @@ func (x *GetPostRequest) GetId() uint32 {
 		return x.Id
 	}
 	return 0
+}
+
+func (x *GetPostRequest) GetLanguageCode() string {
+	if x != nil && x.LanguageCode != nil {
+		return *x.LanguageCode
+	}
+	return ""
 }
 
 func (x *GetPostRequest) GetViewMask() *fieldmaskpb.FieldMask {
@@ -993,10 +1001,12 @@ const file_content_service_v1_post_proto_rawDesc = "" +
 	"categoryId\"X\n" +
 	"\x10ListPostResponse\x12.\n" +
 	"\x05items\x18\x01 \x03(\v2\x18.content.service.v1.PostR\x05items\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x04R\x05total\"\xa7\x01\n" +
+	"\x05total\x18\x02 \x01(\x04R\x05total\"\xf7\x01\n" +
 	"\x0eGetPostRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\rR\x02id\x12w\n" +
-	"\tview_mask\x18d \x01(\v2\x1a.google.protobuf.FieldMaskB9\xbaG6\x92\x023视图字段过滤器，用于控制返回的字段H\x00R\bviewMask\x88\x01\x01B\f\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\x12<\n" +
+	"\rlanguage_code\x18\x02 \x01(\tB\x12\xbaG\x0f\x92\x02\f语言代码H\x00R\flanguageCode\x88\x01\x01\x12w\n" +
+	"\tview_mask\x18d \x01(\v2\x1a.google.protobuf.FieldMaskB9\xbaG6\x92\x023视图字段过滤器，用于控制返回的字段H\x01R\bviewMask\x88\x01\x01B\x10\n" +
+	"\x0e_language_codeB\f\n" +
 	"\n" +
 	"_view_mask\"A\n" +
 	"\x11CreatePostRequest\x12,\n" +

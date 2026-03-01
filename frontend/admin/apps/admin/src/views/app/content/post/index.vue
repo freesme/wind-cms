@@ -5,6 +5,7 @@ import { h } from 'vue';
 
 import { Page, type VbenFormProps } from '@vben/common-ui';
 import { LucideFilePenLine, LucideTrash2 } from '@vben/icons';
+import { i18n } from '@vben/locales';
 
 import { notification } from 'ant-design-vue';
 
@@ -133,14 +134,21 @@ const [Grid, gridApi] = useVbenVxeGrid({ gridOptions, formOptions });
 
 /* 创建 */
 function handleCreate() {
-  console.log('创建');
-  router.push(`/content/posts/create`);
+  console.log('创建', i18n.global.locale.value);
+  router.push({
+    name: 'CreatePost',
+    query: { lang: i18n.global.locale.value },
+  });
 }
 
 /* 编辑 */
 function handleEdit(row: any) {
-  console.log('编辑', row);
-  router.push(`/content/posts/edit/${row.id}`);
+  console.log('编辑', row, i18n.global.locale.value);
+  router.push({
+    name: 'EditPost',
+    params: { id: row.id },
+    query: { lang: i18n.global.locale.value },
+  });
 }
 
 /* 删除 */

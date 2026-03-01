@@ -96,6 +96,22 @@ func (r *PostTranslationRepo) ListTranslations(ctx context.Context, postID uint3
 	return dtos, nil
 }
 
+func (r *PostTranslationRepo) GetTranslation(ctx context.Context, postID uint32, languageCode string) (*contentV1.PostTranslation, error) {
+	q := r.entClient.Client().PostTranslation.Query().
+		Where(
+			posttranslation.PostIDEQ(postID),
+			posttranslation.LanguageCodeEQ(languageCode),
+		)
+
+	entity, err := q.Only(ctx)
+	if err != nil {
+		r.log.Errorf("query translation by post id and language code failed: %s", err.Error())
+		return nil, contentV1.ErrorInternalServerError("query translation by post id and language code failed")
+	}
+
+	return r.mapper.ToDTO(entity), nil
+}
+
 func (r *PostTranslationRepo) BatchCreate(ctx context.Context, tx *ent.Tx, items []*contentV1.PostTranslation) error {
 	if len(items) == 0 {
 		return nil

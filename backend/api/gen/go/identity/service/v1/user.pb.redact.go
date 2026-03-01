@@ -283,10 +283,6 @@ func (x *GetUserRequest) Redact() string {
 		return ""
 	}
 
-	// Safe field: Id
-
-	// Safe field: Username
-
 	// Safe field: ViewMask
 	return x.String()
 }
@@ -327,10 +323,6 @@ func (x *DeleteUserRequest) Redact() string {
 		return ""
 	}
 
-	// Safe field: Id
-
-	// Safe field: Username
-
 	// Safe field: DeletedBy
 	return x.String()
 }
@@ -340,10 +332,6 @@ func (x *UserExistsRequest) Redact() string {
 	if x == nil {
 		return ""
 	}
-
-	// Safe field: Id
-
-	// Safe field: Username
 	return x.String()
 }
 
@@ -416,10 +404,6 @@ func (x *UploadAvatarRequest) Redact() string {
 	if x == nil {
 		return ""
 	}
-
-	// Safe field: ImageBase64
-
-	// Safe field: ImageUrl
 	return x.String()
 }
 
@@ -438,10 +422,6 @@ func (x *BindContactRequest) Redact() string {
 	if x == nil {
 		return ""
 	}
-
-	// Safe field: Phone
-
-	// Safe field: Email
 	return x.String()
 }
 
@@ -474,10 +454,6 @@ func (x *VerifyContactRequest) Redact() string {
 	if x == nil {
 		return ""
 	}
-
-	// Safe field: Phone
-
-	// Safe field: Email
 
 	// Safe field: VerificationId
 	return x.String()

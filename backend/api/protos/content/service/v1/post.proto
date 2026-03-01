@@ -256,6 +256,11 @@ message ListPostResponse {
 message GetPostRequest {
   uint32 id = 1;
 
+  optional string language_code = 2 [
+    json_name = "languageCode",
+    (gnostic.openapi.v3.property) = {description: "语言代码"}
+  ]; // 语言代码
+
   optional google.protobuf.FieldMask view_mask = 100 [
     json_name = "viewMask",
     (gnostic.openapi.v3.property) = {

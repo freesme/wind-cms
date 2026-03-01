@@ -253,10 +253,6 @@ func (x *GetTaskRequest) Redact() string {
 		return ""
 	}
 
-	// Safe field: Id
-
-	// Safe field: TypeName
-
 	// Safe field: ViewMask
 	return x.String()
 }

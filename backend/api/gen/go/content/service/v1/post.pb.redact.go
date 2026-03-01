@@ -243,6 +243,8 @@ func (x *GetPostRequest) Redact() string {
 
 	// Safe field: Id
 
+	// Safe field: LanguageCode
+
 	// Safe field: ViewMask
 	return x.String()
 }

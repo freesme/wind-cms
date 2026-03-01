@@ -5,9 +5,10 @@ import { useUserStore } from '@vben/stores';
 
 import { defineStore } from 'pinia';
 
+import { EditorType } from '#/adapter/component/Editor';
 import {
+  type contentservicev1_EditorType,
   createPostServiceClient,
-  type contentservicev1_EditorType as EditorType,
   type contentservicev1_Post_PostStatus as Post_PostStatus,
 } from '#/generated/api/admin/service/v1';
 import { makeOrderBy, makeQueryString, makeUpdateMask } from '#/utils/query';
@@ -42,8 +43,9 @@ export const usePostStore = defineStore('post', () => {
   /**
    * 获取帖子
    */
-  async function getPost(id: number) {
-    return await service.Get({ id });
+  async function getPost(id: number, languageCode: string) {
+    if (!id) return null;
+    return await service.Get({ id, languageCode });
   }
 
   /**
@@ -162,7 +164,7 @@ export const editorTypeList = computed(() => [
   },
 ]);
 
-export function editorTypeToName(editorType: EditorType) {
+export function editorTypeToName(editorType: contentservicev1_EditorType) {
   const values = editorTypeList.value;
   const matchedItem = values.find((item) => item.value === editorType);
   return matchedItem ? matchedItem.label : '';
@@ -185,9 +187,35 @@ const EDITOR_TYPE_COLOR_MAP = {
   DEFAULT: '#94a3b8',
 } as const;
 
-export function editorTypeToColor(editorType: EditorType) {
+export function editorTypeToColor(editorType: contentservicev1_EditorType) {
   return (
     EDITOR_TYPE_COLOR_MAP[editorType as keyof typeof EDITOR_TYPE_COLOR_MAP] ||
     EDITOR_TYPE_COLOR_MAP.DEFAULT
   );
+}
+
+export function convertEditorType(
+  editorType: contentservicev1_EditorType | undefined,
+): EditorType {
+  switch (editorType) {
+    case 'EDITOR_TYPE_CODE': {
+      return EditorType.CODE;
+    }
+    case 'EDITOR_TYPE_JSON_BLOCK': {
+      return EditorType.JSON;
+    }
+    case 'EDITOR_TYPE_MARKDOWN': {
+      return EditorType.MARKDOWN;
+    }
+    case 'EDITOR_TYPE_PLAIN_TEXT': {
+      return EditorType.PLAIN_TEXT;
+    }
+    case 'EDITOR_TYPE_RICH_TEXT': {
+      return EditorType.RICH_TEXT;
+    }
+    case 'EDITOR_TYPE_VISUAL_BUILDER': {
+      return EditorType.VISUAL_BUILDER;
+    }
+  }
+  return EditorType.MARKDOWN;
 }

@@ -907,6 +907,10 @@ func (m *GetPostRequest) validate(all bool) error {
 
 	// no validation rules for Id
 
+	if m.LanguageCode != nil {
+		// no validation rules for LanguageCode
+	}
+
 	if m.ViewMask != nil {
 
 		if all {

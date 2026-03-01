@@ -9,8 +9,17 @@ import { useTabs } from '@vben/hooks';
 import { LucideArrowLeft } from '@vben/icons';
 import { $t } from '@vben/locales';
 
-import { Editor, EditorType } from '#/adapter/component/Editor';
-import { useFileTransferStore, useLanguageStore, usePostStore } from '#/stores';
+import {
+  Editor,
+  EditorType,
+  editorTypeOptions,
+} from '#/adapter/component/Editor';
+import {
+  convertEditorType,
+  useFileTransferStore,
+  useLanguageStore,
+  usePostStore,
+} from '#/stores';
 
 import PublishPostModal from './publish-post-modal.vue';
 
@@ -20,6 +29,10 @@ const fileTransferStore = useFileTransferStore();
 
 const route = useRoute();
 const { closeCurrentTab } = useTabs();
+
+const initLanguage = computed(() => {
+  return (route.query.lang as string) || 'zh-CN';
+});
 
 const isCreateMode = computed(() => {
   return route.name === 'CreatePost';
@@ -37,26 +50,13 @@ const postId = computed(() => {
   return Number(id);
 });
 
-// 编辑器类型列表
-const editorTypeOptions = [
-  {
-    label: $t('enum.editorType.EDITOR_TYPE_MARKDOWN'),
-    value: EditorType.MARKDOWN,
-  },
-  {
-    label: $t('enum.editorType.EDITOR_TYPE_RICH_TEXT'),
-    value: EditorType.RICH_TEXT,
-  },
-  {
-    label: $t('enum.editorType.EDITOR_TYPE_JSON_BLOCK'),
-    value: EditorType.JSON,
-  },
-  {
-    label: $t('enum.editorType.EDITOR_TYPE_PLAIN_TEXT'),
-    value: EditorType.PLAIN_TEXT,
-  },
-  { label: $t('enum.editorType.EDITOR_TYPE_CODE'), value: EditorType.CODE },
-];
+// 表单数据
+const formData = ref<Props>({
+  title: '',
+  content: '',
+  lang: initLanguage.value,
+  editorType: EditorType.MARKDOWN,
+});
 
 const languageOptions = ref<{ label: string; value: string }[]>([]);
 
@@ -75,14 +75,6 @@ async function reloadLanguages() {
   }
 }
 
-// 表单数据
-const formData = ref<Props>({
-  title: '',
-  content: '',
-  lang: 'zh-CN',
-  editorType: EditorType.MARKDOWN,
-});
-
 const [Modal, modalApi] = useVbenModal({
   // 连接抽离的组件
   connectedComponent: PublishPostModal,
@@ -99,7 +91,7 @@ function goBack() {
   // router.push('/content/posts');
 }
 
-function handleSave() {
+function handleSaveDraft() {
   console.log('Save post:', formData.value);
   // TODO: 调用保存接口
 }
@@ -120,13 +112,49 @@ async function handleUploadImage(file: File): Promise<string> {
   }
 }
 
+async function loadPost() {
+  if (!isEditMode.value) {
+    return;
+  }
+
+  try {
+    const item = await postStore.getPost(
+      postId.value || 0,
+      formData.value.lang,
+    );
+    if (!item) {
+      console.error('Post not found');
+      return;
+    }
+
+    let langItem = item.translations?.find(
+      (t) => t.languageCode === formData.value.lang,
+    );
+    if (!langItem) {
+      langItem = item.translations?.[0];
+      formData.value.lang = langItem?.languageCode || formData.value.lang;
+    }
+    if (!langItem) {
+      console.error('No translations found for post');
+      return;
+    }
+
+    formData.value.title = langItem.title || '';
+    formData.value.content = langItem.content || '';
+    formData.value.lang = formData.value.lang || 'zh-CN';
+    formData.value.editorType = convertEditorType(item.editorType);
+  } catch (error) {
+    console.error('Failed to load post:', error);
+  }
+}
+
 onMounted(async () => {
   await reloadLanguages();
 
   if (isCreateMode.value) {
     formData.value.title = $t('page.post.placeholder.untitled');
   } else {
-    const item = await postStore.getPost(postId.value || 0);
+    await loadPost();
   }
 });
 </script>
@@ -184,7 +212,7 @@ onMounted(async () => {
     <template #footer>
       <div class="flex w-full">
         <a-space class="ml-auto">
-          <a-button type="default" @click="handleSave">
+          <a-button type="default" @click="handleSaveDraft">
             {{ $t('page.post.button.saveDraft') }}
           </a-button>
           <a-button type="primary" danger @click="handlePublish">
