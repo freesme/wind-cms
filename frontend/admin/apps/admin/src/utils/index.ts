@@ -95,3 +95,24 @@ export function formatBytes(bytes: number, decimals: number = 2): string {
   // 返回格式化后的字符串
   return `${value} ${units[unitIndex]}`;
 }
+
+/**
+ * 从数组或对象中提取所有有效数字（原始 number 类型，排除 NaN/Infinity）
+ * @returns 仅包含有效数字的数组
+ */
+export function filterNumbers(arr: unknown[]): number[] {
+  if (!Array.isArray(arr)) {
+    throw new TypeError('输入必须是 Array 类型');
+  }
+
+  const is_valid_number = (value: unknown): value is number => {
+    return (
+      typeof value === 'number' && // 必须是原始 number 类型
+      Object.prototype.toString.call(value) === '[object Number]' && // 排除数字包装对象（new Number()）
+      !Number.isNaN(value) && // 排除 NaN
+      Number.isFinite(value) // 排除 Infinity
+    );
+  };
+
+  return arr.filter((element) => is_valid_number(element));
+}
