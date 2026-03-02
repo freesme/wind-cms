@@ -29,7 +29,7 @@ interface PostEditViewState {
   loading: boolean; // 加载状态
   needTranslate: boolean; // 是否需要翻译
   formData: PostEditProps; // 表单数据
-  languageOptions: { label: string; value: string }[]; // 语言选项列表
+  languageOptions: { hasTranslation?: boolean; label: string; value: string }[]; // 语言选项列表（带翻译标记）
   isCreateMode: boolean; // 是否为创建模式
   postId: null | number; // 文章ID（编辑模式下）
 }
@@ -141,6 +141,13 @@ export const usePostEditViewStore = defineStore('post-edit-view', {
         if (!langItem) {
           throw new Error('No translations found for post');
         }
+
+        // 使用 availableLanguages 标记语言选项中的翻译状态
+        const availableLanguages = item.availableLanguages || [];
+        this.languageOptions = this.languageOptions.map((option) => ({
+          ...option,
+          hasTranslation: availableLanguages.includes(option.value),
+        }));
 
         // 更新表单数据
         this.formData.id = item.id;

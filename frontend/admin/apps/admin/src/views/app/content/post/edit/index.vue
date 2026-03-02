@@ -254,7 +254,23 @@ init();
             :key="option.value"
             :value="option.value"
           >
-            {{ option.label }}
+            <span>
+              {{ option.label }}
+              <span
+                v-if="option.hasTranslation"
+                class="ml-2 text-green-600"
+                :title="$t('page.post.placeholder.hasTranslation')"
+              >
+                ✓
+              </span>
+              <span
+                v-else
+                class="ml-2 text-orange-500"
+                :title="$t('page.post.placeholder.noTranslation')"
+              >
+                ○
+              </span>
+            </span>
           </a-select-option>
         </a-select>
         <a-button
