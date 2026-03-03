@@ -315,6 +315,7 @@ func (_c *PostTranslationCreate) Mutation() *PostTranslationMutation {
 
 // Save creates the PostTranslation in the database.
 func (_c *PostTranslationCreate) Save(ctx context.Context) (*PostTranslation, error) {
+	_c.defaults()
 	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
@@ -337,6 +338,14 @@ func (_c *PostTranslationCreate) Exec(ctx context.Context) error {
 func (_c *PostTranslationCreate) ExecX(ctx context.Context) {
 	if err := _c.Exec(ctx); err != nil {
 		panic(err)
+	}
+}
+
+// defaults sets the default values of the builder before save.
+func (_c *PostTranslationCreate) defaults() {
+	if _, ok := _c.mutation.WordCount(); !ok {
+		v := posttranslation.DefaultWordCount
+		_c.mutation.SetWordCount(v)
 	}
 }
 
@@ -1421,6 +1430,7 @@ func (_c *PostTranslationCreateBulk) Save(ctx context.Context) ([]*PostTranslati
 	for i := range _c.builders {
 		func(i int, root context.Context) {
 			builder := _c.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*PostTranslationMutation)
 				if !ok {

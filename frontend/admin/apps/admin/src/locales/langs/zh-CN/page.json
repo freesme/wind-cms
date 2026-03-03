@@ -506,6 +506,7 @@
     "customHead": "自定义页面头部内容",
     "customFoot": "自定义页面底部内容",
     "summary": "页面摘要",
+    "pageTitle": "页面标题",
     "button": {
       "create": "创建页面",
       "saveDraft": "保存草稿",
@@ -603,7 +604,38 @@
     "group": "标签分组",
     "sortOrder": "排序优先级",
     "isFeatured": "是否推荐",
-    "postCount": "帖子数量"
+    "postCount": "帖子数量",
+    "name": "标签名称",
+    "button": {
+      "create": "创建标签",
+      "saveDraft": "保存草稿",
+      "publish": "发布标签"
+    },
+    "title": {
+      "create": "创建标签",
+      "edit": "编辑标签"
+    },
+    "placeholder": {
+      "name": "请输入标签名称",
+      "slug": "请输入标签别名",
+      "description": "请输入标签描述",
+      "color": "请输入颜色代码",
+      "icon": "请输入图标",
+      "group": "请输入标签分组",
+      "hasTranslation": "已有翻译",
+      "noTranslation": "未翻译"
+    },
+    "validation": {
+      "nameRequired": "标签名称不能为空",
+      "slugRequired": "标签别名不能为空",
+      "publishFailed": "发布失败，请稍后再试",
+      "publishSuccess": "发布成功",
+      "saveDraftSuccess": "保存草稿成功",
+      "saveDraftFailed": "保存草稿失败，请稍后再试",
+      "translationNotExists": "翻译内容不存在，请先进行翻译",
+      "loadFailed": "加载标签数据失败，请稍后再试",
+      "loadLanguageFailed": "加载语言列表失败，请稍后再试"
+    }
   },
   "mediaAsset": {
     "moduleName": "媒体资源",

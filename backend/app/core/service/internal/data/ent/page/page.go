@@ -135,6 +135,8 @@ var (
 	DefaultIsCustomTemplate bool
 	// DefaultVisits holds the default value on creation for the "visits" field.
 	DefaultVisits uint32
+	// DefaultDepth holds the default value on creation for the "depth" field.
+	DefaultDepth int32
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(uint32) error
 )

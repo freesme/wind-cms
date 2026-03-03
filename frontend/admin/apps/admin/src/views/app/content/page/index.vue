@@ -19,6 +19,8 @@ import {
   pageStatusList,
   pageStatusToColor,
   pageStatusToName,
+  pageTypeToColor,
+  pageTypeToName,
   usePageStore,
 } from '#/stores';
 
@@ -103,6 +105,11 @@ const gridOptions: VxeGridProps<PageType> = {
       title: $t('page.page.editorType'),
       field: 'editorType',
       slots: { default: 'editorType' },
+    },
+    {
+      title: $t('page.page.type'),
+      field: 'type',
+      slots: { default: 'type' },
     },
     {
       title: $t('page.page.showInNavigation'),
@@ -206,6 +213,11 @@ async function handleDelete(row: any) {
       <template #status="{ row }">
         <a-tag :color="pageStatusToColor(row.status)">
           {{ pageStatusToName(row.status) }}
+        </a-tag>
+      </template>
+      <template #type="{ row }">
+        <a-tag :color="pageTypeToColor(row.type)">
+          {{ pageTypeToName(row.type) }}
         </a-tag>
       </template>
       <template #editorType="{ row }">

@@ -5767,7 +5767,6 @@ type CategoryTranslationMutation struct {
 	adddeleted_by    *int32
 	category_id      *uint32
 	addcategory_id   *int32
-	is_nav           *bool
 	language_code    *string
 	name             *string
 	slug             *string
@@ -6314,55 +6313,6 @@ func (m *CategoryTranslationMutation) ResetCategoryID() {
 	m.category_id = nil
 	m.addcategory_id = nil
 	delete(m.clearedFields, categorytranslation.FieldCategoryID)
-}
-
-// SetIsNav sets the "is_nav" field.
-func (m *CategoryTranslationMutation) SetIsNav(b bool) {
-	m.is_nav = &b
-}
-
-// IsNav returns the value of the "is_nav" field in the mutation.
-func (m *CategoryTranslationMutation) IsNav() (r bool, exists bool) {
-	v := m.is_nav
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldIsNav returns the old "is_nav" field's value of the CategoryTranslation entity.
-// If the CategoryTranslation object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *CategoryTranslationMutation) OldIsNav(ctx context.Context) (v *bool, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldIsNav is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldIsNav requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldIsNav: %w", err)
-	}
-	return oldValue.IsNav, nil
-}
-
-// ClearIsNav clears the value of the "is_nav" field.
-func (m *CategoryTranslationMutation) ClearIsNav() {
-	m.is_nav = nil
-	m.clearedFields[categorytranslation.FieldIsNav] = struct{}{}
-}
-
-// IsNavCleared returns if the "is_nav" field was cleared in this mutation.
-func (m *CategoryTranslationMutation) IsNavCleared() bool {
-	_, ok := m.clearedFields[categorytranslation.FieldIsNav]
-	return ok
-}
-
-// ResetIsNav resets all changes to the "is_nav" field.
-func (m *CategoryTranslationMutation) ResetIsNav() {
-	m.is_nav = nil
-	delete(m.clearedFields, categorytranslation.FieldIsNav)
 }
 
 // SetLanguageCode sets the "language_code" field.
@@ -6938,7 +6888,7 @@ func (m *CategoryTranslationMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *CategoryTranslationMutation) Fields() []string {
-	fields := make([]string, 0, 19)
+	fields := make([]string, 0, 18)
 	if m.created_at != nil {
 		fields = append(fields, categorytranslation.FieldCreatedAt)
 	}
@@ -6959,9 +6909,6 @@ func (m *CategoryTranslationMutation) Fields() []string {
 	}
 	if m.category_id != nil {
 		fields = append(fields, categorytranslation.FieldCategoryID)
-	}
-	if m.is_nav != nil {
-		fields = append(fields, categorytranslation.FieldIsNav)
 	}
 	if m.language_code != nil {
 		fields = append(fields, categorytranslation.FieldLanguageCode)
@@ -7018,8 +6965,6 @@ func (m *CategoryTranslationMutation) Field(name string) (ent.Value, bool) {
 		return m.DeletedBy()
 	case categorytranslation.FieldCategoryID:
 		return m.CategoryID()
-	case categorytranslation.FieldIsNav:
-		return m.IsNav()
 	case categorytranslation.FieldLanguageCode:
 		return m.LanguageCode()
 	case categorytranslation.FieldName:
@@ -7065,8 +7010,6 @@ func (m *CategoryTranslationMutation) OldField(ctx context.Context, name string)
 		return m.OldDeletedBy(ctx)
 	case categorytranslation.FieldCategoryID:
 		return m.OldCategoryID(ctx)
-	case categorytranslation.FieldIsNav:
-		return m.OldIsNav(ctx)
 	case categorytranslation.FieldLanguageCode:
 		return m.OldLanguageCode(ctx)
 	case categorytranslation.FieldName:
@@ -7146,13 +7089,6 @@ func (m *CategoryTranslationMutation) SetField(name string, value ent.Value) err
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCategoryID(v)
-		return nil
-	case categorytranslation.FieldIsNav:
-		v, ok := value.(bool)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetIsNav(v)
 		return nil
 	case categorytranslation.FieldLanguageCode:
 		v, ok := value.(string)
@@ -7333,9 +7269,6 @@ func (m *CategoryTranslationMutation) ClearedFields() []string {
 	if m.FieldCleared(categorytranslation.FieldCategoryID) {
 		fields = append(fields, categorytranslation.FieldCategoryID)
 	}
-	if m.FieldCleared(categorytranslation.FieldIsNav) {
-		fields = append(fields, categorytranslation.FieldIsNav)
-	}
 	if m.FieldCleared(categorytranslation.FieldLanguageCode) {
 		fields = append(fields, categorytranslation.FieldLanguageCode)
 	}
@@ -7404,9 +7337,6 @@ func (m *CategoryTranslationMutation) ClearField(name string) error {
 	case categorytranslation.FieldCategoryID:
 		m.ClearCategoryID()
 		return nil
-	case categorytranslation.FieldIsNav:
-		m.ClearIsNav()
-		return nil
 	case categorytranslation.FieldLanguageCode:
 		m.ClearLanguageCode()
 		return nil
@@ -7468,9 +7398,6 @@ func (m *CategoryTranslationMutation) ResetField(name string) error {
 		return nil
 	case categorytranslation.FieldCategoryID:
 		m.ResetCategoryID()
-		return nil
-	case categorytranslation.FieldIsNav:
-		m.ResetIsNav()
 		return nil
 	case categorytranslation.FieldLanguageCode:
 		m.ResetLanguageCode()

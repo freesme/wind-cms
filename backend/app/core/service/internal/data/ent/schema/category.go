@@ -42,11 +42,13 @@ func (Category) Fields() []ent.Field {
 
 		field.Int32("depth").
 			Comment("分类层级深度").
+			Default(0).
 			Optional().
 			Nillable(),
 
 		field.Bool("is_nav").
 			Comment("是否显示在导航菜单").
+			Default(false).
 			Optional().
 			Nillable(),
 
@@ -57,11 +59,13 @@ func (Category) Fields() []ent.Field {
 
 		field.Uint32("post_count").
 			Comment("该分类下的文章总数").
+			Default(0).
 			Optional().
 			Nillable(),
 
 		field.Uint32("direct_post_count").
 			Comment("该分类下的直接文章数").
+			Default(0).
 			Optional().
 			Nillable(),
 

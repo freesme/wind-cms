@@ -2,7 +2,6 @@ package data
 
 import (
 	"context"
-	siteV1 "go-wind-cms/api/gen/go/site/service/v1"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -118,13 +117,22 @@ func (r *CategoryRepo) List(ctx context.Context, req *paginationV1.PagingRequest
 		return &contentV1.ListCategoryResponse{Total: 0, Items: nil}, nil
 	}
 
+	//for _, item := range ret.Items {
+	//	translations, err := r.categoryTranslationRepo.ListTranslations(ctx, item.GetId())
+	//	if err != nil {
+	//		r.log.Errorf("query translations failed: %s", err.Error())
+	//		return nil, contentV1.ErrorInternalServerError("query translations failed")
+	//	}
+	//	item.Translations = translations
+	//}
+
 	for _, item := range ret.Items {
-		translations, err := r.categoryTranslationRepo.ListTranslations(ctx, item.GetId())
+		languages, err := r.categoryTranslationRepo.ListAvailedLanguages(ctx, item.GetId())
 		if err != nil {
-			r.log.Errorf("query translations failed: %s", err.Error())
-			return nil, contentV1.ErrorInternalServerError("query translations failed")
+			r.log.Errorf("query availed languages failed: %s", err.Error())
+			return nil, contentV1.ErrorInternalServerError("query availed languages failed")
 		}
-		item.Translations = translations
+		item.AvailableLanguages = languages
 	}
 
 	return &contentV1.ListCategoryResponse{
@@ -157,6 +165,13 @@ func (r *CategoryRepo) Get(ctx context.Context, req *contentV1.GetCategoryReques
 		return nil, contentV1.ErrorInternalServerError("query translations failed")
 	}
 	dto.Translations = translations
+
+	languages, err := r.categoryTranslationRepo.ListAvailedLanguages(ctx, dto.GetId())
+	if err != nil {
+		r.log.Errorf("query availed languages failed: %s", err.Error())
+		return nil, contentV1.ErrorInternalServerError("query availed languages failed")
+	}
+	dto.AvailableLanguages = languages
 
 	return dto, nil
 }
@@ -257,10 +272,11 @@ func (r *CategoryRepo) Update(ctx context.Context, req *contentV1.UpdateCategory
 	}()
 
 	if req.Data.Translations != nil {
-		if err = r.categoryTranslationRepo.CleanTranslations(ctx, tx, req.GetId()); err != nil {
-			r.log.Errorf("clean translations failed: %s", err.Error())
-			return nil, contentV1.ErrorInternalServerError("clean translations failed")
-		}
+		//if err = r.categoryTranslationRepo.CleanTranslations(ctx, tx, req.GetId()); err != nil {
+		//	r.log.Errorf("clean translations failed: %s", err.Error())
+		//	return nil, contentV1.ErrorInternalServerError("clean translations failed")
+		//}
+
 		if err = r.categoryTranslationRepo.BatchCreate(ctx, tx, req.Data.GetTranslations()); err != nil {
 			r.log.Errorf("batch insert translations failed: %s", err.Error())
 			return nil, contentV1.ErrorInternalServerError("batch insert translations failed")
@@ -300,7 +316,7 @@ func (r *CategoryRepo) Delete(ctx context.Context, req *contentV1.DeleteCategory
 	tx, err = r.entClient.Client().Tx(ctx)
 	if err != nil {
 		r.log.Errorf("start transaction failed: %s", err.Error())
-		return siteV1.ErrorInternalServerError("start transaction failed")
+		return contentV1.ErrorInternalServerError("start transaction failed")
 	}
 	defer func() {
 		if err != nil {

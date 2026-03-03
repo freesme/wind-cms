@@ -1,11 +1,11 @@
 package data
 
 import (
-	"go-wind-cms/pkg/oss"
-
 	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/tx7do/go-utils/password"
+
 	"github.com/tx7do/kratos-bootstrap/bootstrap"
+	redisClient "github.com/tx7do/kratos-bootstrap/cache/redis"
 	bRegistry "github.com/tx7do/kratos-bootstrap/registry"
 
 	"github.com/redis/go-redis/v9"
@@ -14,7 +14,7 @@ import (
 	_ "github.com/jackc/pgx/v4/stdlib"
 	_ "github.com/lib/pq"
 
-	redisClient "github.com/tx7do/kratos-bootstrap/cache/redis"
+	"go-wind-cms/pkg/oss"
 )
 
 // NewRedisClient 创建Redis客户端

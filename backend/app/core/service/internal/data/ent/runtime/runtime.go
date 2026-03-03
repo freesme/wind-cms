@@ -123,6 +123,22 @@ func init() {
 	categoryDescPath := categoryMixinFields4[0].Descriptor()
 	// category.PathValidator is a validator for the "path" field. It is called by the builders before save.
 	category.PathValidator = categoryDescPath.Validators[0].(func(string) error)
+	// categoryDescDepth is the schema descriptor for depth field.
+	categoryDescDepth := categoryFields[1].Descriptor()
+	// category.DefaultDepth holds the default value on creation for the depth field.
+	category.DefaultDepth = categoryDescDepth.Default.(int32)
+	// categoryDescIsNav is the schema descriptor for is_nav field.
+	categoryDescIsNav := categoryFields[2].Descriptor()
+	// category.DefaultIsNav holds the default value on creation for the is_nav field.
+	category.DefaultIsNav = categoryDescIsNav.Default.(bool)
+	// categoryDescPostCount is the schema descriptor for post_count field.
+	categoryDescPostCount := categoryFields[4].Descriptor()
+	// category.DefaultPostCount holds the default value on creation for the post_count field.
+	category.DefaultPostCount = categoryDescPostCount.Default.(uint32)
+	// categoryDescDirectPostCount is the schema descriptor for direct_post_count field.
+	categoryDescDirectPostCount := categoryFields[5].Descriptor()
+	// category.DefaultDirectPostCount holds the default value on creation for the direct_post_count field.
+	category.DefaultDirectPostCount = categoryDescDirectPostCount.Default.(uint32)
 	// categoryDescID is the schema descriptor for id field.
 	categoryDescID := categoryMixinFields0[0].Descriptor()
 	// category.IDValidator is a validator for the "id" field. It is called by the builders before save.
@@ -866,6 +882,10 @@ func init() {
 	pageDescVisits := pageFields[10].Descriptor()
 	// page.DefaultVisits holds the default value on creation for the visits field.
 	page.DefaultVisits = pageDescVisits.Default.(uint32)
+	// pageDescDepth is the schema descriptor for depth field.
+	pageDescDepth := pageFields[14].Descriptor()
+	// page.DefaultDepth holds the default value on creation for the depth field.
+	page.DefaultDepth = pageDescDepth.Default.(int32)
 	// pageDescID is the schema descriptor for id field.
 	pageDescID := pageMixinFields0[0].Descriptor()
 	// page.IDValidator is a validator for the "id" field. It is called by the builders before save.
@@ -875,6 +895,10 @@ func init() {
 	_ = pagetranslationMixinFields0
 	pagetranslationFields := schema.PageTranslation{}.Fields()
 	_ = pagetranslationFields
+	// pagetranslationDescWordCount is the schema descriptor for word_count field.
+	pagetranslationDescWordCount := pagetranslationFields[10].Descriptor()
+	// pagetranslation.DefaultWordCount holds the default value on creation for the word_count field.
+	pagetranslation.DefaultWordCount = pagetranslationDescWordCount.Default.(uint32)
 	// pagetranslationDescID is the schema descriptor for id field.
 	pagetranslationDescID := pagetranslationMixinFields0[0].Descriptor()
 	// pagetranslation.IDValidator is a validator for the "id" field. It is called by the builders before save.
@@ -1134,6 +1158,10 @@ func init() {
 	_ = posttranslationMixinFields0
 	posttranslationFields := schema.PostTranslation{}.Fields()
 	_ = posttranslationFields
+	// posttranslationDescWordCount is the schema descriptor for word_count field.
+	posttranslationDescWordCount := posttranslationFields[10].Descriptor()
+	// posttranslation.DefaultWordCount holds the default value on creation for the word_count field.
+	posttranslation.DefaultWordCount = posttranslationDescWordCount.Default.(uint32)
 	// posttranslationDescID is the schema descriptor for id field.
 	posttranslationDescID := posttranslationMixinFields0[0].Descriptor()
 	// posttranslation.IDValidator is a validator for the "id" field. It is called by the builders before save.
@@ -1272,6 +1300,10 @@ func init() {
 	siteDescIsDefault := siteFields[4].Descriptor()
 	// site.DefaultIsDefault holds the default value on creation for the is_default field.
 	site.DefaultIsDefault = siteDescIsDefault.Default.(bool)
+	// siteDescVisitCount is the schema descriptor for visit_count field.
+	siteDescVisitCount := siteFields[9].Descriptor()
+	// site.DefaultVisitCount holds the default value on creation for the visit_count field.
+	site.DefaultVisitCount = siteDescVisitCount.Default.(uint64)
 	// siteDescID is the schema descriptor for id field.
 	siteDescID := siteMixinFields0[0].Descriptor()
 	// site.IDValidator is a validator for the "id" field. It is called by the builders before save.
@@ -1304,6 +1336,10 @@ func init() {
 	tagDescIsFeatured := tagFields[4].Descriptor()
 	// tag.DefaultIsFeatured holds the default value on creation for the is_featured field.
 	tag.DefaultIsFeatured = tagDescIsFeatured.Default.(bool)
+	// tagDescPostCount is the schema descriptor for post_count field.
+	tagDescPostCount := tagFields[5].Descriptor()
+	// tag.DefaultPostCount holds the default value on creation for the post_count field.
+	tag.DefaultPostCount = tagDescPostCount.Default.(uint32)
 	// tagDescID is the schema descriptor for id field.
 	tagDescID := tagMixinFields0[0].Descriptor()
 	// tag.IDValidator is a validator for the "id" field. It is called by the builders before save.

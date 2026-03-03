@@ -603,7 +603,37 @@
     "group": "Group",
     "sortOrder": "Sort Order",
     "isFeatured": "Featured",
-    "postCount": "Post Count"
+    "postCount": "Post Count",
+    "button": {
+      "create": "Create Tag",
+      "saveDraft": "Save Draft",
+      "publish": "Publish Tag"
+    },
+    "title": {
+      "create": "Create Tag",
+      "edit": "Edit Tag"
+    },
+    "placeholder": {
+      "name": "Please enter tag name",
+      "slug": "Please enter tag slug",
+      "description": "Please enter tag description",
+      "color": "Please enter color code",
+      "icon": "Please enter icon",
+      "group": "Please enter tag group",
+      "hasTranslation": "Translation Available",
+      "noTranslation": "No Translation"
+    },
+    "validation": {
+      "nameRequired": "Tag name is required",
+      "slugRequired": "Tag slug is required",
+      "publishFailed": "Publish failed, please try again later",
+      "publishSuccess": "Published successfully",
+      "saveDraftSuccess": "Draft saved successfully",
+      "saveDraftFailed": "Failed to save draft, please try again later",
+      "translationNotExists": "Translation does not exist, please translate first",
+      "loadFailed": "Failed to load tag data, please try again later",
+      "loadLanguageFailed": "Failed to load language list, please try again later"
+    }
   },
   "mediaAsset": {
     "moduleName": "Media Assets",

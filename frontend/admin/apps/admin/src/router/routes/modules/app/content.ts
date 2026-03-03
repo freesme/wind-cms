@@ -124,6 +124,26 @@ const content: RouteRecordRaw[] = [
         },
         component: () => import('#/views/app/content/tag/index.vue'),
       },
+      {
+        path: 'tags/create',
+        name: 'CreateTag',
+        meta: {
+          hideInMenu: true,
+          title: $t('menu.content.editTag'),
+          authority: ['sys:platform_admin', 'sys:tenant_manager'],
+        },
+        component: () => import('#/views/app/content/tag/edit/index.vue'),
+      },
+      {
+        path: 'tags/edit/:id',
+        name: 'EditTag',
+        meta: {
+          hideInMenu: true,
+          title: $t('menu.content.editTag'),
+          authority: ['sys:platform_admin', 'sys:tenant_manager'],
+        },
+        component: () => import('#/views/app/content/tag/edit/index.vue'),
+      },
     ],
   },
 ];

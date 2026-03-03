@@ -132,3 +132,35 @@ func (r *TagTranslationRepo) BatchCreate(ctx context.Context, tx *ent.Tx, items 
 
 	return nil
 }
+
+// TranslationExists checks if a translation exists for the given tag ID and language code.
+func (r *TagTranslationRepo) TranslationExists(ctx context.Context, tagId uint32, languageCode string) (bool, error) {
+	count, err := r.entClient.Client().TagTranslation.Query().
+		Where(
+			tagtranslation.TagIDEQ(tagId),
+			tagtranslation.LanguageCodeEQ(languageCode),
+		).
+		Count(ctx)
+	if err != nil {
+		r.log.Errorf("count tag translations by tag id and language code failed: %s", err.Error())
+		return false, contentV1.ErrorInternalServerError("count tag translations by tag id and language code failed")
+	}
+
+	return count > 0, nil
+}
+
+// ListAvailedLanguages lists the language codes of all translations available for the given tag ID.
+func (r *TagTranslationRepo) ListAvailedLanguages(ctx context.Context, tagId uint32) ([]string, error) {
+	entities, err := r.entClient.Client().TagTranslation.Query().
+		Where(
+			tagtranslation.TagIDEQ(tagId),
+		).
+		Select(tagtranslation.FieldLanguageCode).
+		Strings(ctx)
+	if err != nil {
+		r.log.Errorf("query available translation languages by tag id failed: %s", err.Error())
+		return nil, contentV1.ErrorInternalServerError("query available translation languages by tag id failed")
+	}
+
+	return entities, nil
+}

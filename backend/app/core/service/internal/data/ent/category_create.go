@@ -303,6 +303,22 @@ func (_c *CategoryCreate) defaults() {
 		v := category.DefaultSortOrder
 		_c.mutation.SetSortOrder(v)
 	}
+	if _, ok := _c.mutation.Depth(); !ok {
+		v := category.DefaultDepth
+		_c.mutation.SetDepth(v)
+	}
+	if _, ok := _c.mutation.IsNav(); !ok {
+		v := category.DefaultIsNav
+		_c.mutation.SetIsNav(v)
+	}
+	if _, ok := _c.mutation.PostCount(); !ok {
+		v := category.DefaultPostCount
+		_c.mutation.SetPostCount(v)
+	}
+	if _, ok := _c.mutation.DirectPostCount(); !ok {
+		v := category.DefaultDirectPostCount
+		_c.mutation.SetDirectPostCount(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.

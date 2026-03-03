@@ -315,6 +315,7 @@ func (_c *PageTranslationCreate) Mutation() *PageTranslationMutation {
 
 // Save creates the PageTranslation in the database.
 func (_c *PageTranslationCreate) Save(ctx context.Context) (*PageTranslation, error) {
+	_c.defaults()
 	return withHooks(ctx, _c.sqlSave, _c.mutation, _c.hooks)
 }
 
@@ -337,6 +338,14 @@ func (_c *PageTranslationCreate) Exec(ctx context.Context) error {
 func (_c *PageTranslationCreate) ExecX(ctx context.Context) {
 	if err := _c.Exec(ctx); err != nil {
 		panic(err)
+	}
+}
+
+// defaults sets the default values of the builder before save.
+func (_c *PageTranslationCreate) defaults() {
+	if _, ok := _c.mutation.WordCount(); !ok {
+		v := pagetranslation.DefaultWordCount
+		_c.mutation.SetWordCount(v)
 	}
 }
 
@@ -1421,6 +1430,7 @@ func (_c *PageTranslationCreateBulk) Save(ctx context.Context) ([]*PageTranslati
 	for i := range _c.builders {
 		func(i int, root context.Context) {
 			builder := _c.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*PageTranslationMutation)
 				if !ok {

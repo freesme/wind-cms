@@ -120,20 +120,6 @@ func (_c *CategoryTranslationCreate) SetNillableCategoryID(v *uint32) *CategoryT
 	return _c
 }
 
-// SetIsNav sets the "is_nav" field.
-func (_c *CategoryTranslationCreate) SetIsNav(v bool) *CategoryTranslationCreate {
-	_c.mutation.SetIsNav(v)
-	return _c
-}
-
-// SetNillableIsNav sets the "is_nav" field if the given value is not nil.
-func (_c *CategoryTranslationCreate) SetNillableIsNav(v *bool) *CategoryTranslationCreate {
-	if v != nil {
-		_c.SetIsNav(*v)
-	}
-	return _c
-}
-
 // SetLanguageCode sets the "language_code" field.
 func (_c *CategoryTranslationCreate) SetLanguageCode(v string) *CategoryTranslationCreate {
 	_c.mutation.SetLanguageCode(v)
@@ -394,10 +380,6 @@ func (_c *CategoryTranslationCreate) createSpec() (*CategoryTranslation, *sqlgra
 		_spec.SetField(categorytranslation.FieldCategoryID, field.TypeUint32, value)
 		_node.CategoryID = &value
 	}
-	if value, ok := _c.mutation.IsNav(); ok {
-		_spec.SetField(categorytranslation.FieldIsNav, field.TypeBool, value)
-		_node.IsNav = &value
-	}
 	if value, ok := _c.mutation.LanguageCode(); ok {
 		_spec.SetField(categorytranslation.FieldLanguageCode, field.TypeString, value)
 		_node.LanguageCode = &value
@@ -623,24 +605,6 @@ func (u *CategoryTranslationUpsert) AddCategoryID(v uint32) *CategoryTranslation
 // ClearCategoryID clears the value of the "category_id" field.
 func (u *CategoryTranslationUpsert) ClearCategoryID() *CategoryTranslationUpsert {
 	u.SetNull(categorytranslation.FieldCategoryID)
-	return u
-}
-
-// SetIsNav sets the "is_nav" field.
-func (u *CategoryTranslationUpsert) SetIsNav(v bool) *CategoryTranslationUpsert {
-	u.Set(categorytranslation.FieldIsNav, v)
-	return u
-}
-
-// UpdateIsNav sets the "is_nav" field to the value that was provided on create.
-func (u *CategoryTranslationUpsert) UpdateIsNav() *CategoryTranslationUpsert {
-	u.SetExcluded(categorytranslation.FieldIsNav)
-	return u
-}
-
-// ClearIsNav clears the value of the "is_nav" field.
-func (u *CategoryTranslationUpsert) ClearIsNav() *CategoryTranslationUpsert {
-	u.SetNull(categorytranslation.FieldIsNav)
 	return u
 }
 
@@ -1044,27 +1008,6 @@ func (u *CategoryTranslationUpsertOne) UpdateCategoryID() *CategoryTranslationUp
 func (u *CategoryTranslationUpsertOne) ClearCategoryID() *CategoryTranslationUpsertOne {
 	return u.Update(func(s *CategoryTranslationUpsert) {
 		s.ClearCategoryID()
-	})
-}
-
-// SetIsNav sets the "is_nav" field.
-func (u *CategoryTranslationUpsertOne) SetIsNav(v bool) *CategoryTranslationUpsertOne {
-	return u.Update(func(s *CategoryTranslationUpsert) {
-		s.SetIsNav(v)
-	})
-}
-
-// UpdateIsNav sets the "is_nav" field to the value that was provided on create.
-func (u *CategoryTranslationUpsertOne) UpdateIsNav() *CategoryTranslationUpsertOne {
-	return u.Update(func(s *CategoryTranslationUpsert) {
-		s.UpdateIsNav()
-	})
-}
-
-// ClearIsNav clears the value of the "is_nav" field.
-func (u *CategoryTranslationUpsertOne) ClearIsNav() *CategoryTranslationUpsertOne {
-	return u.Update(func(s *CategoryTranslationUpsert) {
-		s.ClearIsNav()
 	})
 }
 
@@ -1666,27 +1609,6 @@ func (u *CategoryTranslationUpsertBulk) UpdateCategoryID() *CategoryTranslationU
 func (u *CategoryTranslationUpsertBulk) ClearCategoryID() *CategoryTranslationUpsertBulk {
 	return u.Update(func(s *CategoryTranslationUpsert) {
 		s.ClearCategoryID()
-	})
-}
-
-// SetIsNav sets the "is_nav" field.
-func (u *CategoryTranslationUpsertBulk) SetIsNav(v bool) *CategoryTranslationUpsertBulk {
-	return u.Update(func(s *CategoryTranslationUpsert) {
-		s.SetIsNav(v)
-	})
-}
-
-// UpdateIsNav sets the "is_nav" field to the value that was provided on create.
-func (u *CategoryTranslationUpsertBulk) UpdateIsNav() *CategoryTranslationUpsertBulk {
-	return u.Update(func(s *CategoryTranslationUpsert) {
-		s.UpdateIsNav()
-	})
-}
-
-// ClearIsNav clears the value of the "is_nav" field.
-func (u *CategoryTranslationUpsertBulk) ClearIsNav() *CategoryTranslationUpsertBulk {
-	return u.Update(func(s *CategoryTranslationUpsert) {
-		s.ClearIsNav()
 	})
 }
 

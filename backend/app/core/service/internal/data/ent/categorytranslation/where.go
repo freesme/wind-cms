@@ -89,11 +89,6 @@ func CategoryID(v uint32) predicate.CategoryTranslation {
 	return predicate.CategoryTranslation(sql.FieldEQ(FieldCategoryID, v))
 }
 
-// IsNav applies equality check predicate on the "is_nav" field. It's identical to IsNavEQ.
-func IsNav(v bool) predicate.CategoryTranslation {
-	return predicate.CategoryTranslation(sql.FieldEQ(FieldIsNav, v))
-}
-
 // LanguageCode applies equality check predicate on the "language_code" field. It's identical to LanguageCodeEQ.
 func LanguageCode(v string) predicate.CategoryTranslation {
 	return predicate.CategoryTranslation(sql.FieldEQ(FieldLanguageCode, v))
@@ -497,26 +492,6 @@ func CategoryIDIsNil() predicate.CategoryTranslation {
 // CategoryIDNotNil applies the NotNil predicate on the "category_id" field.
 func CategoryIDNotNil() predicate.CategoryTranslation {
 	return predicate.CategoryTranslation(sql.FieldNotNull(FieldCategoryID))
-}
-
-// IsNavEQ applies the EQ predicate on the "is_nav" field.
-func IsNavEQ(v bool) predicate.CategoryTranslation {
-	return predicate.CategoryTranslation(sql.FieldEQ(FieldIsNav, v))
-}
-
-// IsNavNEQ applies the NEQ predicate on the "is_nav" field.
-func IsNavNEQ(v bool) predicate.CategoryTranslation {
-	return predicate.CategoryTranslation(sql.FieldNEQ(FieldIsNav, v))
-}
-
-// IsNavIsNil applies the IsNil predicate on the "is_nav" field.
-func IsNavIsNil() predicate.CategoryTranslation {
-	return predicate.CategoryTranslation(sql.FieldIsNull(FieldIsNav))
-}
-
-// IsNavNotNil applies the NotNil predicate on the "is_nav" field.
-func IsNavNotNil() predicate.CategoryTranslation {
-	return predicate.CategoryTranslation(sql.FieldNotNull(FieldIsNav))
 }
 
 // LanguageCodeEQ applies the EQ predicate on the "language_code" field.

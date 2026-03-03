@@ -32,8 +32,6 @@ type CategoryTranslation struct {
 	DeletedBy *uint32 `json:"deleted_by,omitempty"`
 	// 关联的分类ID
 	CategoryID *uint32 `json:"category_id,omitempty"`
-	// 是否显示在导航菜单
-	IsNav *bool `json:"is_nav,omitempty"`
 	// 语言代码
 	LanguageCode *string `json:"language_code,omitempty"`
 	// 分类名称
@@ -64,8 +62,6 @@ func (*CategoryTranslation) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case categorytranslation.FieldIsNav:
-			values[i] = new(sql.NullBool)
 		case categorytranslation.FieldID, categorytranslation.FieldCreatedBy, categorytranslation.FieldUpdatedBy, categorytranslation.FieldDeletedBy, categorytranslation.FieldCategoryID:
 			values[i] = new(sql.NullInt64)
 		case categorytranslation.FieldLanguageCode, categorytranslation.FieldName, categorytranslation.FieldSlug, categorytranslation.FieldDescription, categorytranslation.FieldThumbnail, categorytranslation.FieldCoverImage, categorytranslation.FieldTemplate, categorytranslation.FieldFullPath, categorytranslation.FieldMetaKeywords, categorytranslation.FieldMetaDescription, categorytranslation.FieldSeoTitle:
@@ -141,13 +137,6 @@ func (_m *CategoryTranslation) assignValues(columns []string, values []any) erro
 			} else if value.Valid {
 				_m.CategoryID = new(uint32)
 				*_m.CategoryID = uint32(value.Int64)
-			}
-		case categorytranslation.FieldIsNav:
-			if value, ok := values[i].(*sql.NullBool); !ok {
-				return fmt.Errorf("unexpected type %T for field is_nav", values[i])
-			} else if value.Valid {
-				_m.IsNav = new(bool)
-				*_m.IsNav = value.Bool
 			}
 		case categorytranslation.FieldLanguageCode:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -294,11 +283,6 @@ func (_m *CategoryTranslation) String() string {
 	builder.WriteString(", ")
 	if v := _m.CategoryID; v != nil {
 		builder.WriteString("category_id=")
-		builder.WriteString(fmt.Sprintf("%v", *v))
-	}
-	builder.WriteString(", ")
-	if v := _m.IsNav; v != nil {
-		builder.WriteString("is_nav=")
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
 	builder.WriteString(", ")

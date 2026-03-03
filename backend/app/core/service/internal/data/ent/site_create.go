@@ -307,6 +307,10 @@ func (_c *SiteCreate) defaults() error {
 		v := site.DefaultStatus
 		_c.mutation.SetStatus(v)
 	}
+	if _, ok := _c.mutation.VisitCount(); !ok {
+		v := site.DefaultVisitCount
+		_c.mutation.SetVisitCount(v)
+	}
 	return nil
 }
 

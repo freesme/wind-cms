@@ -25,8 +25,6 @@ const (
 	FieldDeletedBy = "deleted_by"
 	// FieldCategoryID holds the string denoting the category_id field in the database.
 	FieldCategoryID = "category_id"
-	// FieldIsNav holds the string denoting the is_nav field in the database.
-	FieldIsNav = "is_nav"
 	// FieldLanguageCode holds the string denoting the language_code field in the database.
 	FieldLanguageCode = "language_code"
 	// FieldName holds the string denoting the name field in the database.
@@ -63,7 +61,6 @@ var Columns = []string{
 	FieldUpdatedBy,
 	FieldDeletedBy,
 	FieldCategoryID,
-	FieldIsNav,
 	FieldLanguageCode,
 	FieldName,
 	FieldSlug,
@@ -133,11 +130,6 @@ func ByDeletedBy(opts ...sql.OrderTermOption) OrderOption {
 // ByCategoryID orders the results by the category_id field.
 func ByCategoryID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCategoryID, opts...).ToFunc()
-}
-
-// ByIsNav orders the results by the is_nav field.
-func ByIsNav(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldIsNav, opts...).ToFunc()
 }
 
 // ByLanguageCode orders the results by the language_code field.

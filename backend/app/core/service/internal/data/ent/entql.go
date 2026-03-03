@@ -184,7 +184,6 @@ var schemaGraph = func() *sqlgraph.Schema {
 			categorytranslation.FieldUpdatedBy:       {Type: field.TypeUint32, Column: categorytranslation.FieldUpdatedBy},
 			categorytranslation.FieldDeletedBy:       {Type: field.TypeUint32, Column: categorytranslation.FieldDeletedBy},
 			categorytranslation.FieldCategoryID:      {Type: field.TypeUint32, Column: categorytranslation.FieldCategoryID},
-			categorytranslation.FieldIsNav:           {Type: field.TypeBool, Column: categorytranslation.FieldIsNav},
 			categorytranslation.FieldLanguageCode:    {Type: field.TypeString, Column: categorytranslation.FieldLanguageCode},
 			categorytranslation.FieldName:            {Type: field.TypeString, Column: categorytranslation.FieldName},
 			categorytranslation.FieldSlug:            {Type: field.TypeString, Column: categorytranslation.FieldSlug},
@@ -2449,11 +2448,6 @@ func (f *CategoryTranslationFilter) WhereDeletedBy(p entql.Uint32P) {
 // WhereCategoryID applies the entql uint32 predicate on the category_id field.
 func (f *CategoryTranslationFilter) WhereCategoryID(p entql.Uint32P) {
 	f.Where(p.Field(categorytranslation.FieldCategoryID))
-}
-
-// WhereIsNav applies the entql bool predicate on the is_nav field.
-func (f *CategoryTranslationFilter) WhereIsNav(p entql.BoolP) {
-	f.Where(p.Field(categorytranslation.FieldIsNav))
 }
 
 // WhereLanguageCode applies the entql string predicate on the language_code field.

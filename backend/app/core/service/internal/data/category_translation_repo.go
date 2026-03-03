@@ -132,3 +132,35 @@ func (r *CategoryTranslationRepo) BatchCreate(ctx context.Context, tx *ent.Tx, i
 
 	return nil
 }
+
+// TranslationExists checks if a translation exists for the given category ID and language code.
+func (r *CategoryTranslationRepo) TranslationExists(ctx context.Context, categoryId uint32, languageCode string) (bool, error) {
+	count, err := r.entClient.Client().CategoryTranslation.Query().
+		Where(
+			categorytranslation.CategoryIDEQ(categoryId),
+			categorytranslation.LanguageCodeEQ(languageCode),
+		).
+		Count(ctx)
+	if err != nil {
+		r.log.Errorf("count category translations by category id and language code failed: %s", err.Error())
+		return false, contentV1.ErrorInternalServerError("count category translations by category id and language code failed")
+	}
+
+	return count > 0, nil
+}
+
+// ListAvailedLanguages lists the language codes of all translations available for the given category ID.
+func (r *CategoryTranslationRepo) ListAvailedLanguages(ctx context.Context, categoryId uint32) ([]string, error) {
+	entities, err := r.entClient.Client().CategoryTranslation.Query().
+		Where(
+			categorytranslation.CategoryIDEQ(categoryId),
+		).
+		Select(categorytranslation.FieldLanguageCode).
+		Strings(ctx)
+	if err != nil {
+		r.log.Errorf("query available translation languages by category id failed: %s", err.Error())
+		return nil, contentV1.ErrorInternalServerError("query available translation languages by category id failed")
+	}
+
+	return entities, nil
+}

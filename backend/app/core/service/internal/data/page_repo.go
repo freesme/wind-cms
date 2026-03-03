@@ -112,13 +112,22 @@ func (r *PageRepo) List(ctx context.Context, req *paginationV1.PagingRequest) (*
 		return &contentV1.ListPageResponse{Total: 0, Items: nil}, nil
 	}
 
+	//for _, item := range ret.Items {
+	//	translations, err := r.pageTranslationRepo.ListTranslations(ctx, item.GetId())
+	//	if err != nil {
+	//		r.log.Errorf("query translations failed: %s", err.Error())
+	//		return nil, contentV1.ErrorInternalServerError("query translations failed")
+	//	}
+	//	item.Translations = translations
+	//}
+
 	for _, item := range ret.Items {
-		translations, err := r.pageTranslationRepo.ListTranslations(ctx, item.GetId())
+		languages, err := r.pageTranslationRepo.ListAvailedLanguages(ctx, item.GetId())
 		if err != nil {
-			r.log.Errorf("query translations failed: %s", err.Error())
-			return nil, contentV1.ErrorInternalServerError("query translations failed")
+			r.log.Errorf("query availed languages failed: %s", err.Error())
+			return nil, contentV1.ErrorInternalServerError("query availed languages failed")
 		}
-		item.Translations = translations
+		item.AvailableLanguages = languages
 	}
 
 	return &contentV1.ListPageResponse{
@@ -151,6 +160,13 @@ func (r *PageRepo) Get(ctx context.Context, req *contentV1.GetPageRequest) (*con
 		return nil, contentV1.ErrorInternalServerError("query translations failed")
 	}
 	dto.Translations = translations
+
+	languages, err := r.pageTranslationRepo.ListAvailedLanguages(ctx, dto.GetId())
+	if err != nil {
+		r.log.Errorf("query availed languages failed: %s", err.Error())
+		return nil, contentV1.ErrorInternalServerError("query availed languages failed")
+	}
+	dto.AvailableLanguages = languages
 
 	return dto, nil
 }
@@ -264,10 +280,11 @@ func (r *PageRepo) Update(ctx context.Context, req *contentV1.UpdatePageRequest)
 	}()
 
 	if req.Data.Translations != nil {
-		if err = r.pageTranslationRepo.CleanTranslations(ctx, tx, req.GetId()); err != nil {
-			r.log.Errorf("clean translations failed: %s", err.Error())
-			return nil, contentV1.ErrorInternalServerError("clean translations failed")
-		}
+		//if err = r.pageTranslationRepo.CleanTranslations(ctx, tx, req.GetId()); err != nil {
+		//	r.log.Errorf("clean translations failed: %s", err.Error())
+		//	return nil, contentV1.ErrorInternalServerError("clean translations failed")
+		//}
+
 		if err = r.pageTranslationRepo.BatchCreate(ctx, tx, req.Data.GetTranslations()); err != nil {
 			r.log.Errorf("batch insert translations failed: %s", err.Error())
 			return nil, contentV1.ErrorInternalServerError("batch insert translations failed")

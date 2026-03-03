@@ -63,6 +63,7 @@ func (Tag) Fields() []ent.Field {
 
 		field.Uint32("post_count").
 			Comment("使用该标签的文章总数").
+			Default(0).
 			Optional().
 			Nillable(),
 	}

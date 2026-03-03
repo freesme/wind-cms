@@ -98,6 +98,14 @@ var (
 	DefaultSortOrder uint32
 	// PathValidator is a validator for the "path" field. It is called by the builders before save.
 	PathValidator func(string) error
+	// DefaultDepth holds the default value on creation for the "depth" field.
+	DefaultDepth int32
+	// DefaultIsNav holds the default value on creation for the "is_nav" field.
+	DefaultIsNav bool
+	// DefaultPostCount holds the default value on creation for the "post_count" field.
+	DefaultPostCount uint32
+	// DefaultDirectPostCount holds the default value on creation for the "direct_post_count" field.
+	DefaultDirectPostCount uint32
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(uint32) error
 )

@@ -257,6 +257,10 @@ func (_c *TagCreate) defaults() {
 		v := tag.DefaultIsFeatured
 		_c.mutation.SetIsFeatured(v)
 	}
+	if _, ok := _c.mutation.PostCount(); !ok {
+		v := tag.DefaultPostCount
+		_c.mutation.SetPostCount(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.

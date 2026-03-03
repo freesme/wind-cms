@@ -76,6 +76,8 @@ var (
 	DefaultSortOrder uint32
 	// DefaultIsFeatured holds the default value on creation for the "is_featured" field.
 	DefaultIsFeatured bool
+	// DefaultPostCount holds the default value on creation for the "post_count" field.
+	DefaultPostCount uint32
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(uint32) error
 )

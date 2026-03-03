@@ -92,12 +92,12 @@ export const usePageStore = defineStore('page', () => {
 
 export const pageStatusList = computed(() => [
   {
-    value: 'POST_STATUS_DRAFT',
-    label: $t('enum.page.status.POST_STATUS_DRAFT'),
+    value: 'PAGE_STATUS_DRAFT',
+    label: $t('enum.page.status.PAGE_STATUS_DRAFT'),
   },
   {
-    value: 'POST_STATUS_PUBLISHED',
-    label: $t('enum.page.status.POST_STATUS_PUBLISHED'),
+    value: 'PAGE_STATUS_PUBLISHED',
+    label: $t('enum.page.status.PAGE_STATUS_PUBLISHED'),
   },
   {
     value: 'PAGE_STATUS_ARCHIVED',
@@ -113,11 +113,11 @@ export function pageStatusToName(status: Page_PageStatus) {
 
 const PAGE_STATUS_COLOR_MAP = {
   // 草稿 - 雅致紫（代表创作中、未完成，中性且有设计感）
-  POST_STATUS_DRAFT: '#8b5cf6',
+  PAGE_STATUS_DRAFT: '#8b5cf6',
   // 已发布 - 自然青绿（代表成功、生效，积极正面且不刺眼）
-  POST_STATUS_PUBLISHED: '#22c55e',
+  PAGE_STATUS_PUBLISHED: '#22c55e',
   // 已归档 - 中性暖棕（代表归档、封存，无负面情绪，仅体现状态变更）
-  POST_STATUS_ARCHIVED: '#92400e',
+  PAGE_STATUS_ARCHIVED: '#92400e',
   // 默认值 - 中性浅灰（无明确状态时的兜底，保持视觉中立）
   DEFAULT: '#94a3b8',
 } as const;

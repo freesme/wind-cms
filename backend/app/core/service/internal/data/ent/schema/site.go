@@ -82,6 +82,7 @@ func (Site) Fields() []ent.Field {
 
 		field.Uint64("visit_count").
 			Comment("访问次数").
+			Default(0).
 			Optional().
 			Nillable(),
 	}

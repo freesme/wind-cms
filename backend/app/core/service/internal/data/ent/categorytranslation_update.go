@@ -177,26 +177,6 @@ func (_u *CategoryTranslationUpdate) ClearCategoryID() *CategoryTranslationUpdat
 	return _u
 }
 
-// SetIsNav sets the "is_nav" field.
-func (_u *CategoryTranslationUpdate) SetIsNav(v bool) *CategoryTranslationUpdate {
-	_u.mutation.SetIsNav(v)
-	return _u
-}
-
-// SetNillableIsNav sets the "is_nav" field if the given value is not nil.
-func (_u *CategoryTranslationUpdate) SetNillableIsNav(v *bool) *CategoryTranslationUpdate {
-	if v != nil {
-		_u.SetIsNav(*v)
-	}
-	return _u
-}
-
-// ClearIsNav clears the value of the "is_nav" field.
-func (_u *CategoryTranslationUpdate) ClearIsNav() *CategoryTranslationUpdate {
-	_u.mutation.ClearIsNav()
-	return _u
-}
-
 // SetLanguageCode sets the "language_code" field.
 func (_u *CategoryTranslationUpdate) SetLanguageCode(v string) *CategoryTranslationUpdate {
 	_u.mutation.SetLanguageCode(v)
@@ -515,12 +495,6 @@ func (_u *CategoryTranslationUpdate) sqlSave(ctx context.Context) (_node int, er
 	if _u.mutation.CategoryIDCleared() {
 		_spec.ClearField(categorytranslation.FieldCategoryID, field.TypeUint32)
 	}
-	if value, ok := _u.mutation.IsNav(); ok {
-		_spec.SetField(categorytranslation.FieldIsNav, field.TypeBool, value)
-	}
-	if _u.mutation.IsNavCleared() {
-		_spec.ClearField(categorytranslation.FieldIsNav, field.TypeBool)
-	}
 	if value, ok := _u.mutation.LanguageCode(); ok {
 		_spec.SetField(categorytranslation.FieldLanguageCode, field.TypeString, value)
 	}
@@ -754,26 +728,6 @@ func (_u *CategoryTranslationUpdateOne) AddCategoryID(v int32) *CategoryTranslat
 // ClearCategoryID clears the value of the "category_id" field.
 func (_u *CategoryTranslationUpdateOne) ClearCategoryID() *CategoryTranslationUpdateOne {
 	_u.mutation.ClearCategoryID()
-	return _u
-}
-
-// SetIsNav sets the "is_nav" field.
-func (_u *CategoryTranslationUpdateOne) SetIsNav(v bool) *CategoryTranslationUpdateOne {
-	_u.mutation.SetIsNav(v)
-	return _u
-}
-
-// SetNillableIsNav sets the "is_nav" field if the given value is not nil.
-func (_u *CategoryTranslationUpdateOne) SetNillableIsNav(v *bool) *CategoryTranslationUpdateOne {
-	if v != nil {
-		_u.SetIsNav(*v)
-	}
-	return _u
-}
-
-// ClearIsNav clears the value of the "is_nav" field.
-func (_u *CategoryTranslationUpdateOne) ClearIsNav() *CategoryTranslationUpdateOne {
-	_u.mutation.ClearIsNav()
 	return _u
 }
 
@@ -1124,12 +1078,6 @@ func (_u *CategoryTranslationUpdateOne) sqlSave(ctx context.Context) (_node *Cat
 	}
 	if _u.mutation.CategoryIDCleared() {
 		_spec.ClearField(categorytranslation.FieldCategoryID, field.TypeUint32)
-	}
-	if value, ok := _u.mutation.IsNav(); ok {
-		_spec.SetField(categorytranslation.FieldIsNav, field.TypeBool, value)
-	}
-	if _u.mutation.IsNavCleared() {
-		_spec.ClearField(categorytranslation.FieldIsNav, field.TypeBool)
 	}
 	if value, ok := _u.mutation.LanguageCode(); ok {
 		_spec.SetField(categorytranslation.FieldLanguageCode, field.TypeString, value)

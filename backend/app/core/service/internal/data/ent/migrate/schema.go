@@ -173,11 +173,11 @@ var (
 		{Name: "sort_order", Type: field.TypeUint32, Nullable: true, Comment: "排序值（越小越靠前）", Default: 0},
 		{Name: "path", Type: field.TypeString, Nullable: true, Size: 512, Comment: "树路径，规范： 根节点: /，非根节点: /1/2/3/（以 / 开头且以 / 结尾）。禁止空字符串（NULL 表示未设置）。"},
 		{Name: "status", Type: field.TypeEnum, Nullable: true, Comment: "分类状态", Enums: []string{"CATEGORY_STATUS_ACTIVE", "CATEGORY_STATUS_HIDDEN", "CATEGORY_STATUS_ARCHIVED"}},
-		{Name: "depth", Type: field.TypeInt32, Nullable: true, Comment: "分类层级深度"},
-		{Name: "is_nav", Type: field.TypeBool, Nullable: true, Comment: "是否显示在导航菜单"},
+		{Name: "depth", Type: field.TypeInt32, Nullable: true, Comment: "分类层级深度", Default: 0},
+		{Name: "is_nav", Type: field.TypeBool, Nullable: true, Comment: "是否显示在导航菜单", Default: false},
 		{Name: "icon", Type: field.TypeString, Nullable: true, Comment: "分类图标"},
-		{Name: "post_count", Type: field.TypeUint32, Nullable: true, Comment: "该分类下的文章总数"},
-		{Name: "direct_post_count", Type: field.TypeUint32, Nullable: true, Comment: "该分类下的直接文章数"},
+		{Name: "post_count", Type: field.TypeUint32, Nullable: true, Comment: "该分类下的文章总数", Default: 0},
+		{Name: "direct_post_count", Type: field.TypeUint32, Nullable: true, Comment: "该分类下的直接文章数", Default: 0},
 		{Name: "custom_fields", Type: field.TypeJSON, Nullable: true, Comment: "自定义字段"},
 		{Name: "parent_id", Type: field.TypeUint32, Nullable: true, Comment: "父节点ID"},
 	}
@@ -223,7 +223,6 @@ var (
 		{Name: "updated_by", Type: field.TypeUint32, Nullable: true, Comment: "更新者ID"},
 		{Name: "deleted_by", Type: field.TypeUint32, Nullable: true, Comment: "删除者ID"},
 		{Name: "category_id", Type: field.TypeUint32, Nullable: true, Comment: "关联的分类ID"},
-		{Name: "is_nav", Type: field.TypeBool, Nullable: true, Comment: "是否显示在导航菜单"},
 		{Name: "language_code", Type: field.TypeString, Nullable: true, Comment: "语言代码"},
 		{Name: "name", Type: field.TypeString, Nullable: true, Comment: "分类名称"},
 		{Name: "slug", Type: field.TypeString, Nullable: true, Comment: "分类别名"},
@@ -246,7 +245,7 @@ var (
 			{
 				Name:    "categorytranslation_category_id_language_code",
 				Unique:  true,
-				Columns: []*schema.Column{CategoryTranslationsColumns[7], CategoryTranslationsColumns[9]},
+				Columns: []*schema.Column{CategoryTranslationsColumns[7], CategoryTranslationsColumns[8]},
 			},
 			{
 				Name:    "categorytranslation_category_id",
@@ -256,17 +255,12 @@ var (
 			{
 				Name:    "categorytranslation_language_code",
 				Unique:  false,
-				Columns: []*schema.Column{CategoryTranslationsColumns[9]},
-			},
-			{
-				Name:    "categorytranslation_is_nav",
-				Unique:  false,
 				Columns: []*schema.Column{CategoryTranslationsColumns[8]},
 			},
 			{
 				Name:    "categorytranslation_slug",
 				Unique:  false,
-				Columns: []*schema.Column{CategoryTranslationsColumns[11]},
+				Columns: []*schema.Column{CategoryTranslationsColumns[10]},
 			},
 		},
 	}
@@ -2039,7 +2033,7 @@ var (
 		{Name: "custom_fields", Type: field.TypeJSON, Nullable: true, Comment: "自定义字段"},
 		{Name: "custom_head", Type: field.TypeString, Nullable: true, Comment: "自定义 head 代码"},
 		{Name: "custom_foot", Type: field.TypeString, Nullable: true, Comment: "自定义 foot 代码"},
-		{Name: "depth", Type: field.TypeInt32, Nullable: true, Comment: "页面层级深度"},
+		{Name: "depth", Type: field.TypeInt32, Nullable: true, Comment: "页面层级深度", Default: 0},
 		{Name: "parent_id", Type: field.TypeUint32, Nullable: true, Comment: "父节点ID"},
 	}
 	// PagesTable holds the schema information for the "pages" table.
@@ -2123,7 +2117,7 @@ var (
 		{Name: "thumbnail", Type: field.TypeString, Nullable: true, Comment: "缩略图"},
 		{Name: "cover_image", Type: field.TypeString, Nullable: true, Comment: "封面图"},
 		{Name: "full_path", Type: field.TypeString, Nullable: true, Comment: "完整路径"},
-		{Name: "word_count", Type: field.TypeUint32, Nullable: true, Comment: "当前语言版本的字数"},
+		{Name: "word_count", Type: field.TypeUint32, Nullable: true, Comment: "当前语言版本的字数", Default: 0},
 		{Name: "meta_keywords", Type: field.TypeString, Nullable: true, Comment: "SEO 关键词"},
 		{Name: "meta_description", Type: field.TypeString, Nullable: true, Comment: "SEO 描述"},
 		{Name: "seo_title", Type: field.TypeString, Nullable: true, Comment: "SEO 标题"},
@@ -2811,7 +2805,7 @@ var (
 		{Name: "thumbnail", Type: field.TypeString, Nullable: true, Comment: "缩略图"},
 		{Name: "template", Type: field.TypeString, Nullable: true, Comment: "模板名称"},
 		{Name: "full_path", Type: field.TypeString, Nullable: true, Comment: "完整路径"},
-		{Name: "word_count", Type: field.TypeUint32, Nullable: true, Comment: "当前语言版本的字数"},
+		{Name: "word_count", Type: field.TypeUint32, Nullable: true, Comment: "当前语言版本的字数", Default: 0},
 		{Name: "meta_keywords", Type: field.TypeString, Nullable: true, Comment: "SEO 关键词"},
 		{Name: "meta_description", Type: field.TypeString, Nullable: true, Comment: "SEO 描述"},
 		{Name: "seo_title", Type: field.TypeString, Nullable: true, Comment: "SEO 标题"},
@@ -3086,7 +3080,7 @@ var (
 		{Name: "default_locale", Type: field.TypeString, Nullable: true, Comment: "默认语言"},
 		{Name: "template", Type: field.TypeString, Nullable: true, Comment: "站点模板"},
 		{Name: "theme", Type: field.TypeString, Nullable: true, Comment: "主题名称"},
-		{Name: "visit_count", Type: field.TypeUint64, Nullable: true, Comment: "访问次数"},
+		{Name: "visit_count", Type: field.TypeUint64, Nullable: true, Comment: "访问次数", Default: 0},
 	}
 	// SitesTable holds the schema information for the "sites" table.
 	SitesTable = &schema.Table{
@@ -3203,7 +3197,7 @@ var (
 		{Name: "icon", Type: field.TypeString, Nullable: true, Comment: "标签图标"},
 		{Name: "group", Type: field.TypeString, Nullable: true, Comment: "标签分组"},
 		{Name: "is_featured", Type: field.TypeBool, Nullable: true, Comment: "是否推荐", Default: false},
-		{Name: "post_count", Type: field.TypeUint32, Nullable: true, Comment: "使用该标签的文章总数"},
+		{Name: "post_count", Type: field.TypeUint32, Nullable: true, Comment: "使用该标签的文章总数", Default: 0},
 	}
 	// TagsTable holds the schema information for the "tags" table.
 	TagsTable = &schema.Table{

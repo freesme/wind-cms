@@ -122,6 +122,7 @@ func (Page) Fields() []ent.Field {
 
 		field.Int32("depth").
 			Comment("页面层级深度").
+			Default(0).
 			Optional().
 			Nillable(),
 	}

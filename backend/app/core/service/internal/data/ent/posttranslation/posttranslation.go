@@ -91,6 +91,8 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// DefaultWordCount holds the default value on creation for the "word_count" field.
+	DefaultWordCount uint32
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(uint32) error
 )

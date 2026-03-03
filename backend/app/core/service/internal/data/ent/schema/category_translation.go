@@ -35,11 +35,6 @@ func (CategoryTranslation) Fields() []ent.Field {
 			Optional().
 			Nillable(),
 
-		field.Bool("is_nav").
-			Comment("是否显示在导航菜单").
-			Optional().
-			Nillable(),
-
 		field.String("language_code").
 			Comment("语言代码").
 			Optional().
@@ -114,8 +109,6 @@ func (CategoryTranslation) Indexes() []ent.Index {
 		index.Fields("category_id"),
 		// 单字段索引，用于按语言代码查询翻译
 		index.Fields("language_code"),
-		// 单字段索引，用于按导航菜单状态查询
-		index.Fields("is_nav"),
 		// 单字段索引，优化SEO相关的搜索查询
 		index.Fields("slug"),
 	}

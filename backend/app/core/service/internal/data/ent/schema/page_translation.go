@@ -82,6 +82,7 @@ func (PageTranslation) Fields() []ent.Field {
 
 		field.Uint32("word_count").
 			Comment("当前语言版本的字数").
+			Default(0).
 			Optional().
 			Nillable(),
 

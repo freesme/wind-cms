@@ -96,6 +96,8 @@ var (
 	DefaultTenantID uint32
 	// DefaultIsDefault holds the default value on creation for the "is_default" field.
 	DefaultIsDefault bool
+	// DefaultVisitCount holds the default value on creation for the "visit_count" field.
+	DefaultVisitCount uint64
 	// IDValidator is a validator for the "id" field. It is called by the builders before save.
 	IDValidator func(uint32) error
 )

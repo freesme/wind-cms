@@ -134,3 +134,35 @@ func (r *PageTranslationRepo) BatchCreate(ctx context.Context, tx *ent.Tx, items
 
 	return nil
 }
+
+// TranslationExists checks if a translation exists for the given page ID and language code.
+func (r *PageTranslationRepo) TranslationExists(ctx context.Context, pageId uint32, languageCode string) (bool, error) {
+	count, err := r.entClient.Client().PageTranslation.Query().
+		Where(
+			pagetranslation.PageIDEQ(pageId),
+			pagetranslation.LanguageCodeEQ(languageCode),
+		).
+		Count(ctx)
+	if err != nil {
+		r.log.Errorf("count page translations by page id and language code failed: %s", err.Error())
+		return false, contentV1.ErrorInternalServerError("count page translations by page id and language code failed")
+	}
+
+	return count > 0, nil
+}
+
+// ListAvailedLanguages lists the language codes of all translations available for the given page ID.
+func (r *PageTranslationRepo) ListAvailedLanguages(ctx context.Context, pageId uint32) ([]string, error) {
+	entities, err := r.entClient.Client().PageTranslation.Query().
+		Where(
+			pagetranslation.PageIDEQ(pageId),
+		).
+		Select(pagetranslation.FieldLanguageCode).
+		Strings(ctx)
+	if err != nil {
+		r.log.Errorf("query available translation languages by page id failed: %s", err.Error())
+		return nil, contentV1.ErrorInternalServerError("query available translation languages by page id failed")
+	}
+
+	return entities, nil
+}

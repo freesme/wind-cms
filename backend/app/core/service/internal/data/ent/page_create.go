@@ -461,6 +461,10 @@ func (_c *PageCreate) defaults() {
 		v := page.DefaultVisits
 		_c.mutation.SetVisits(v)
 	}
+	if _, ok := _c.mutation.Depth(); !ok {
+		v := page.DefaultDepth
+		_c.mutation.SetDepth(v)
+	}
 }
 
 // check runs all checks and user-defined validators on the builder.
