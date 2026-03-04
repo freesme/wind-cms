@@ -625,7 +625,7 @@ INSERT INTO public.sites (
 );
 
 -- ----------------------------
--- 1. 插入 sites 表测试数据
+-- 插入 sites 表测试数据
 -- ----------------------------
 INSERT INTO public.sites (
     created_at, updated_at, tenant_id, name, slug, domain,
@@ -676,7 +676,7 @@ INSERT INTO public.sites (
 );
 
 -- ----------------------------
--- 2. 插入 site_settings 表测试数据
+-- 插入 site_settings 表测试数据
 -- 关联上述 3 个站点，覆盖多语言/多配置组
 -- ----------------------------
 INSERT INTO public.site_settings (
@@ -1387,7 +1387,7 @@ INSERT INTO public.comments (
 
 
 -- ----------------------------
--- 插入 pages 表（页面主表）测试数据（匹配 PageType 枚举）
+-- 插入 pages 表（页面主表）测试数据
 -- ----------------------------
 INSERT INTO public.pages (
     created_at, updated_at, sort_order, path, editor_type,
@@ -1511,7 +1511,6 @@ INSERT INTO public.pages (
 
 -- ----------------------------
 -- 插入 page_translations 表（页面多语言翻译）测试数据
--- 核心修正：所有 \n 替换为真实换行，用多行字符串写法
 -- ----------------------------
 INSERT INTO public.page_translations (
     created_at, updated_at, page_id, language_code, title,
@@ -1888,7 +1887,7 @@ Core sections:
 
 
 -- ----------------------------
--- 插入 posts 表（8条数据，保持不变）
+-- 插入 posts 表
 -- ----------------------------
 INSERT INTO public.posts (
     created_at, updated_at, sort_order, editor_type,
@@ -1995,7 +1994,7 @@ INSERT INTO public.posts (
 );
 
 -- ----------------------------
--- 插入 post_translations 表（8篇文章的中文翻译，纯字符串+ \n 换行）
+-- 插入 post_translations 表
 -- ----------------------------
 INSERT INTO public.post_translations (
     created_at, updated_at, post_id, language_code, title,
@@ -2009,8 +2008,38 @@ INSERT INTO public.post_translations (
     'GoWind CMS 快速上手：5分钟搭建你的第一个CMS站点',
     'gowind-cms-quick-start',
     '本文带你5分钟快速搭建GoWind CMS站点，涵盖环境准备、代码克隆、配置启动、初始登录全流程。',
-    '# GoWind CMS 快速上手\n\n## 环境准备\n### 前置依赖\n- Go 1.21+（推荐1.22最新版）\n- PostgreSQL 14+\n- Git（可选）\n- Docker（可选）\n\n## 安装步骤\n1. 克隆代码仓库：git clone https://github.com/gowind/cms.git\n2. 配置环境变量：复制.env.example为.env并修改数据库配置\n3. 启动服务：go run main.go 或 docker-compose up -d\n4. 初始登录：http://localhost:8080，默认账号admin/admin\n\n> 首次登录请立即修改密码！',
-    '# GoWind CMS 快速上手\n\n## 环境准备\n### 前置依赖\n- Go 1.21+（推荐1.22最新版）\n- PostgreSQL 14+\n- Git（可选）\n- Docker（可选）\n\n## 安装步骤\n1. 克隆代码仓库：git clone https://github.com/gowind/cms.git\n2. 配置环境变量：复制.env.example为.env并修改数据库配置\n3. 启动服务：go run main.go 或 docker-compose up -d\n4. 初始登录：http://localhost:8080，默认账号admin/admin\n\n> 首次登录请立即修改密码！',
+    '# GoWind CMS 快速上手
+
+## 环境准备
+### 前置依赖
+- Go 1.21+（推荐1.22最新版）
+- PostgreSQL 14+
+- Git（可选）
+- Docker（可选）
+
+## 安装步骤
+1. 克隆代码仓库：git clone https://github.com/gowind/cms.git
+2. 配置环境变量：复制.env.example为.env并修改数据库配置
+3. 启动服务：go run main.go 或 docker-compose up -d
+4. 初始登录：http://localhost:8080，默认账号admin/admin
+
+> 首次登录请立即修改密码！',
+    '# GoWind CMS 快速上手
+
+## 环境准备
+### 前置依赖
+- Go 1.21+（推荐1.22最新版）
+- PostgreSQL 14+
+- Git（可选）
+- Docker（可选）
+
+## 安装步骤
+1. 克隆代码仓库：git clone https://github.com/gowind/cms.git
+2. 配置环境变量：复制.env.example为.env并修改数据库配置
+3. 启动服务：go run main.go 或 docker-compose up -d
+4. 初始登录：http://localhost:8080，默认账号admin/admin
+
+> 首次登录请立即修改密码！',
     '/images/thumbnails/post-quick-start-zh.jpg',
     'post-default', '/blog/gowind-cms-quick-start',
     2580,
@@ -2024,8 +2053,32 @@ INSERT INTO public.post_translations (
     'GoWind CMS v2.0 正式发布：新增多租户、性能提升100%',
     'gowind-v2-0-release',
     'GoWind CMS v2.0版本发布，核心更新多租户支持、性能优化、UI重构，QPS突破10万。',
-    '# GoWind CMS v2.0 正式发布\n\n## 发布说明\nGoWind CMS v2.0于2024年3月1日发布，是开源以来的重大版本更新！\n\n## 核心新功能\n1. 多租户支持：单实例部署多套独立站点，数据隔离\n2. 性能优化：QPS从5万提升至10万，响应时间降低60%\n3. UI重构：基于Vue3+Element Plus重构后台，移动端适配\n\n## 升级指南\n- 从v1.9升级：备份数据库后执行go run scripts/upgrade/v2.0.go\n- 全新安装：直接克隆v2.0分支代码部署',
-    '# GoWind CMS v2.0 正式发布\n\n## 发布说明\nGoWind CMS v2.0于2024年3月1日发布，是开源以来的重大版本更新！\n\n## 核心新功能\n1. 多租户支持：单实例部署多套独立站点，数据隔离\n2. 性能优化：QPS从5万提升至10万，响应时间降低60%\n3. UI重构：基于Vue3+Element Plus重构后台，移动端适配\n\n## 升级指南\n- 从v1.9升级：备份数据库后执行go run scripts/upgrade/v2.0.go\n- 全新安装：直接克隆v2.0分支代码部署',
+    '# GoWind CMS v2.0 正式发布
+
+## 发布说明
+GoWind CMS v2.0于2024年3月1日发布，是开源以来的重大版本更新！
+
+## 核心新功能
+1. 多租户支持：单实例部署多套独立站点，数据隔离
+2. 性能优化：QPS从5万提升至10万，响应时间降低60%
+3. UI重构：基于Vue3+Element Plus重构后台，移动端适配
+
+## 升级指南
+- 从v1.9升级：备份数据库后执行go run scripts/upgrade/v2.0.go
+- 全新安装：直接克隆v2.0分支代码部署',
+    '# GoWind CMS v2.0 正式发布
+
+## 发布说明
+GoWind CMS v2.0于2024年3月1日发布，是开源以来的重大版本更新！
+
+## 核心新功能
+1. 多租户支持：单实例部署多套独立站点，数据隔离
+2. 性能优化：QPS从5万提升至10万，响应时间降低60%
+3. UI重构：基于Vue3+Element Plus重构后台，移动端适配
+
+## 升级指南
+- 从v1.9升级：备份数据库后执行go run scripts/upgrade/v2.0.go
+- 全新安装：直接克隆v2.0分支代码部署',
     '/images/thumbnails/post-v2-release-zh.jpg',
     'post-announcement', '/blog/gowind-v2-0-release',
     3200,
@@ -2039,8 +2092,46 @@ INSERT INTO public.post_translations (
     'Linux 环境下部署 GoWind CMS（Ubuntu/CentOS通用）',
     'deploy-gowind-on-linux',
     '详解Linux环境（Ubuntu/CentOS）下GoWind CMS的部署步骤，含依赖安装、端口配置、开机自启。',
-    '# Linux 环境下部署 GoWind CMS\n\n## 适用系统\n- Ubuntu 20.04/22.04\n- CentOS 7/8\n\n## 依赖安装\n### Ubuntu\napt update && apt install -y golang postgresql git\n### CentOS\nyum install -y golang postgresql git\n\n## 部署步骤\n1. 创建数据库：createdb gowind\n2. 克隆代码：git clone https://github.com/gowind/cms.git\n3. 配置数据库连接：修改.env文件\n4. 启动服务：nohup go run main.go > app.log 2>&1 &\n\n## 开机自启\n创建systemd服务文件：/etc/systemd/system/gowind.service',
-    '# Linux 环境下部署 GoWind CMS\n\n## 适用系统\n- Ubuntu 20.04/22.04\n- CentOS 7/8\n\n## 依赖安装\n### Ubuntu\napt update && apt install -y golang postgresql git\n### CentOS\nyum install -y golang postgresql git\n\n## 部署步骤\n1. 创建数据库：createdb gowind\n2. 克隆代码：git clone https://github.com/gowind/cms.git\n3. 配置数据库连接：修改.env文件\n4. 启动服务：nohup go run main.go > app.log 2>&1 &\n\n## 开机自启\n创建systemd服务文件：/etc/systemd/system/gowind.service',
+    '# Linux 环境下部署 GoWind CMS
+
+## 适用系统
+- Ubuntu 20.04/22.04
+- CentOS 7/8
+
+## 依赖安装
+### Ubuntu
+apt update && apt install -y golang postgresql git
+### CentOS
+yum install -y golang postgresql git
+
+## 部署步骤
+1. 创建数据库：createdb gowind
+2. 克隆代码：git clone https://github.com/gowind/cms.git
+3. 配置数据库连接：修改.env文件
+4. 启动服务：nohup go run main.go > app.log 2>&1 &
+
+## 开机自启
+创建systemd服务文件：/etc/systemd/system/gowind.service',
+    '# Linux 环境下部署 GoWind CMS
+
+## 适用系统
+- Ubuntu 20.04/22.04
+- CentOS 7/8
+
+## 依赖安装
+### Ubuntu
+apt update && apt install -y golang postgresql git
+### CentOS
+yum install -y golang postgresql git
+
+## 部署步骤
+1. 创建数据库：createdb gowind
+2. 克隆代码：git clone https://github.com/gowind/cms.git
+3. 配置数据库连接：修改.env文件
+4. 启动服务：nohup go run main.go > app.log 2>&1 &
+
+## 开机自启
+创建systemd服务文件：/etc/systemd/system/gowind.service',
     '/images/thumbnails/post-deploy-linux-zh.jpg',
     'post-tech', '/blog/deploy-gowind-on-linux',
     2800,
@@ -2054,8 +2145,36 @@ INSERT INTO public.post_translations (
     '2024 CMS 行业发展趋势：轻量化、私有化、AI赋能',
     '2024-cms-industry-trends',
     '基于IDC 2024行业报告，分析CMS行业三大趋势：轻量化、私有化部署、AI智能赋能。',
-    '# 2024 CMS 行业发展趋势分析\n\n## 数据来源\nIDC 2024年全球CMS市场研究报告\n\n## 核心趋势\n1. 轻量化：轻量级CMS占比提升至65%，替代重型系统\n2. 私有化：企业级用户私有化部署需求增长40%\n3. AI赋能：AI生成内容、智能排版成为标配功能\n\n## 市场规模\n2024年全球CMS市场规模预计达89亿美元，年增长率18%。\n\n## 国内趋势\n国产化替代加速，Go/Java语言开发的CMS占比提升。',
-    '# 2024 CMS 行业发展趋势分析\n\n## 数据来源\nIDC 2024年全球CMS市场研究报告\n\n## 核心趋势\n1. 轻量化：轻量级CMS占比提升至65%，替代重型系统\n2. 私有化：企业级用户私有化部署需求增长40%\n3. AI赋能：AI生成内容、智能排版成为标配功能\n\n## 市场规模\n2024年全球CMS市场规模预计达89亿美元，年增长率18%。\n\n## 国内趋势\n国产化替代加速，Go/Java语言开发的CMS占比提升。',
+    '# 2024 CMS 行业发展趋势分析
+
+## 数据来源
+IDC 2024年全球CMS市场研究报告
+
+## 核心趋势
+1. 轻量化：轻量级CMS占比提升至65%，替代重型系统
+2. 私有化：企业级用户私有化部署需求增长40%
+3. AI赋能：AI生成内容、智能排版成为标配功能
+
+## 市场规模
+2024年全球CMS市场规模预计达89亿美元，年增长率18%。
+
+## 国内趋势
+国产化替代加速，Go/Java语言开发的CMS占比提升。',
+    '# 2024 CMS 行业发展趋势分析
+
+## 数据来源
+IDC 2024年全球CMS市场研究报告
+
+## 核心趋势
+1. 轻量化：轻量级CMS占比提升至65%，替代重型系统
+2. 私有化：企业级用户私有化部署需求增长40%
+3. AI赋能：AI生成内容、智能排版成为标配功能
+
+## 市场规模
+2024年全球CMS市场规模预计达89亿美元，年增长率18%。
+
+## 国内趋势
+国产化替代加速，Go/Java语言开发的CMS占比提升。',
     '/images/thumbnails/post-cms-trends-zh.jpg',
     'post-analysis', '/blog/2024-cms-industry-trends',
     2600,
@@ -2069,8 +2188,46 @@ INSERT INTO public.post_translations (
     'GoWind CMS 自定义模板开发教程（草稿）',
     'gowind-custom-template-dev',
     'GoWind CMS自定义模板开发教程，涵盖模板语法、数据调用、样式定制，当前开发进度50%。',
-    '# GoWind CMS 自定义模板开发\n\n> 本文正在编写中，开发进度50%，预计2024年4月1日完成。\n\n## 开发准备\n### 所需技能\n- Go语言基础\n- Vue3 + Element Plus\n- HTML/CSS/JS\n\n## 模板目录结构\n/templates/custom/\n  - index.tpl # 首页模板\n  - post.tpl # 文章模板\n  - style.css # 自定义样式\n\n## 待编写内容\n1. 模板语法详解\n2. 数据调用示例\n3. 自定义组件开发',
-    '# GoWind CMS 自定义模板开发\n\n> 本文正在编写中，开发进度50%，预计2024年4月1日完成。\n\n## 开发准备\n### 所需技能\n- Go语言基础\n- Vue3 + Element Plus\n- HTML/CSS/JS\n\n## 模板目录结构\n/templates/custom/\n  - index.tpl # 首页模板\n  - post.tpl # 文章模板\n  - style.css # 自定义样式\n\n## 待编写内容\n1. 模板语法详解\n2. 数据调用示例\n3. 自定义组件开发',
+    '# GoWind CMS 自定义模板开发
+
+> 本文正在编写中，开发进度50%，预计2024年4月1日完成。
+
+## 开发准备
+### 所需技能
+- Go语言基础
+- Vue3 + Element Plus
+- HTML/CSS/JS
+
+## 模板目录结构
+/templates/custom/
+  - index.tpl # 首页模板
+  - post.tpl # 文章模板
+  - style.css # 自定义样式
+
+## 待编写内容
+1. 模板语法详解
+2. 数据调用示例
+3. 自定义组件开发',
+    '# GoWind CMS 自定义模板开发
+
+> 本文正在编写中，开发进度50%，预计2024年4月1日完成。
+
+## 开发准备
+### 所需技能
+- Go语言基础
+- Vue3 + Element Plus
+- HTML/CSS/JS
+
+## 模板目录结构
+/templates/custom/
+  - index.tpl # 首页模板
+  - post.tpl # 文章模板
+  - style.css # 自定义样式
+
+## 待编写内容
+1. 模板语法详解
+2. 数据调用示例
+3. 自定义组件开发',
     '/images/thumbnails/post-template-dev-zh.jpg',
     'post-draft', '/blog/gowind-custom-template-dev',
     1800,
@@ -2084,8 +2241,38 @@ INSERT INTO public.post_translations (
     'GoWind CMS 企业版功能详解（付费专属）',
     'gowind-enterprise-features',
     'GoWind企业版专属功能：多租户管理、高级权限、数据备份、专属客服，价格9999-19999元/年。',
-    '# GoWind CMS 企业版功能详解\n\n## 专属功能\n1. 多租户管理：单系统管理多站点，数据完全隔离\n2. 高级权限：按角色/部门精细化权限控制\n3. 数据备份：自动定时备份，支持异地容灾\n4. 专属客服：7*24小时技术支持\n5. 定制开发：按需定制功能模块\n\n## 价格方案\n- 基础版：¥9999/年（10租户以内）\n- 标准版：¥14999/年（50租户以内）\n- 旗舰版：¥19999/年（不限租户）\n\n## 试用申请\n联系客服：400-123-4567，可申请15天免费试用。',
-    '# GoWind CMS 企业版功能详解\n\n## 专属功能\n1. 多租户管理：单系统管理多站点，数据完全隔离\n2. 高级权限：按角色/部门精细化权限控制\n3. 数据备份：自动定时备份，支持异地容灾\n4. 专属客服：7*24小时技术支持\n5. 定制开发：按需定制功能模块\n\n## 价格方案\n- 基础版：¥9999/年（10租户以内）\n- 标准版：¥14999/年（50租户以内）\n- 旗舰版：¥19999/年（不限租户）\n\n## 试用申请\n联系客服：400-123-4567，可申请15天免费试用。',
+    '# GoWind CMS 企业版功能详解
+
+## 专属功能
+1. 多租户管理：单系统管理多站点，数据完全隔离
+2. 高级权限：按角色/部门精细化权限控制
+3. 数据备份：自动定时备份，支持异地容灾
+4. 专属客服：7*24小时技术支持
+5. 定制开发：按需定制功能模块
+
+## 价格方案
+- 基础版：¥9999/年（10租户以内）
+- 标准版：¥14999/年（50租户以内）
+- 旗舰版：¥19999/年（不限租户）
+
+## 试用申请
+联系客服：400-123-4567，可申请15天免费试用。',
+    '# GoWind CMS 企业版功能详解
+
+## 专属功能
+1. 多租户管理：单系统管理多站点，数据完全隔离
+2. 高级权限：按角色/部门精细化权限控制
+3. 数据备份：自动定时备份，支持异地容灾
+4. 专属客服：7*24小时技术支持
+5. 定制开发：按需定制功能模块
+
+## 价格方案
+- 基础版：¥9999/年（10租户以内）
+- 标准版：¥14999/年（50租户以内）
+- 旗舰版：¥19999/年（不限租户）
+
+## 试用申请
+联系客服：400-123-4567，可申请15天免费试用。',
     '/images/thumbnails/post-enterprise-zh.jpg',
     'post-enterprise', '/blog/gowind-enterprise-features',
     2200,
@@ -2099,8 +2286,38 @@ INSERT INTO public.post_translations (
     'GoWind CMS 常见问题解答（FAQ）',
     'gowind-faq',
     'GoWind CMS常见问题汇总，涵盖安装、配置、性能、升级等方向，每月更新。',
-    '# GoWind CMS 常见问题解答\n\n## 安装相关\nQ1：安装时提示数据库连接失败？\nA1：检查.env文件中的数据库地址、端口、账号密码是否正确。\n\nQ2：启动服务后访问不了？\nA2：检查端口是否被占用，防火墙是否开放8080端口。\n\n## 配置相关\nQ3：如何开启多语言支持？\nA3：在后台设置-多语言中启用，上传翻译文件。\n\n## 待补充\n- 性能优化相关问题\n- 升级相关问题',
-    '# GoWind CMS 常见问题解答\n\n## 安装相关\nQ1：安装时提示数据库连接失败？\nA1：检查.env文件中的数据库地址、端口、账号密码是否正确。\n\nQ2：启动服务后访问不了？\nA2：检查端口是否被占用，防火墙是否开放8080端口。\n\n## 配置相关\nQ3：如何开启多语言支持？\nA3：在后台设置-多语言中启用，上传翻译文件。\n\n## 待补充\n- 性能优化相关问题\n- 升级相关问题',
+    '# GoWind CMS 常见问题解答
+
+## 安装相关
+Q1：安装时提示数据库连接失败？
+A1：检查.env文件中的数据库地址、端口、账号密码是否正确。
+
+Q2：启动服务后访问不了？
+A2：检查端口是否被占用，防火墙是否开放8080端口。
+
+## 配置相关
+Q3：如何开启多语言支持？
+A3：在后台设置-多语言中启用，上传翻译文件。
+
+## 待补充
+- 性能优化相关问题
+- 升级相关问题',
+    '# GoWind CMS 常见问题解答
+
+## 安装相关
+Q1：安装时提示数据库连接失败？
+A1：检查.env文件中的数据库地址、端口、账号密码是否正确。
+
+Q2：启动服务后访问不了？
+A2：检查端口是否被占用，防火墙是否开放8080端口。
+
+## 配置相关
+Q3：如何开启多语言支持？
+A3：在后台设置-多语言中启用，上传翻译文件。
+
+## 待补充
+- 性能优化相关问题
+- 升级相关问题',
     '/images/thumbnails/post-faq-zh.jpg',
     'post-faq', '/blog/gowind-faq',
     1500,
@@ -2114,8 +2331,38 @@ INSERT INTO public.post_translations (
     'GoWind CMS 性能优化指南：从5万QPS到10万的实战经验',
     'gowind-cms-performance-optimization',
     '分享GoWind CMS性能优化实战经验，涵盖数据库优化、缓存策略、代码层面，QPS提升100%。',
-    '# GoWind CMS 性能优化指南\n\n## 优化背景\nv1.9版本QPS仅5万，响应时间200ms，无法满足高并发需求。\n\n## 优化指标\n| 指标 | 优化前 | 优化后 | 提升 |\n|------|--------|--------|------|\n| QPS | 50000 | 100000 | 100% |\n| 响应时间 | 200ms | 80ms | 60% |\n| 数据库负载 | 80% | 30% | 62.5% |\n\n## 核心优化点\n1. 数据库：新增索引、慢查询优化、读写分离\n2. 缓存：Redis缓存分类/文章，动态过期策略\n3. 代码：优化Goroutine、JSON序列化、静态资源压缩',
-    '# GoWind CMS 性能优化指南\n\n## 优化背景\nv1.9版本QPS仅5万，响应时间200ms，无法满足高并发需求。\n\n## 优化指标\n| 指标 | 优化前 | 优化后 | 提升 |\n|------|--------|--------|------|\n| QPS | 50000 | 100000 | 100% |\n| 响应时间 | 200ms | 80ms | 60% |\n| 数据库负载 | 80% | 30% | 62.5% |\n\n## 核心优化点\n1. 数据库：新增索引、慢查询优化、读写分离\n2. 缓存：Redis缓存分类/文章，动态过期策略\n3. 代码：优化Goroutine、JSON序列化、静态资源压缩',
+    '# GoWind CMS 性能优化指南
+
+## 优化背景
+v1.9版本QPS仅5万，响应时间200ms，无法满足高并发需求。
+
+## 优化指标
+| 指标 | 优化前 | 优化后 | 提升 |
+|------|--------|--------|------|
+| QPS | 50000 | 100000 | 100% |
+| 响应时间 | 200ms | 80ms | 60% |
+| 数据库负载 | 80% | 30% | 62.5% |
+
+## 核心优化点
+1. 数据库：新增索引、慢查询优化、读写分离
+2. 缓存：Redis缓存分类/文章，动态过期策略
+3. 代码：优化Goroutine、JSON序列化、静态资源压缩',
+    '# GoWind CMS 性能优化指南
+
+## 优化背景
+v1.9版本QPS仅5万，响应时间200ms，无法满足高并发需求。
+
+## 优化指标
+| 指标 | 优化前 | 优化后 | 提升 |
+|------|--------|--------|------|
+| QPS | 50000 | 100000 | 100% |
+| 响应时间 | 200ms | 80ms | 60% |
+| 数据库负载 | 80% | 30% | 62.5% |
+
+## 核心优化点
+1. 数据库：新增索引、慢查询优化、读写分离
+2. 缓存：Redis缓存分类/文章，动态过期策略
+3. 代码：优化Goroutine、JSON序列化、静态资源压缩',
     '/images/thumbnails/post-performance-zh.jpg',
     'post-tech', '/blog/gowind-cms-performance-optimization',
     3000,
