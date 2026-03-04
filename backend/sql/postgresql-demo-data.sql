@@ -1679,4 +1679,450 @@ Sorry, the page you are looking for does not exist or has been deleted.
 );
 
 
+-- ----------------------------
+-- 插入 categories 表（分类主表）测试数据
+-- ----------------------------
+INSERT INTO public.categories (
+    created_at, updated_at, sort_order, path, status,
+    depth, is_nav, icon, post_count, direct_post_count,
+    custom_fields, parent_id
+) VALUES
+-- 分类1：博客（一级、显示在导航、已发布）
+(
+    NOW() - INTERVAL '30 days', NOW(),
+    1, '/blog', 'CATEGORY_STATUS_ACTIVE',
+    0, true, 'icon-blog', 128, 128,
+    '{"show_banner": "true", "banner_image": "/images/category/blog-banner.jpg", "layout": "list"}'::jsonb,
+    NULL
+),
+-- 分类2：技术文档（一级、显示在导航、已发布）
+(
+    NOW() - INTERVAL '28 days', NOW(),
+    2, '/docs', 'CATEGORY_STATUS_ACTIVE',
+    0, true, 'icon-docs', 89, 0,
+    '{"sidebar_type": "collapsible", "edit_link": "https://github.com/gowind/docs/edit/main"}'::jsonb,
+    NULL
+),
+-- 分类3：产品中心（一级、显示在导航、已发布）
+(
+    NOW() - INTERVAL '25 days', NOW(),
+    3, '/products', 'CATEGORY_STATUS_ACTIVE',
+    0, true, 'icon-product', 45, 45,
+    '{"show_filter": "true", "filter_fields": "price, type", "default_sort": "newest"}'::jsonb,
+    NULL
+),
+-- 分类4：安装部署（二级、不显示在导航、已发布，父ID=2）
+(
+    NOW() - INTERVAL '22 days', NOW(),
+    1, '/docs/deployment', 'CATEGORY_STATUS_ACTIVE',
+    1, false, 'icon-deploy', 32, 32,
+    '{"difficulty": "beginner", "estimated_time": "10分钟"}'::jsonb,
+    2
+),
+-- 分类5：环境配置（三级、不显示在导航、已发布，父ID=4）
+(
+    NOW() - INTERVAL '20 days', NOW(),
+    1, '/docs/deployment/env', 'CATEGORY_STATUS_ACTIVE',
+    2, false, 'icon-env', 18, 18,
+    '{"os_support": "Linux, Windows, macOS", "min_requirements": "2GB RAM, 1 CPU"}'::jsonb,
+    4
+),
+-- 分类6：功能教程（二级、不显示在导航、已发布，父ID=2）
+(
+    NOW() - INTERVAL '18 days', NOW(),
+    2, '/docs/tutorials', 'CATEGORY_STATUS_ACTIVE',
+    1, false, 'icon-tutorial', 35, 35,
+    '{"video_support": "true", "tutorial_level": "beginner, intermediate"}'::jsonb,
+    2
+),
+-- 分类7：常见问题（二级、不显示在导航、草稿，父ID=2）
+(
+    NOW() - INTERVAL '15 days', NOW(),
+    3, '/docs/faq', 'CATEGORY_STATUS_HIDDEN',
+    1, false, 'icon-faq', 0, 0,
+    '{"show_search": "true", "hot_tags": "installation configuration performance"}'::jsonb,
+    2
+),
+-- 分类8：废弃分类（一级、不显示在导航、已归档）
+(
+    NOW() - INTERVAL '10 days', NOW(),
+    4, '/old-category', 'CATEGORY_STATUS_ARCHIVED',
+    0, false, 'icon-archive', 0, 0,
+    '{"archive_reason": "内容合并至技术文档", "archive_time": "2024-03-01"}'::jsonb,
+    NULL
+),
+-- 分类9：行业资讯（一级、显示在导航、已发布）
+(
+    NOW() - INTERVAL '8 days', NOW(),
+    5, '/news', 'CATEGORY_STATUS_ACTIVE',
+    0, true, 'icon-news', 67, 67,
+    '{"show_date": "true", "author_display": "true", "comment_support": "true"}'::jsonb,
+    NULL
+);
+
+-- ----------------------------
+-- 插入 category_translations 表（分类多语言翻译）测试数据
+-- 关联上述分类，覆盖 zh-CN/en-US 双语言，真实换行符
+-- ----------------------------
+INSERT INTO public.category_translations (
+    created_at, updated_at, category_id, language_code,
+    name, slug, description, thumbnail, cover_image,
+    template, full_path, meta_keywords, meta_description, seo_title
+) VALUES
+-- ========== 分类1（博客） - 中文翻译 ==========
+(
+    NOW() - INTERVAL '30 days', NOW(), 1, 'zh-CN',
+    '博客', 'blog',
+    'GoWind CMS 官方博客，分享产品更新、技术实践、行业动态等内容。
+
+内容涵盖：
+- Go 语言开发技巧
+- CMS 产品使用经验
+- 开源项目维护心得',
+    '/images/thumbnails/category-blog-zh.jpg',
+    '/images/covers/category-blog-zh.jpg',
+    'category-blog', '/blog',
+    'GoWind,博客,技术实践,产品更新',
+    'GoWind CMS 官方博客，分享产品更新、技术实践、行业动态等内容。',
+    '博客 | GoWind CMS'
+),
+-- ========== 分类1（博客） - 英文翻译 ==========
+(
+    NOW() - INTERVAL '30 days', NOW(), 1, 'en-US',
+    'Blog', 'blog',
+    'GoWind CMS official blog, sharing product updates, technical practices, industry trends and other content.
+
+Content includes:
+- Go language development skills
+- CMS product usage experience
+- Open source project maintenance experience',
+    '/images/thumbnails/category-blog-en.jpg',
+    '/images/covers/category-blog-en.jpg',
+    'category-blog', '/en/blog',
+    'GoWind,Blog,Technical Practices,Product Updates',
+    'GoWind CMS official blog, sharing product updates, technical practices, industry trends and other content.',
+    'Blog | GoWind CMS'
+),
+-- ========== 分类2（技术文档） - 中文翻译 ==========
+(
+    NOW() - INTERVAL '28 days', NOW(), 2, 'zh-CN',
+    '技术文档', 'docs',
+    'GoWind CMS 完整技术文档，包含安装部署、功能教程、API 参考等内容，帮助开发者快速上手。
+
+核心板块：
+- 安装部署：环境配置、快速开始
+- 功能教程：核心功能、高级用法
+- API 参考：接口文档、调用示例',
+    '/images/thumbnails/category-docs-zh.jpg',
+    '/images/covers/category-docs-zh.jpg',
+    'category-docs', '/docs',
+    'GoWind,技术文档,安装部署,API参考',
+    'GoWind CMS 完整技术文档，包含安装部署、功能教程、API 参考等内容，帮助开发者快速上手。',
+    '技术文档 | GoWind CMS'
+),
+-- ========== 分类2（技术文档） - 英文翻译 ==========
+(
+    NOW() - INTERVAL '28 days', NOW(), 2, 'en-US',
+    'Documentation', 'docs',
+    'Complete technical documentation for GoWind CMS, including installation and deployment, feature tutorials, API references, etc., to help developers get started quickly.
+
+Core sections:
+- Installation & Deployment: Environment configuration, quick start
+- Feature Tutorials: Core features, advanced usage
+- API Reference: Interface documentation, call examples',
+    '/images/thumbnails/category-docs-en.jpg',
+    '/images/covers/category-docs-en.jpg',
+    'category-docs', '/en/docs',
+    'GoWind,Documentation,Installation,API Reference',
+    'Complete technical documentation for GoWind CMS, including installation and deployment, feature tutorials, API references, etc., to help developers get started quickly.',
+    'Documentation | GoWind CMS'
+),
+-- ========== 分类4（安装部署） - 中文翻译 ==========
+(
+    NOW() - INTERVAL '22 days', NOW(), 4, 'zh-CN',
+    '安装部署', 'deployment',
+    'GoWind CMS 安装部署相关文档，包含环境配置、快速安装、Docker 部署等内容，适配不同操作系统。',
+    '/images/thumbnails/category-deploy-zh.jpg',
+    '/images/covers/category-deploy-zh.jpg',
+    'category-docs-child', '/docs/deployment',
+    'GoWind,安装部署,环境配置,Docker部署',
+    'GoWind CMS 安装部署相关文档，包含环境配置、快速安装、Docker 部署等内容，适配不同操作系统。',
+    '安装部署 | GoWind CMS 技术文档'
+),
+-- ========== 分类5（环境配置） - 中文翻译 ==========
+(
+    NOW() - INTERVAL '20 days', NOW(), 5, 'zh-CN',
+    '环境配置', 'env',
+    'GoWind CMS 环境配置详细教程，包含 Linux/Windows/macOS 系统的环境搭建、依赖安装、端口配置等。',
+    '/images/thumbnails/category-env-zh.jpg',
+    '/images/covers/category-env-zh.jpg',
+    'category-docs-grandchild', '/docs/deployment/env',
+    'GoWind,环境配置,依赖安装,端口配置',
+    'GoWind CMS 环境配置详细教程，包含 Linux/Windows/macOS 系统的环境搭建、依赖安装、端口配置等。',
+    '环境配置 | GoWind CMS 安装部署'
+),
+-- ========== 分类3（产品中心） - 中文翻译 ==========
+(
+    NOW() - INTERVAL '25 days', NOW(), 3, 'zh-CN',
+    '产品中心', 'products',
+    'GoWind 旗下全系列产品，包含开源版、企业版、云服务等，满足不同规模用户的内容管理需求。',
+    '/images/thumbnails/category-product-zh.jpg',
+    '/images/covers/category-product-zh.jpg',
+    'category-product', '/products',
+    'GoWind,产品中心,开源版,企业版,云服务',
+    'GoWind 旗下全系列产品，包含开源版、企业版、云服务等，满足不同规模用户的内容管理需求。',
+    '产品中心 | GoWind CMS'
+),
+-- ========== 分类9（行业资讯） - 中文翻译 ==========
+(
+    NOW() - INTERVAL '8 days', NOW(), 9, 'zh-CN',
+    '行业资讯', 'news',
+    'CMS 行业最新资讯、政策解读、市场分析，帮助您把握行业发展趋势。',
+    '/images/thumbnails/category-news-zh.jpg',
+    '/images/covers/category-news-zh.jpg',
+    'category-news', '/news',
+    'GoWind,行业资讯,CMS行业,市场分析',
+    'CMS 行业最新资讯、政策解读、市场分析，帮助您把握行业发展趋势。',
+    '行业资讯 | GoWind CMS'
+);
+
+
+-- ----------------------------
+-- 插入 posts 表（8条数据，保持不变）
+-- ----------------------------
+INSERT INTO public.posts (
+    created_at, updated_at, sort_order, editor_type,
+    status, slug, disallow_comment, in_progress,
+    auto_summary, is_featured, visits, likes,
+    comment_count, author_id, author_name, password_hash,
+    custom_fields, category_ids, tag_ids
+) VALUES
+-- 文章1：GoWind CMS 快速上手（已发布、精选）
+(
+    NOW() - INTERVAL '30 days', NOW(),
+    1, 'EDITOR_TYPE_MARKDOWN',
+    'POST_STATUS_PUBLISHED', 'gowind-cms-quick-start',
+    false, false, true, true,
+    15890, 892, 156,
+    1, 'GoWind 官方', '',
+    '{"show_toc": "true", "toc_depth": "3", "allow_copy": "true", "copyright_notice": "GoWind 官方原创"}'::jsonb,
+    '[2,4]'::jsonb,
+    '[1,2,3]'::jsonb
+),
+-- 文章2：GoWind v2.0 版本发布公告（已发布、精选）
+(
+    NOW() - INTERVAL '25 days', NOW(),
+    2, 'EDITOR_TYPE_MARKDOWN',
+    'POST_STATUS_PUBLISHED', 'gowind-v2-0-release',
+    false, false, true, true,
+    9870, 654, 89,
+    1, 'GoWind 官方', '',
+    '{"show_changelog": "true", "release_date": "2024-03-01", "upgrade_guide_url": "/docs/upgrade/v2.0"}'::jsonb,
+    '[1,3]'::jsonb,
+    '[4,5,6]'::jsonb
+),
+-- 文章3：Linux 环境下部署 GoWind CMS（已发布）
+(
+    NOW() - INTERVAL '22 days', NOW(),
+    3, 'EDITOR_TYPE_MARKDOWN',
+    'POST_STATUS_PUBLISHED', 'deploy-gowind-on-linux',
+    false, false, true, false,
+    7650, 432, 78,
+    1001, '张三', '',
+    '{"os_type": "Linux", "distro": "Ubuntu, CentOS", "tested_version": "v1.9.0"}'::jsonb,
+    '[2,4,5]'::jsonb,
+    '[1,7,8]'::jsonb
+),
+-- 文章4：2024 CMS 行业发展趋势分析（已发布）
+(
+    NOW() - INTERVAL '20 days', NOW(),
+    4, 'EDITOR_TYPE_MARKDOWN',
+    'POST_STATUS_PUBLISHED', '2024-cms-industry-trends',
+    false, false, true, false,
+    6540, 389, 67,
+    1002, '李四', '',
+    '{"data_source": "IDC 2024 行业报告", "chart_support": "true", "downloadable": "true"}'::jsonb,
+    '[1,9]'::jsonb,
+    '[9,10,11]'::jsonb
+),
+-- 文章5：GoWind CMS 自定义模板开发（草稿、未完成）
+(
+    NOW() - INTERVAL '15 days', NOW(),
+    5, 'EDITOR_TYPE_MARKDOWN',
+    'POST_STATUS_DRAFT', 'gowind-custom-template-dev',
+    true, true, false, false,
+    1230, 0, 0,
+    1001, '张三', '',
+    '{"dev_status": "50%", "expected_release": "2024-04-01", "required_skills": "Go, Vue3, HTML/CSS"}'::jsonb,
+    '[2,6]'::jsonb,
+    '[1,12,13]'::jsonb
+),
+-- 文章6：GoWind 企业版功能详解（加密、已发布）
+(
+    NOW() - INTERVAL '12 days', NOW(),
+    6, 'EDITOR_TYPE_MARKDOWN',
+    'POST_STATUS_PUBLISHED', 'gowind-enterprise-features',
+    true, false, true, false,
+    4320, 256, 0,
+    1, 'GoWind 官方', '$2a$10$89jZk54G89sdkf89sdf89sd89sdf89sdf89sdf',
+    '{"is_enterprise": "true", "price_range": "¥9999-¥19999", "trial_available": "true"}'::jsonb,
+    '[3]'::jsonb,
+    '[5,14,15]'::jsonb
+),
+-- 文章7：常见问题解答（草稿）
+(
+    NOW() - INTERVAL '10 days', NOW(),
+    7, 'EDITOR_TYPE_MARKDOWN',
+    'POST_STATUS_DRAFT', 'gowind-faq',
+    true, false, true, false,
+    890, 0, 0,
+    1, 'GoWind 官方', '',
+    '{"faq_category": "installation, configuration, performance", "update_frequency": "monthly"}'::jsonb,
+    '[2,7]'::jsonb,
+    '[16,17,18]'::jsonb
+),
+-- 文章8：GoWind CMS 性能优化指南（已发布、精选）
+(
+    NOW() - INTERVAL '8 days', NOW(),
+    8, 'EDITOR_TYPE_MARKDOWN',
+    'POST_STATUS_PUBLISHED', 'gowind-cms-performance-optimization',
+    false, false, true, true,
+    5680, 789, 123,
+    1003, '王五', '',
+    '{"benchmark_data": "true", "qps_before": "50000", "qps_after": "100000", "optimization_points": "DB, Cache, Code"}'::jsonb,
+    '[1,2]'::jsonb,
+    '[1,19,20]'::jsonb
+);
+
+-- ----------------------------
+-- 插入 post_translations 表（8篇文章的中文翻译，纯字符串+ \n 换行）
+-- ----------------------------
+INSERT INTO public.post_translations (
+    created_at, updated_at, post_id, language_code, title,
+    slug, summary, content, original_content, thumbnail,
+    template, full_path, word_count, meta_keywords,
+    meta_description, seo_title
+) VALUES
+-- ========== 文章1：GoWind CMS 快速上手 - 中文 ==========
+(
+    NOW() - INTERVAL '30 days', NOW(), 1, 'zh-CN',
+    'GoWind CMS 快速上手：5分钟搭建你的第一个CMS站点',
+    'gowind-cms-quick-start',
+    '本文带你5分钟快速搭建GoWind CMS站点，涵盖环境准备、代码克隆、配置启动、初始登录全流程。',
+    '# GoWind CMS 快速上手\n\n## 环境准备\n### 前置依赖\n- Go 1.21+（推荐1.22最新版）\n- PostgreSQL 14+\n- Git（可选）\n- Docker（可选）\n\n## 安装步骤\n1. 克隆代码仓库：git clone https://github.com/gowind/cms.git\n2. 配置环境变量：复制.env.example为.env并修改数据库配置\n3. 启动服务：go run main.go 或 docker-compose up -d\n4. 初始登录：http://localhost:8080，默认账号admin/admin\n\n> 首次登录请立即修改密码！',
+    '# GoWind CMS 快速上手\n\n## 环境准备\n### 前置依赖\n- Go 1.21+（推荐1.22最新版）\n- PostgreSQL 14+\n- Git（可选）\n- Docker（可选）\n\n## 安装步骤\n1. 克隆代码仓库：git clone https://github.com/gowind/cms.git\n2. 配置环境变量：复制.env.example为.env并修改数据库配置\n3. 启动服务：go run main.go 或 docker-compose up -d\n4. 初始登录：http://localhost:8080，默认账号admin/admin\n\n> 首次登录请立即修改密码！',
+    '/images/thumbnails/post-quick-start-zh.jpg',
+    'post-default', '/blog/gowind-cms-quick-start',
+    2580,
+    'GoWind,CMS,快速上手,安装部署,Go语言,PostgreSQL',
+    '本文带你5分钟快速搭建GoWind CMS站点，涵盖环境准备、代码克隆、配置启动、初始登录全流程。',
+    'GoWind CMS 快速上手：5分钟搭建你的第一个CMS站点 | GoWind 官方文档'
+),
+-- ========== 文章2：GoWind v2.0 版本发布公告 - 中文 ==========
+(
+    NOW() - INTERVAL '25 days', NOW(), 2, 'zh-CN',
+    'GoWind CMS v2.0 正式发布：新增多租户、性能提升100%',
+    'gowind-v2-0-release',
+    'GoWind CMS v2.0版本发布，核心更新多租户支持、性能优化、UI重构，QPS突破10万。',
+    '# GoWind CMS v2.0 正式发布\n\n## 发布说明\nGoWind CMS v2.0于2024年3月1日发布，是开源以来的重大版本更新！\n\n## 核心新功能\n1. 多租户支持：单实例部署多套独立站点，数据隔离\n2. 性能优化：QPS从5万提升至10万，响应时间降低60%\n3. UI重构：基于Vue3+Element Plus重构后台，移动端适配\n\n## 升级指南\n- 从v1.9升级：备份数据库后执行go run scripts/upgrade/v2.0.go\n- 全新安装：直接克隆v2.0分支代码部署',
+    '# GoWind CMS v2.0 正式发布\n\n## 发布说明\nGoWind CMS v2.0于2024年3月1日发布，是开源以来的重大版本更新！\n\n## 核心新功能\n1. 多租户支持：单实例部署多套独立站点，数据隔离\n2. 性能优化：QPS从5万提升至10万，响应时间降低60%\n3. UI重构：基于Vue3+Element Plus重构后台，移动端适配\n\n## 升级指南\n- 从v1.9升级：备份数据库后执行go run scripts/upgrade/v2.0.go\n- 全新安装：直接克隆v2.0分支代码部署',
+    '/images/thumbnails/post-v2-release-zh.jpg',
+    'post-announcement', '/blog/gowind-v2-0-release',
+    3200,
+    'GoWind,CMS,v2.0,版本发布,多租户,性能优化,UI重构',
+    'GoWind CMS v2.0版本发布，核心更新多租户支持、性能优化、UI重构，QPS突破10万。',
+    'GoWind CMS v2.0 正式发布：新增多租户、性能提升100% | GoWind 官方公告'
+),
+-- ========== 文章3：Linux 环境下部署 GoWind CMS - 中文 ==========
+(
+    NOW() - INTERVAL '22 days', NOW(), 3, 'zh-CN',
+    'Linux 环境下部署 GoWind CMS（Ubuntu/CentOS通用）',
+    'deploy-gowind-on-linux',
+    '详解Linux环境（Ubuntu/CentOS）下GoWind CMS的部署步骤，含依赖安装、端口配置、开机自启。',
+    '# Linux 环境下部署 GoWind CMS\n\n## 适用系统\n- Ubuntu 20.04/22.04\n- CentOS 7/8\n\n## 依赖安装\n### Ubuntu\napt update && apt install -y golang postgresql git\n### CentOS\nyum install -y golang postgresql git\n\n## 部署步骤\n1. 创建数据库：createdb gowind\n2. 克隆代码：git clone https://github.com/gowind/cms.git\n3. 配置数据库连接：修改.env文件\n4. 启动服务：nohup go run main.go > app.log 2>&1 &\n\n## 开机自启\n创建systemd服务文件：/etc/systemd/system/gowind.service',
+    '# Linux 环境下部署 GoWind CMS\n\n## 适用系统\n- Ubuntu 20.04/22.04\n- CentOS 7/8\n\n## 依赖安装\n### Ubuntu\napt update && apt install -y golang postgresql git\n### CentOS\nyum install -y golang postgresql git\n\n## 部署步骤\n1. 创建数据库：createdb gowind\n2. 克隆代码：git clone https://github.com/gowind/cms.git\n3. 配置数据库连接：修改.env文件\n4. 启动服务：nohup go run main.go > app.log 2>&1 &\n\n## 开机自启\n创建systemd服务文件：/etc/systemd/system/gowind.service',
+    '/images/thumbnails/post-deploy-linux-zh.jpg',
+    'post-tech', '/blog/deploy-gowind-on-linux',
+    2800,
+    'GoWind,CMS,Linux部署,Ubuntu,CentOS,Go语言',
+    '详解Linux环境（Ubuntu/CentOS）下GoWind CMS的部署步骤，含依赖安装、端口配置、开机自启。',
+    'Linux 环境下部署 GoWind CMS（Ubuntu/CentOS通用） | GoWind 技术博客'
+),
+-- ========== 文章4：2024 CMS 行业发展趋势分析 - 中文 ==========
+(
+    NOW() - INTERVAL '20 days', NOW(), 4, 'zh-CN',
+    '2024 CMS 行业发展趋势：轻量化、私有化、AI赋能',
+    '2024-cms-industry-trends',
+    '基于IDC 2024行业报告，分析CMS行业三大趋势：轻量化、私有化部署、AI智能赋能。',
+    '# 2024 CMS 行业发展趋势分析\n\n## 数据来源\nIDC 2024年全球CMS市场研究报告\n\n## 核心趋势\n1. 轻量化：轻量级CMS占比提升至65%，替代重型系统\n2. 私有化：企业级用户私有化部署需求增长40%\n3. AI赋能：AI生成内容、智能排版成为标配功能\n\n## 市场规模\n2024年全球CMS市场规模预计达89亿美元，年增长率18%。\n\n## 国内趋势\n国产化替代加速，Go/Java语言开发的CMS占比提升。',
+    '# 2024 CMS 行业发展趋势分析\n\n## 数据来源\nIDC 2024年全球CMS市场研究报告\n\n## 核心趋势\n1. 轻量化：轻量级CMS占比提升至65%，替代重型系统\n2. 私有化：企业级用户私有化部署需求增长40%\n3. AI赋能：AI生成内容、智能排版成为标配功能\n\n## 市场规模\n2024年全球CMS市场规模预计达89亿美元，年增长率18%。\n\n## 国内趋势\n国产化替代加速，Go/Java语言开发的CMS占比提升。',
+    '/images/thumbnails/post-cms-trends-zh.jpg',
+    'post-analysis', '/blog/2024-cms-industry-trends',
+    2600,
+    'CMS,2024趋势,行业分析,轻量化,私有化,AI赋能',
+    '基于IDC 2024行业报告，分析CMS行业三大趋势：轻量化、私有化部署、AI智能赋能。',
+    '2024 CMS 行业发展趋势：轻量化、私有化、AI赋能 | GoWind 行业洞察'
+),
+-- ========== 文章5：GoWind CMS 自定义模板开发 - 中文（草稿） ==========
+(
+    NOW() - INTERVAL '15 days', NOW(), 5, 'zh-CN',
+    'GoWind CMS 自定义模板开发教程（草稿）',
+    'gowind-custom-template-dev',
+    'GoWind CMS自定义模板开发教程，涵盖模板语法、数据调用、样式定制，当前开发进度50%。',
+    '# GoWind CMS 自定义模板开发\n\n> 本文正在编写中，开发进度50%，预计2024年4月1日完成。\n\n## 开发准备\n### 所需技能\n- Go语言基础\n- Vue3 + Element Plus\n- HTML/CSS/JS\n\n## 模板目录结构\n/templates/custom/\n  - index.tpl # 首页模板\n  - post.tpl # 文章模板\n  - style.css # 自定义样式\n\n## 待编写内容\n1. 模板语法详解\n2. 数据调用示例\n3. 自定义组件开发',
+    '# GoWind CMS 自定义模板开发\n\n> 本文正在编写中，开发进度50%，预计2024年4月1日完成。\n\n## 开发准备\n### 所需技能\n- Go语言基础\n- Vue3 + Element Plus\n- HTML/CSS/JS\n\n## 模板目录结构\n/templates/custom/\n  - index.tpl # 首页模板\n  - post.tpl # 文章模板\n  - style.css # 自定义样式\n\n## 待编写内容\n1. 模板语法详解\n2. 数据调用示例\n3. 自定义组件开发',
+    '/images/thumbnails/post-template-dev-zh.jpg',
+    'post-draft', '/blog/gowind-custom-template-dev',
+    1800,
+    'GoWind,CMS,自定义模板,开发教程,Go,Vue3',
+    'GoWind CMS自定义模板开发教程，涵盖模板语法、数据调用、样式定制，当前开发进度50%。',
+    'GoWind CMS 自定义模板开发教程（草稿） | GoWind 开发文档'
+),
+-- ========== 文章6：GoWind 企业版功能详解 - 中文（加密） ==========
+(
+    NOW() - INTERVAL '12 days', NOW(), 6, 'zh-CN',
+    'GoWind CMS 企业版功能详解（付费专属）',
+    'gowind-enterprise-features',
+    'GoWind企业版专属功能：多租户管理、高级权限、数据备份、专属客服，价格9999-19999元/年。',
+    '# GoWind CMS 企业版功能详解\n\n## 专属功能\n1. 多租户管理：单系统管理多站点，数据完全隔离\n2. 高级权限：按角色/部门精细化权限控制\n3. 数据备份：自动定时备份，支持异地容灾\n4. 专属客服：7*24小时技术支持\n5. 定制开发：按需定制功能模块\n\n## 价格方案\n- 基础版：¥9999/年（10租户以内）\n- 标准版：¥14999/年（50租户以内）\n- 旗舰版：¥19999/年（不限租户）\n\n## 试用申请\n联系客服：400-123-4567，可申请15天免费试用。',
+    '# GoWind CMS 企业版功能详解\n\n## 专属功能\n1. 多租户管理：单系统管理多站点，数据完全隔离\n2. 高级权限：按角色/部门精细化权限控制\n3. 数据备份：自动定时备份，支持异地容灾\n4. 专属客服：7*24小时技术支持\n5. 定制开发：按需定制功能模块\n\n## 价格方案\n- 基础版：¥9999/年（10租户以内）\n- 标准版：¥14999/年（50租户以内）\n- 旗舰版：¥19999/年（不限租户）\n\n## 试用申请\n联系客服：400-123-4567，可申请15天免费试用。',
+    '/images/thumbnails/post-enterprise-zh.jpg',
+    'post-enterprise', '/blog/gowind-enterprise-features',
+    2200,
+    'GoWind,CMS,企业版,付费功能,多租户,高级权限',
+    'GoWind企业版专属功能：多租户管理、高级权限、数据备份、专属客服，价格9999-19999元/年。',
+    'GoWind CMS 企业版功能详解（付费专属） | GoWind 企业服务'
+),
+-- ========== 文章7：常见问题解答 - 中文（草稿） ==========
+(
+    NOW() - INTERVAL '10 days', NOW(), 7, 'zh-CN',
+    'GoWind CMS 常见问题解答（FAQ）',
+    'gowind-faq',
+    'GoWind CMS常见问题汇总，涵盖安装、配置、性能、升级等方向，每月更新。',
+    '# GoWind CMS 常见问题解答\n\n## 安装相关\nQ1：安装时提示数据库连接失败？\nA1：检查.env文件中的数据库地址、端口、账号密码是否正确。\n\nQ2：启动服务后访问不了？\nA2：检查端口是否被占用，防火墙是否开放8080端口。\n\n## 配置相关\nQ3：如何开启多语言支持？\nA3：在后台设置-多语言中启用，上传翻译文件。\n\n## 待补充\n- 性能优化相关问题\n- 升级相关问题',
+    '# GoWind CMS 常见问题解答\n\n## 安装相关\nQ1：安装时提示数据库连接失败？\nA1：检查.env文件中的数据库地址、端口、账号密码是否正确。\n\nQ2：启动服务后访问不了？\nA2：检查端口是否被占用，防火墙是否开放8080端口。\n\n## 配置相关\nQ3：如何开启多语言支持？\nA3：在后台设置-多语言中启用，上传翻译文件。\n\n## 待补充\n- 性能优化相关问题\n- 升级相关问题',
+    '/images/thumbnails/post-faq-zh.jpg',
+    'post-faq', '/blog/gowind-faq',
+    1500,
+    'GoWind,CMS,FAQ,常见问题,安装,配置,性能',
+    'GoWind CMS常见问题汇总，涵盖安装、配置、性能、升级等方向，每月更新。',
+    'GoWind CMS 常见问题解答（FAQ） | GoWind 帮助中心'
+),
+-- ========== 文章8：GoWind CMS 性能优化指南 - 中文 ==========
+(
+    NOW() - INTERVAL '8 days', NOW(), 8, 'zh-CN',
+    'GoWind CMS 性能优化指南：从5万QPS到10万的实战经验',
+    'gowind-cms-performance-optimization',
+    '分享GoWind CMS性能优化实战经验，涵盖数据库优化、缓存策略、代码层面，QPS提升100%。',
+    '# GoWind CMS 性能优化指南\n\n## 优化背景\nv1.9版本QPS仅5万，响应时间200ms，无法满足高并发需求。\n\n## 优化指标\n| 指标 | 优化前 | 优化后 | 提升 |\n|------|--------|--------|------|\n| QPS | 50000 | 100000 | 100% |\n| 响应时间 | 200ms | 80ms | 60% |\n| 数据库负载 | 80% | 30% | 62.5% |\n\n## 核心优化点\n1. 数据库：新增索引、慢查询优化、读写分离\n2. 缓存：Redis缓存分类/文章，动态过期策略\n3. 代码：优化Goroutine、JSON序列化、静态资源压缩',
+    '# GoWind CMS 性能优化指南\n\n## 优化背景\nv1.9版本QPS仅5万，响应时间200ms，无法满足高并发需求。\n\n## 优化指标\n| 指标 | 优化前 | 优化后 | 提升 |\n|------|--------|--------|------|\n| QPS | 50000 | 100000 | 100% |\n| 响应时间 | 200ms | 80ms | 60% |\n| 数据库负载 | 80% | 30% | 62.5% |\n\n## 核心优化点\n1. 数据库：新增索引、慢查询优化、读写分离\n2. 缓存：Redis缓存分类/文章，动态过期策略\n3. 代码：优化Goroutine、JSON序列化、静态资源压缩',
+    '/images/thumbnails/post-performance-zh.jpg',
+    'post-tech', '/blog/gowind-cms-performance-optimization',
+    3000,
+    'GoWind,CMS,性能优化,QPS,数据库优化,缓存策略,Go语言',
+    '分享GoWind CMS性能优化实战经验，涵盖数据库优化、缓存策略、代码层面，QPS提升100%。',
+    'GoWind CMS 性能优化指南：从5万QPS到10万的实战经验 | GoWind 技术博客'
+);
+
+
 COMMIT;
