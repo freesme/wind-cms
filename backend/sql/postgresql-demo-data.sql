@@ -624,4 +624,145 @@ INSERT INTO public.sites (
     256800
 );
 
+-- ----------------------------
+-- 1. 插入 sites 表测试数据
+-- ----------------------------
+INSERT INTO public.sites (
+    created_at, updated_at, tenant_id, name, slug, domain,
+    alternate_domains, is_default, status, default_locale,
+    template, theme, visit_count
+) VALUES
+-- 站点1：默认中文站点（主站）
+(
+    NOW(), NOW(), 0,
+    'GoWind 官方博客',
+    'gowind-blog',
+    'blog.gowind.com',
+    '["www.gowind-blog.com", "blog.gowind.cn"]'::jsonb,
+    true,
+    'SITE_STATUS_ACTIVE',
+    'zh-CN',
+    'default-blog',
+    'dark-mode',
+    12580
+),
+-- 站点2：英文子站点
+(
+    NOW(), NOW(), 0,
+    'GoWind English Docs',
+    'gowind-docs-en',
+    'docs.gowind.com',
+    '["en-docs.gowind.com"]'::jsonb,
+    false,
+    'SITE_STATUS_ACTIVE',
+    'en-US',
+    'default-docs',
+    'light-mode',
+    8920
+),
+-- 站点3：维护中的测试站点（用于测试状态逻辑）
+(
+    NOW(), NOW(), 0,
+    '测试站点（维护中）',
+    'test-site-maintenance',
+    'test.gowind.com',
+    '[]'::jsonb,
+    false,
+    'SITE_STATUS_MAINTENANCE',
+    'zh-CN',
+    'default-test',
+    'default',
+    1560
+);
+
+-- ----------------------------
+-- 2. 插入 site_settings 表测试数据
+-- 关联上述 3 个站点，覆盖多语言/多配置组
+-- ----------------------------
+INSERT INTO public.site_settings (
+    created_at, updated_at, site_id, locale, "group", key,
+    value, type, label, description, placeholder, options,
+    is_required, validation_regex
+) VALUES
+-- ========== 站点1（ID=1）：中文配置 ==========
+-- 基础设置组
+(
+    NOW(), NOW(), 1, 'zh-CN', 'basic', 'site_title',
+    'GoWind - 高性能Go语言CMS',
+    'SETTING_TYPE_TEXT', '站点标题', '显示在浏览器标签的站点主标题', '请输入站点标题', NULL,
+    true, '^.{2,50}$'
+),
+(
+    NOW(), NOW(), 1, 'zh-CN', 'basic', 'site_description',
+    '基于Go+Vue3开发的多站点/多语言CMS系统',
+    'SETTING_TYPE_TEXT', '站点描述', '用于SEO的站点简介', '请输入站点描述（10-200字）', NULL,
+    true, '^.{10,200}$'
+),
+(
+    NOW(), NOW(), 1, 'zh-CN', 'basic', 'enable_comment',
+    'true',
+    'SETTING_TYPE_BOOLEAN', '启用评论功能', '是否允许用户在文章下评论', NULL, NULL,
+    false, NULL
+),
+-- SEO配置组
+(
+    NOW(), NOW(), 1, 'zh-CN', 'seo', 'meta_keywords',
+    'GoWind,CMS,Go语言,多语言,多站点',
+    'SETTING_TYPE_TEXT', 'SEO关键词', '用英文逗号分隔的关键词列表', '请输入SEO关键词', NULL,
+    false, NULL
+),
+(
+    NOW(), NOW(), 1, 'zh-CN', 'seo', 'enable_baidu_verify',
+    'true',
+    'SETTING_TYPE_BOOLEAN', '启用百度验证', '是否添加百度站点验证代码', NULL, NULL,
+    false, NULL
+),
+-- 主题配置组（下拉选择类型）
+(
+    NOW(), NOW(), 1, 'zh-CN', 'theme', 'primary_color',
+    '#1890ff',
+    'SETTING_TYPE_SELECT', '主题主色', '站点的核心品牌色', NULL,
+    '["#1890ff", "#e53e3e", "#389e0d", "#faad14"]'::jsonb,
+    false, '^#[0-9a-fA-F]{6}$'
+),
+-- ========== 站点1（ID=1）：英文配置 ==========
+(
+    NOW(), NOW(), 1, 'en-US', 'basic', 'site_title',
+    'GoWind - High Performance Go CMS',
+    'SETTING_TYPE_TEXT', 'Site Title', 'Main title displayed in browser tab', 'Enter site title', NULL,
+    true, '^.{2,50}$'
+),
+(
+    NOW(), NOW(), 1, 'en-US', 'basic', 'site_description',
+    'Multi-site & multi-language CMS built with Go + Vue3',
+    'SETTING_TYPE_TEXT', 'Site Description', 'SEO-friendly site introduction', 'Enter site description (10-200 chars)', NULL,
+    true, '^.{10,200}$'
+),
+-- ========== 站点2（ID=2）：英文配置 ==========
+(
+    NOW(), NOW(), 2, 'en-US', 'basic', 'site_title',
+    'GoWind Documentation - English Version',
+    'SETTING_TYPE_TEXT', 'Site Title', 'Main title of English docs site', 'Enter site title', NULL,
+    true, '^.{2,50}$'
+),
+(
+    NOW(), NOW(), 2, 'en-US', 'seo', 'meta_keywords',
+    'GoWind,CMS,Documentation,Go,Vue3,Multi-language',
+    'SETTING_TYPE_TEXT', 'SEO Keywords', 'Comma-separated keywords for SEO', 'Enter SEO keywords', NULL,
+    false, NULL
+),
+-- ========== 站点3（ID=3）：维护中站点配置 ==========
+(
+    NOW(), NOW(), 3, 'zh-CN', 'maintenance', 'maintenance_title',
+    '站点维护中',
+    'SETTING_TYPE_TEXT', '维护页面标题', '站点维护时显示的标题', '请输入维护标题', NULL,
+    true, NULL
+),
+(
+    NOW(), NOW(), 3, 'zh-CN', 'maintenance', 'maintenance_content',
+    '本站点正在维护，预计2小时后恢复访问。',
+    'SETTING_TYPE_TEXT', '维护页面内容', '站点维护时显示的提示内容', '请输入维护提示', NULL,
+    true, NULL
+);
+
 COMMIT;

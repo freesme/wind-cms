@@ -4,7 +4,7 @@ go 1.25.3
 
 require (
 	entgo.io/ent v0.14.5
-	github.com/alicebob/miniredis/v2 v2.36.1
+	github.com/alicebob/miniredis/v2 v2.37.0
 	github.com/dtm-labs/dtm v1.19.0
 	github.com/dtm-labs/dtmdriver v0.0.6
 	github.com/envoyproxy/protoc-gen-validate v1.3.3
@@ -27,8 +27,8 @@ require (
 	github.com/redis/go-redis/v9 v9.18.0
 	github.com/stretchr/testify v1.11.1
 	github.com/tx7do/go-crud/api v0.0.7
-	github.com/tx7do/go-crud/entgo v0.0.40
-	github.com/tx7do/go-crud/pagination v0.0.11
+	github.com/tx7do/go-crud/entgo v0.0.42
+	github.com/tx7do/go-crud/pagination v0.0.12
 	github.com/tx7do/go-crud/viewer v0.0.6
 	github.com/tx7do/go-utils v1.1.34
 	github.com/tx7do/go-utils/aggregator v0.0.4
@@ -62,15 +62,15 @@ require (
 	github.com/tx7do/kratos-transport/transport/sse v1.3.2
 	github.com/yuin/gopher-lua v1.1.1
 	go.etcd.io/etcd/client/v3 v3.6.8
-	go.opentelemetry.io/otel/trace v1.40.0
-	google.golang.org/genproto v0.0.0-20260217215200-42d3e9bedb6d
-	google.golang.org/genproto/googleapis/api v0.0.0-20260217215200-42d3e9bedb6d
+	go.opentelemetry.io/otel/trace v1.41.0
+	google.golang.org/genproto v0.0.0-20260226221140-a57be14db171
+	google.golang.org/genproto/googleapis/api v0.0.0-20260226221140-a57be14db171
 	google.golang.org/grpc v1.79.1
 	google.golang.org/protobuf v1.36.11
 )
 
 require (
-	ariga.io/atlas v1.0.0 // indirect
+	ariga.io/atlas v1.1.0 // indirect
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.11-20260209202127-80ab13bee0bf.1 // indirect
 	buf.build/go/protovalidate v1.1.2 // indirect
 	cel.dev/expr v0.25.1 // indirect
@@ -227,22 +227,22 @@ require (
 	github.com/yashtewari/glob-intersection v0.2.0 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
-	github.com/zclconf/go-cty v1.17.0 // indirect
+	github.com/zclconf/go-cty v1.18.0 // indirect
 	github.com/zclconf/go-cty-yaml v1.2.0 // indirect
-	go.einride.tech/aip v0.80.0 // indirect
+	go.einride.tech/aip v0.81.0 // indirect
 	go.etcd.io/etcd/api/v3 v3.6.8 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.6.8 // indirect
-	go.mongodb.org/mongo-driver v1.17.7 // indirect
+	go.mongodb.org/mongo-driver v1.17.9 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.63.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.64.0 // indirect
-	go.opentelemetry.io/otel v1.40.0 // indirect
+	go.opentelemetry.io/otel v1.41.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.40.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.40.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp v1.40.0 // indirect
 	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.40.0 // indirect
 	go.opentelemetry.io/otel/exporters/zipkin v1.40.0 // indirect
-	go.opentelemetry.io/otel/metric v1.40.0 // indirect
+	go.opentelemetry.io/otel/metric v1.41.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.40.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.9.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
@@ -261,7 +261,7 @@ require (
 	golang.org/x/time v0.14.0 // indirect
 	golang.org/x/tools v0.42.0 // indirect
 	google.golang.org/api v0.256.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20260217215200-42d3e9bedb6d // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20260226221140-a57be14db171 // indirect
 	gopkg.in/cenkalti/backoff.v1 v1.1.0 // indirect
 	gopkg.in/ini.v1 v1.67.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
