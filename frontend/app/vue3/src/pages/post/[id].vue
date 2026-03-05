@@ -151,92 +151,162 @@ onMounted(async () => {
   <div class="post-detail-page">
     <n-spin :show="loading">
       <div v-if="post" class="post-container">
-        <!-- Post Header -->
+        <!-- Back Button -->
+        <div class="back-navigation">
+          <n-button text @click="router.push('/post')">
+            <template #icon>
+              <span class="i-carbon:arrow-left" />
+            </template>
+            {{ $t('page.post_detail.back') }}
+          </n-button>
+        </div>
+
+        <!-- Post Header with Thumbnail -->
         <article class="post-article">
-          <header class="post-header">
-            <h1>{{ getTitle() }}</h1>
-            <div class="post-meta">
-              <span class="author">{{ $t('page.post_detail.author') }}：{{ post.authorName }}</span>
-              <span class="date">{{ $t('page.post_detail.published_at') }}：{{ formatDate(post.createdAt) }}</span>
-              <span class="views">{{ $t('page.post_detail.views') }}：{{ post.visits || 0 }}</span>
-              <span class="likes">{{ $t('page.post_detail.likes') }}：{{ post.likes || 0 }}</span>
-            </div>
-          </header>
-
-          <!-- Post Thumbnail -->
-          <div v-if="getThumbnail()" class="post-thumbnail">
+          <!-- Post Thumbnail Banner -->
+          <div v-if="getThumbnail()" class="post-banner">
             <img :src="getThumbnail()" :alt="getTitle()" />
+            <div class="banner-overlay" />
           </div>
 
-          <!-- Post Content -->
-          <div class="post-content">
-            <ContentViewer
-              :content="getContent()"
-              type="markdown"
-            />
-          </div>
+          <div class="article-content">
+            <!-- Post Header -->
+            <header class="post-header">
+              <h1 class="post-title">{{ getTitle() }}</h1>
+              <div class="post-meta">
+                <div class="meta-item">
+                  <span class="i-carbon:user-avatar" />
+                  <span>{{ post.authorName }}</span>
+                </div>
+                <div class="meta-item">
+                  <span class="i-carbon:calendar" />
+                  <span>{{ formatDate(post.createdAt) }}</span>
+                </div>
+                <div class="meta-item">
+                  <span class="i-carbon:view" />
+                  <span>{{ post.visits || 0 }}</span>
+                </div>
+                <div class="meta-item">
+                  <span class="i-carbon:thumbs-up" />
+                  <span>{{ post.likes || 0 }}</span>
+                </div>
+              </div>
+            </header>
 
-          <!-- Post Footer -->
-          <footer class="post-footer">
-            <n-space>
-              <n-button @click="router.back()">
-                {{ $t('page.post_detail.back') }}
-              </n-button>
-            </n-space>
-          </footer>
+            <!-- Post Content -->
+            <div class="post-content">
+              <ContentViewer
+                :content="getContent()"
+                type="markdown"
+              />
+            </div>
+
+            <!-- Post Actions -->
+            <footer class="post-actions">
+              <n-space size="large">
+                <n-button size="large" circle>
+                  <template #icon>
+                    <span class="i-carbon:thumbs-up" />
+                  </template>
+                </n-button>
+                <n-button size="large" circle>
+                  <template #icon>
+                    <span class="i-carbon:bookmark" />
+                  </template>
+                </n-button>
+                <n-button size="large" circle>
+                  <template #icon>
+                    <span class="i-carbon:share" />
+                  </template>
+                </n-button>
+              </n-space>
+            </footer>
+          </div>
         </article>
 
         <!-- Comments Section -->
         <section v-if="!post.disallowComment" class="comments-section">
-          <h2>{{ $t('page.post_detail.comments_count', { count: comments.length }) }}</h2>
+          <div class="section-header">
+            <h2>
+              <span class="i-carbon:chat" />
+              {{ $t('page.post_detail.comments_count', { count: comments.length }) }}
+            </h2>
+          </div>
 
           <!-- Comment Form -->
-          <n-card class="comment-form-card">
+          <div class="comment-form">
+            <h3>{{ $t('page.post_detail.write_comment') }}</h3>
             <n-form>
-              <n-form-item :label="$t('page.post_detail.nickname')">
-                <n-input v-model:value="newComment.authorName" :placeholder="$t('page.post_detail.enter_nickname')" />
-              </n-form-item>
-              <n-form-item :label="$t('page.post_detail.email')">
-                <n-input v-model:value="newComment.email" :placeholder="$t('page.post_detail.enter_email')" type="text" />
-              </n-form-item>
+              <n-grid :cols="2" :x-gap="16">
+                <n-form-item-gi :label="$t('page.post_detail.nickname')">
+                  <n-input
+                    v-model:value="newComment.authorName"
+                    :placeholder="$t('page.post_detail.enter_nickname')"
+                    size="large"
+                  />
+                </n-form-item-gi>
+                <n-form-item-gi :label="$t('page.post_detail.email')">
+                  <n-input
+                    v-model:value="newComment.email"
+                    :placeholder="$t('page.post_detail.enter_email')"
+                    type="text"
+                    size="large"
+                  />
+                </n-form-item-gi>
+              </n-grid>
               <n-form-item :label="$t('page.post_detail.comment_content')">
                 <n-input
                   v-model:value="newComment.content"
                   type="textarea"
-                  :rows="4"
+                  :rows="5"
                   :placeholder="$t('page.post_detail.write_comment')"
+                  size="large"
                 />
               </n-form-item>
               <n-form-item>
-                <n-button type="primary" @click="handleSubmitComment">
+                <n-button type="primary" size="large" @click="handleSubmitComment">
+                  <template #icon>
+                    <span class="i-carbon:send-alt" />
+                  </template>
                   {{ $t('page.post_detail.submit_comment') }}
                 </n-button>
               </n-form-item>
             </n-form>
-          </n-card>
+          </div>
 
           <!-- Comments List -->
-          <div class="comments-list">
+          <div v-if="comments.length > 0" class="comments-list">
             <div v-for="comment in comments" :key="comment.id" class="comment-item">
-              <div class="comment-author">
-                <strong>{{ comment.authorName }}</strong>
-                <span class="comment-date">{{ formatDate(comment.createdAt) }}</span>
+              <div class="comment-avatar">
+                <n-avatar :size="48" round>
+                  {{ comment.authorName?.charAt(0) || 'U' }}
+                </n-avatar>
               </div>
-              <div class="comment-content">
-                <ContentViewer
-                  :content="comment.content"
-                  type="text"
-                />
+              <div class="comment-body">
+                <div class="comment-header">
+                  <strong class="comment-author">{{ comment.authorName }}</strong>
+                  <span class="comment-date">{{ formatDate(comment.createdAt) }}</span>
+                </div>
+                <div class="comment-content">
+                  <ContentViewer
+                    :content="comment.content"
+                    type="text"
+                  />
+                </div>
               </div>
             </div>
-
-            <n-empty v-if="comments.length === 0" :description="$t('page.post_detail.no_comments')" />
           </div>
+          <n-empty v-else :description="$t('page.post_detail.no_comments')" style="margin-top: 40px;" />
         </section>
 
         <!-- Related Posts -->
         <section v-if="relatedPosts.length > 0" class="related-section">
-          <h2>{{ $t('page.post_detail.related_posts') }}</h2>
+          <div class="section-header">
+            <h2>
+              <span class="i-carbon:book" />
+              {{ $t('page.post_detail.related_posts') }}
+            </h2>
+          </div>
           <div class="related-grid">
             <div
               v-for="relatedPost in relatedPosts"
@@ -249,10 +319,15 @@ onMounted(async () => {
                   :src="relatedPost.translations?.[0]?.thumbnail || '/placeholder.jpg'"
                   :alt="relatedPost.translations?.[0]?.title"
                 />
+                <div class="image-overlay" />
               </div>
               <div class="related-content">
                 <h3>{{ relatedPost.translations?.[0]?.title }}</h3>
                 <p>{{ relatedPost.translations?.[0]?.summary }}</p>
+                <div class="related-meta">
+                  <span><span class="i-carbon:view" /> {{ relatedPost.visits || 0 }}</span>
+                  <span><span class="i-carbon:thumbs-up" /> {{ relatedPost.likes || 0 }}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -266,239 +341,557 @@ onMounted(async () => {
 
 <style scoped lang="less">
 .post-detail-page {
-  max-width: 900px;
+  min-height: 100vh;
+  background: var(--color-bg);
+  padding-bottom: 80px;
+}
+
+// Back Navigation
+.back-navigation {
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
-}
+  padding: 20px 32px;
 
-.post-article {
-  background: var(--color-surface);
-  border-radius: var(--radius-md);
-  padding: 2rem;
-  margin-bottom: 2rem;
-}
-
-.post-header {
-  margin-bottom: 2rem;
-
-  h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin: 0 0 1rem 0;
-    color: var(--color-text-primary);
-    line-height: 1.3;
-  }
-
-  .post-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
+  :deep(.n-button) {
     color: var(--color-text-secondary);
-    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s;
+
+    &:hover {
+      color: var(--color-brand);
+      transform: translateX(-4px);
+    }
   }
 }
 
-.post-thumbnail {
-  width: 100%;
-  max-height: 500px;
+// Post Article
+.post-article {
+  max-width: 1200px;
+  margin: 0 auto 40px;
+  background: var(--color-surface);
+  border-radius: 16px;
   overflow: hidden;
-  border-radius: var(--radius-md);
-  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+// Post Banner
+.post-banner {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
+
+  .banner-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.6));
+  }
 }
 
+// Article Content
+.article-content {
+  padding: 48px 64px;
+}
+
+// Post Header
+.post-header {
+  margin-bottom: 40px;
+
+  .post-title {
+    font-size: 42px;
+    font-weight: 800;
+    margin: 0 0 24px 0;
+    color: var(--color-text-primary);
+    line-height: 1.3;
+    letter-spacing: -0.5px;
+  }
+
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--color-text-secondary);
+      font-size: 15px;
+      font-weight: 500;
+
+      span[class^="i-"] {
+        font-size: 18px;
+        opacity: 0.8;
+      }
+    }
+  }
+}
+
+// Post Content
 .post-content {
-  font-size: 1.05rem;
+  font-size: 18px;
   line-height: 1.8;
   color: var(--color-text-primary);
-  margin-bottom: 2rem;
+  margin-bottom: 48px;
 
   :deep(h2) {
-    font-size: 1.75rem;
-    margin: 2rem 0 1rem;
+    font-size: 32px;
+    font-weight: 700;
+    margin: 48px 0 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--color-border);
   }
 
   :deep(h3) {
-    font-size: 1.5rem;
-    margin: 1.5rem 0 0.75rem;
+    font-size: 26px;
+    font-weight: 600;
+    margin: 36px 0 20px;
   }
 
   :deep(p) {
-    margin: 1rem 0;
+    margin: 20px 0;
+    text-align: justify;
   }
 
   :deep(img) {
     max-width: 100%;
-    border-radius: var(--radius-md);
-    margin: 1rem 0;
+    border-radius: 12px;
+    margin: 32px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
 
   :deep(code) {
     background: var(--color-bg);
-    padding: 0.2rem 0.4rem;
-    border-radius: var(--radius-sm);
-    font-family: 'Courier New', monospace;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.9em;
+    color: var(--color-brand);
   }
 
   :deep(pre) {
     background: var(--color-bg);
-    padding: 1rem;
-    border-radius: var(--radius-md);
+    padding: 24px;
+    border-radius: 12px;
     overflow-x: auto;
+    border: 1px solid var(--color-border);
+
+    code {
+      background: none;
+      padding: 0;
+      color: var(--color-text-primary);
+    }
+  }
+
+  :deep(blockquote) {
+    border-left: 4px solid var(--color-brand);
+    padding-left: 24px;
+    margin: 24px 0;
+    color: var(--color-text-secondary);
+    font-style: italic;
+  }
+
+  :deep(ul), :deep(ol) {
+    padding-left: 32px;
+    margin: 20px 0;
+
+    li {
+      margin: 12px 0;
+    }
+  }
+
+  :deep(a) {
+    color: var(--color-brand);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s;
+
+    &:hover {
+      border-bottom-color: var(--color-brand);
+    }
   }
 }
 
-.post-footer {
-  padding-top: 2rem;
+// Post Actions
+.post-actions {
+  padding: 32px 0;
   border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: center;
+
+  :deep(.n-button) {
+    width: 56px;
+    height: 56px;
+    border: 2px solid var(--color-border);
+    background: var(--color-surface);
+    transition: all 0.3s;
+
+    &:hover {
+      border-color: var(--color-brand);
+      color: var(--color-brand);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+  }
 }
 
-.comments-section {
-  background: var(--color-surface);
-  border-radius: var(--radius-md);
-  padding: 2rem;
-  margin-bottom: 2rem;
+// Section Header
+.section-header {
+  margin-bottom: 32px;
 
   h2 {
-    font-size: 1.5rem;
-    margin: 0 0 1.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
     color: var(--color-text-primary);
+
+    span[class^="i-"] {
+      font-size: 32px;
+      color: var(--color-brand);
+    }
   }
 }
 
-.comment-form-card {
-  margin-bottom: 2rem;
+// Comments Section
+.comments-section {
+  max-width: 1200px;
+  margin: 0 auto 40px;
+  background: var(--color-surface);
+  border-radius: 16px;
+  padding: 48px 64px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
+// Comment Form
+.comment-form {
+  background: var(--color-bg);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 40px;
+  border: 1px solid var(--color-border);
+
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 24px 0;
+    color: var(--color-text-primary);
+  }
+
+  :deep(.n-form-item) {
+    margin-bottom: 24px;
+  }
+
+  :deep(.n-button) {
+    padding: 0 32px;
+  }
+}
+
+// Comments List
 .comments-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 24px;
 }
 
 .comment-item {
-  padding: 1rem;
+  display: flex;
+  gap: 16px;
+  padding: 24px;
   background: var(--color-bg);
-  border-radius: var(--radius-md);
+  border-radius: 12px;
   border: 1px solid var(--color-border);
+  transition: all 0.3s;
 
-  .comment-author {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
+  &:hover {
+    border-color: var(--color-brand);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  }
 
-    strong {
-      color: var(--color-text-primary);
-    }
+  .comment-avatar {
+    flex-shrink: 0;
 
-    .comment-date {
-      font-size: 0.85rem;
-      color: var(--color-text-secondary);
+    :deep(.n-avatar) {
+      background: linear-gradient(135deg, var(--color-brand) 0%, #764ba2 100%);
+      color: #fff;
+      font-weight: 600;
     }
   }
 
-  .comment-content {
-    color: var(--color-text-primary);
-    line-height: 1.6;
+  .comment-body {
+    flex: 1;
+    min-width: 0;
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+
+      .comment-author {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--color-text-primary);
+      }
+
+      .comment-date {
+        font-size: 14px;
+        color: var(--color-text-secondary);
+      }
+    }
+
+    .comment-content {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--color-text-primary);
+    }
   }
 }
 
+// Related Section
 .related-section {
+  max-width: 1200px;
+  margin: 0 auto;
   background: var(--color-surface);
-  border-radius: var(--radius-md);
-  padding: 2rem;
-
-  h2 {
-    font-size: 1.5rem;
-    margin: 0 0 1.5rem 0;
-    color: var(--color-text-primary);
-  }
+  border-radius: 16px;
+  padding: 48px 64px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .related-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
 }
 
 .related-card {
   cursor: pointer;
   transition: all 0.3s;
-  border-radius: var(--radius-md);
+  border-radius: 12px;
   overflow: hidden;
   border: 1px solid var(--color-border);
+  background: var(--color-bg);
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    border-color: var(--color-brand);
+
+    .related-image {
+      .image-overlay {
+        background: rgba(0, 0, 0, 0.3);
+      }
+
+      img {
+        transform: scale(1.1);
+      }
+    }
   }
 
   .related-image {
+    position: relative;
     width: 100%;
-    height: 150px;
+    height: 200px;
     overflow: hidden;
 
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.3s;
+      transition: transform 0.5s;
     }
 
-    &:hover img {
-      transform: scale(1.05);
+    .image-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.1);
+      transition: all 0.3s;
     }
   }
 
   .related-content {
-    padding: 1rem;
+    padding: 20px;
 
     h3 {
-      font-size: 1rem;
+      font-size: 18px;
       font-weight: 600;
-      margin: 0 0 0.5rem 0;
+      margin: 0 0 12px 0;
       color: var(--color-text-primary);
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      line-height: 1.4;
     }
 
     p {
-      font-size: 0.85rem;
+      font-size: 14px;
       color: var(--color-text-secondary);
-      margin: 0;
+      margin: 0 0 16px 0;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      line-height: 1.6;
+    }
+
+    .related-meta {
+      display: flex;
+      gap: 20px;
+      font-size: 13px;
+      color: var(--color-text-secondary);
+
+      span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        span[class^="i-"] {
+          font-size: 16px;
+        }
+      }
     }
   }
 }
 
-@media (max-width: 768px) {
-  .post-detail-page {
-    padding: 1rem;
-  }
-
+// Responsive Design
+@media (max-width: 1024px) {
+  .back-navigation,
   .post-article,
   .comments-section,
   .related-section {
-    padding: 1rem;
+    margin-left: 20px;
+    margin-right: 20px;
   }
 
-  .post-header h1 {
-    font-size: 1.75rem;
+  .article-content,
+  .comments-section,
+  .related-section {
+    padding: 32px 40px;
+  }
+
+  .post-banner {
+    height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .back-navigation {
+    padding: 16px 20px;
+  }
+
+  .post-banner {
+    height: 300px;
+  }
+
+  .article-content,
+  .comments-section,
+  .related-section {
+    padding: 24px 20px;
+  }
+
+  .post-header {
+    .post-title {
+      font-size: 28px;
+    }
+
+    .post-meta {
+      gap: 16px;
+
+      .meta-item {
+        font-size: 13px;
+      }
+    }
+  }
+
+  .post-content {
+    font-size: 16px;
+
+    :deep(h2) {
+      font-size: 24px;
+      margin: 32px 0 16px;
+    }
+
+    :deep(h3) {
+      font-size: 20px;
+      margin: 24px 0 12px;
+    }
+  }
+
+  .post-actions {
+    :deep(.n-button) {
+      width: 48px;
+      height: 48px;
+    }
+  }
+
+  .section-header h2 {
+    font-size: 22px;
+  }
+
+  .comment-form {
+    padding: 20px;
+
+    h3 {
+      font-size: 18px;
+    }
+  }
+
+  .comment-item {
+    padding: 16px;
+
+    .comment-avatar {
+      :deep(.n-avatar) {
+        --n-size: 40px !important;
+      }
+    }
   }
 
   .related-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .back-navigation,
+  .post-article,
+  .comments-section,
+  .related-section {
+    margin-left: 12px;
+    margin-right: 12px;
+    border-radius: 12px;
+  }
+
+  .article-content,
+  .comments-section,
+  .related-section {
+    padding: 20px 16px;
+  }
+
+  .post-banner {
+    height: 250px;
+  }
+
+  .post-header .post-title {
+    font-size: 24px;
+  }
+
+  .post-content {
+    font-size: 15px;
   }
 }
 </style>
