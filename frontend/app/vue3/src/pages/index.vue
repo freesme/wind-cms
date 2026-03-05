@@ -151,11 +151,35 @@ onMounted(async () => {
       <!-- Animated Background Elements -->
       <div class="hero-bg-wrapper">
         <div class="hero-gradient-bg"></div>
+
+        <!-- Grid Background -->
+        <div class="hero-grid-bg"></div>
+
+        <!-- Animated Shapes -->
         <div class="hero-animated-shapes">
           <div class="shape shape-1"></div>
           <div class="shape shape-2"></div>
           <div class="shape shape-3"></div>
         </div>
+
+        <!-- Code Snippet Decorations -->
+        <div class="hero-code-snippets">
+          <div class="code-snippet snippet-1">
+            <div class="code-line"><span class="code-keyword">func</span> <span class="code-function">GetPost</span>() {</div>
+            <div class="code-line">  <span class="code-keyword">return</span> post</div>
+            <div class="code-line">}</div>
+          </div>
+          <div class="code-snippet snippet-2">
+            <div class="code-line"><span class="code-tag">&lt;template&gt;</span></div>
+            <div class="code-line">  <span class="code-tag">&lt;div</span> <span class="code-attr">class</span>=<span class="code-string">"cms"</span><span class="code-tag">&gt;</span></div>
+            <div class="code-line">  <span class="code-tag">&lt;/div&gt;</span></div>
+          </div>
+          <div class="code-snippet snippet-3">
+            <div class="code-line"><span class="code-comment">// CMS API</span></div>
+            <div class="code-line"><span class="code-keyword">const</span> api = <span class="code-string">'v1'</span></div>
+          </div>
+        </div>
+
         <svg class="hero-waves" viewBox="0 0 1440 320" preserveAspectRatio="none">
           <path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,101.3C1248,85,1344,75,1392,69.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
         </svg>
@@ -164,7 +188,7 @@ onMounted(async () => {
       <div class="hero-content">
         <h1 class="hero-title">{{ $t('authentication.login.brand_title') }}</h1>
         <p class="hero-subtitle">{{ $t('authentication.login.brand_subtitle') }}</p>
-        <p class="hero-tagline">基于 Go + Vue3 的高性能、多语言 CMS 系统</p>
+        <p class="hero-description">基于 Go + Vue3 的高性能、多语言 CMS 系统</p>
         <div class="hero-actions">
           <n-button type="primary" size="large" class="btn-primary" @click="router.push('/post')">
             <template #icon>
@@ -321,7 +345,7 @@ onMounted(async () => {
   padding: 6rem 2rem;
   text-align: center;
   max-width: 100%;
-  background: linear-gradient(135deg, var(--color-brand) 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
   color: white;
   position: relative;
   overflow: hidden;
@@ -346,10 +370,95 @@ onMounted(async () => {
       right: 0;
       bottom: 0;
       background:
-        radial-gradient(ellipse at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
-        linear-gradient(135deg, var(--color-brand) 0%, #764ba2 100%);
+        radial-gradient(ellipse at 20% 50%, rgba(100, 200, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(200, 100, 255, 0.12) 0%, transparent 50%),
+        linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
       animation: gradientShift 15s ease-in-out infinite;
+    }
+
+    .hero-grid-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: gridMove 20s linear infinite;
+      opacity: 0.6;
+    }
+
+    // Code Snippet Decorations
+    .hero-code-snippets {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+
+      .code-snippet {
+        position: absolute;
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 12px 16px;
+        font-family: 'Fira Code', 'Consolas', monospace;
+        font-size: 13px;
+        line-height: 1.6;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        opacity: 0.85;
+
+        .code-line {
+          white-space: nowrap;
+          color: rgba(255, 255, 255, 0.9);
+        }
+
+        .code-keyword {
+          color: #fb7185;
+          font-weight: 600;
+        }
+
+        .code-function {
+          color: #fbbf24;
+        }
+
+        .code-tag {
+          color: #60a5fa;
+        }
+
+        .code-attr {
+          color: #a78bfa;
+        }
+
+        .code-string {
+          color: #34d399;
+        }
+
+        .code-comment {
+          color: rgba(255, 255, 255, 0.5);
+          font-style: italic;
+        }
+
+        &.snippet-1 {
+          top: 15%;
+          right: 8%;
+          animation: float 8s ease-in-out infinite, fadeInOut 4s ease-in-out infinite;
+        }
+
+        &.snippet-2 {
+          top: 55%;
+          left: 5%;
+          animation: float 10s ease-in-out infinite reverse, fadeInOut 5s ease-in-out infinite 1s;
+        }
+
+        &.snippet-3 {
+          bottom: 20%;
+          right: 12%;
+          animation: float 12s ease-in-out infinite, fadeInOut 6s ease-in-out infinite 2s;
+        }
+      }
     }
 
     .hero-animated-shapes {
@@ -411,37 +520,46 @@ onMounted(async () => {
   }
 
   .hero-title {
-    font-size: 3.5rem;
-    font-weight: 800;
-    margin-bottom: 1rem;
-    line-height: 1.2;
-    letter-spacing: -1px;
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+    font-size: 4.5rem;
+    font-weight: 900;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+    letter-spacing: -2px;
+    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.3),
+                 0 2px 8px rgba(0, 0, 0, 0.2);
     animation: slideDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.95) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .hero-subtitle {
-    font-size: 1.5rem;
-    margin-bottom: 0.75rem;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    opacity: 0.95;
-    font-weight: 500;
-    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
-    animation: fadeInUp 0.8s ease-out 0.2s both;
-  }
-
-  .hero-tagline {
-    font-size: 1.1rem;
-    margin-bottom: 2.5rem;
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
-    opacity: 0.9;
-    font-weight: 400;
-    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+    opacity: 0.95;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+    line-height: 1.4;
+  }
+
+  .hero-description {
+    font-size: 1.15rem;
+    margin-bottom: 2.5rem;
+    max-width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.85;
+    font-weight: 300;
+    letter-spacing: 0.3px;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
     animation: fadeInUp 0.8s ease-out 0.4s both;
+    line-height: 1.6;
   }
 
   .hero-actions {
@@ -455,69 +573,163 @@ onMounted(async () => {
       :deep(.n-button) {
         background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
         color: white !important;
-        font-size: 1rem;
+        font-size: 1.05rem;
         font-weight: 700;
-        padding: 14px 36px !important;
-        border-radius: 50px !important;
+        padding: 16px 40px !important;
+        border-radius: 12px !important;
         border: none !important;
-        box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4), 0 1px 3px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 24px rgba(16, 185, 129, 0.35),
+                    0 4px 12px rgba(16, 185, 129, 0.2),
+                    0 0 0 1px rgba(255, 255, 255, 0.15) inset;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+          transition: left 0.5s;
+        }
 
         &:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 12px 32px rgba(16, 185, 129, 0.5), 0 4px 8px rgba(0, 0, 0, 0.15);
+          transform: translateY(-2px) scale(1.02);
+          box-shadow: 0 12px 32px rgba(16, 185, 129, 0.45),
+                      0 6px 16px rgba(16, 185, 129, 0.25),
+                      0 0 0 1px rgba(255, 255, 255, 0.2) inset;
           background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+
+          &::before {
+            left: 100%;
+          }
         }
 
         &:active {
-          transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+          transform: translateY(0) scale(0.98);
+          box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4),
+                      0 2px 8px rgba(16, 185, 129, 0.2);
         }
       }
     }
 
     .btn-secondary {
       :deep(.n-button) {
-        background: rgba(255, 255, 255, 0.15) !important;
+        background: rgba(255, 255, 255, 0.12) !important;
         color: white !important;
-        font-size: 1rem;
-        font-weight: 700;
-        padding: 14px 36px !important;
-        border-radius: 50px !important;
-        border: 2px solid rgba(255, 255, 255, 0.4) !important;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+        font-size: 1.05rem;
+        font-weight: 600;
+        padding: 16px 40px !important;
+        border-radius: 12px !important;
+        border: 2px solid rgba(255, 255, 255, 0.3) !important;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15),
+                    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+          transition: left 0.5s;
+        }
 
         &:hover {
-          background: rgba(255, 255, 255, 0.25) !important;
-          border-color: rgba(255, 255, 255, 0.6) !important;
-          transform: translateY(-3px);
-          box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+          background: rgba(255, 255, 255, 0.2) !important;
+          border-color: rgba(255, 255, 255, 0.5) !important;
+          transform: translateY(-2px) scale(1.02);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2),
+                      0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+
+          &::before {
+            left: 100%;
+          }
         }
 
         &:active {
-          transform: translateY(-1px);
-          background: rgba(255, 255, 255, 0.2) !important;
+          transform: translateY(0) scale(0.98);
+          background: rgba(255, 255, 255, 0.15) !important;
+          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
         }
       }
     }
+  }
+
+  .hero-content {
+    animation: fadeInUp 0.8s ease-out;
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .hero-title {
+    font-size: 4.5rem;
+    font-weight: 900;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+    letter-spacing: -2px;
+    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.3),
+                 0 2px 8px rgba(0, 0, 0, 0.2);
+    animation: slideDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.95) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.95;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+    line-height: 1.4;
+  }
+
+  .hero-description {
+    font-size: 1.15rem;
+    margin-bottom: 2.5rem;
+    max-width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.85;
+    font-weight: 300;
+    letter-spacing: 0.3px;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+    line-height: 1.6;
   }
 }
 
 @keyframes gradientShift {
   0%, 100% {
     background:
-      radial-gradient(ellipse at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
-      linear-gradient(135deg, var(--color-brand) 0%, #764ba2 100%);
+      radial-gradient(ellipse at 20% 50%, rgba(100, 200, 255, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(200, 100, 255, 0.12) 0%, transparent 50%),
+      linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
   }
   50% {
     background:
-      radial-gradient(ellipse at 80% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-      radial-gradient(ellipse at 20% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
-      linear-gradient(135deg, #764ba2 0%, var(--color-brand) 100%);
+      radial-gradient(ellipse at 80% 50%, rgba(100, 200, 255, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 20% 80%, rgba(200, 100, 255, 0.12) 0%, transparent 50%),
+      linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #6366f1 100%);
   }
 }
 
@@ -553,6 +765,24 @@ onMounted(async () => {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes gridMove {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(50px, 50px);
+  }
+}
+
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
   }
 }
 
@@ -1136,11 +1366,68 @@ onMounted(async () => {
 
 // 暗黑模式优化 - 创造层次感和视觉节奏
 html.dark {
-  // 定义暗黑模式的CSS变量 - 增强背景颜色深度
-  --color-card-bg: linear-gradient(135deg, rgba(65, 75, 95, 0.85) 0%, rgba(48, 56, 72, 0.85) 100%);
-  --color-card-border: rgba(255, 255, 255, 0.12);
-  --color-card-shadow: rgba(0, 0, 0, 0.5);
-  --color-hover-shadow: rgba(0, 0, 0, 0.6);
+  // 页面背景 - 优化配色更生动
+  background: linear-gradient(135deg, #0f1420 0%, #1a1f35 50%, #0f1420 100%);
+  background-attachment: fixed;
+
+  // 页面背景装饰效果
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+      radial-gradient(ellipse at 20% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 70%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  // ...existing code...
+  --color-card-bg: linear-gradient(135deg, rgba(75, 90, 120, 0.9) 0%, rgba(55, 70, 100, 0.9) 100%);
+  --color-card-border: rgba(150, 180, 255, 0.2);
+  --color-card-shadow: rgba(0, 0, 0, 0.4);
+  --color-hover-shadow: rgba(100, 150, 255, 0.3);
+
+  // Hero 区域暗黑模式优化
+  .hero {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+    box-shadow: 0 20px 60px rgba(99, 102, 241, 0.3);
+
+    .hero-grid-bg {
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      opacity: 0.5;
+    }
+
+    .hero-code-snippets .code-snippet {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-title {
+      background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.9) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
+                   0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-subtitle {
+      color: rgba(255, 255, 255, 0.95);
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .hero-description {
+      color: rgba(255, 255, 255, 0.85);
+      text-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
+    }
+  }
 
   // 卡片基础样式
   .category-card {
@@ -1172,51 +1459,59 @@ html.dark {
   }
 
   .post-card {
-    background: linear-gradient(135deg, rgba(65, 75, 95, 0.85) 0%, rgba(48, 56, 72, 0.85) 100%);
-    border-color: rgba(255, 255, 255, 0.12);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(135deg, rgba(75, 90, 120, 0.9) 0%, rgba(55, 70, 100, 0.9) 100%);
+    border-color: rgba(150, 180, 255, 0.2);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(10px);
 
     &:hover {
-      background: linear-gradient(135deg, rgba(80, 95, 120, 0.95) 0%, rgba(65, 75, 95, 0.95) 100%);
-      border-color: var(--color-brand);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--color-brand);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%),
+                  linear-gradient(135deg, rgba(100, 120, 160, 0.95) 0%, rgba(80, 100, 140, 0.95) 100%);
+      border-color: rgba(168, 85, 247, 0.6) !important;
+      box-shadow: 0 12px 32px rgba(99, 102, 241, 0.3),
+                  0 0 0 1px rgba(168, 85, 247, 0.5),
+                  0 0 20px rgba(168, 85, 247, 0.15);
     }
   }
 
   .featured-card {
-    background: linear-gradient(135deg, rgba(65, 75, 95, 0.85) 0%, rgba(48, 56, 72, 0.85) 100%);
-    border-color: rgba(255, 255, 255, 0.12);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(135deg, rgba(75, 90, 120, 0.9) 0%, rgba(55, 70, 100, 0.9) 100%);
+    border-color: rgba(150, 180, 255, 0.2);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(10px);
 
     &:hover {
-      background: linear-gradient(135deg, rgba(80, 95, 120, 0.95) 0%, rgba(65, 75, 95, 0.95) 100%);
-      border-color: var(--color-brand);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--color-brand);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%),
+                  linear-gradient(135deg, rgba(100, 120, 160, 0.95) 0%, rgba(80, 100, 140, 0.95) 100%);
+      border-color: rgba(168, 85, 247, 0.6) !important;
+      box-shadow: 0 12px 32px rgba(99, 102, 241, 0.3),
+                  0 0 0 1px rgba(168, 85, 247, 0.5),
+                  0 0 20px rgba(168, 85, 247, 0.15);
     }
   }
 
-  // Section 背景交替：创造视觉节奏
+  // Section 背景交替：创造视觉节奏 - 优化配色更生动
   .categories-section {
-    background: #18191c;
+    background: linear-gradient(180deg, #1a1d26 0%, #222836 100%);
   }
 
   .featured-section {
-    background: #1e2024;
+    background: linear-gradient(180deg, #252b38 0%, #1f2633 100%);
   }
 
   .latest-section {
-    background: #18191c;
+    background: linear-gradient(180deg, #1a1d26 0%, #222836 100%);
   }
 
   .features {
-    background: #1e2024;
+    background: linear-gradient(180deg, #252b38 0%, #1f2633 100%);
   }
 
   // Section header 文字优化
   .section-header h2 {
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    color: #f0f1f3 !important;
+    font-weight: 700;
   }
 
   // 卡片内部元素优化
@@ -1302,9 +1597,9 @@ html.dark {
 
   // Feature卡片在暗黑模式下的优化
   .feature-card {
-    background: linear-gradient(135deg, rgba(65, 75, 95, 0.85) 0%, rgba(48, 56, 72, 0.85) 100%);
-    border-color: rgba(255, 255, 255, 0.12);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(135deg, rgba(75, 90, 120, 0.9) 0%, rgba(55, 70, 100, 0.9) 100%);
+    border-color: rgba(150, 180, 255, 0.2);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(10px);
 
     h3 {
@@ -1316,8 +1611,12 @@ html.dark {
     }
 
     &:hover {
-      background: linear-gradient(135deg, rgba(80, 95, 120, 0.95) 0%, rgba(65, 75, 95, 0.95) 100%);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%),
+                  linear-gradient(135deg, rgba(100, 120, 160, 0.95) 0%, rgba(80, 100, 140, 0.95) 100%);
+      border-color: rgba(168, 85, 247, 0.6) !important;
+      box-shadow: 0 12px 32px rgba(99, 102, 241, 0.3),
+                  0 0 0 1px rgba(168, 85, 247, 0.5),
+                  0 0 20px rgba(168, 85, 247, 0.15);
 
       h3 {
         color: #f9fafb !important;
@@ -1367,11 +1666,21 @@ html.dark {
   }
 
   .hero-title {
-    font-size: 2.8rem;
+    font-size: 3.5rem;
+    letter-spacing: -1.5px;
   }
 
   .hero-subtitle {
-    font-size: 1.25rem;
+    font-size: 1.4rem;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+  }
+
+  // 隐藏代码片段在小屏幕上
+  .hero-code-snippets {
+    display: none;
   }
 }
 
@@ -1380,13 +1689,25 @@ html.dark {
     padding: 4rem 1.5rem;
 
     .hero-title {
-      font-size: 2.2rem;
+      font-size: 2.8rem;
       margin-bottom: 0.75rem;
+      letter-spacing: -1px;
     }
 
     .hero-subtitle {
-      font-size: 1rem;
-      margin-bottom: 1.5rem;
+      font-size: 1.15rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-description {
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+
+    // 隐藏装饰元素在移动端
+    .hero-code-snippets,
+    .hero-grid-bg {
+      display: none;
     }
 
     .hero-actions {
