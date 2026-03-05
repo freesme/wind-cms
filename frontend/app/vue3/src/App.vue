@@ -122,6 +122,7 @@ onMounted(() => {
   }
 }
 
+
 .footer-wrapper {
   width: 100%;
   background: var(--color-surface);
