@@ -95,6 +95,10 @@ function handleViewCategory(id: number) {
   router.push(`/category/${id}`)
 }
 
+function getUpdatedDaysAgo(days: number = 3) {
+  return $t('page.home.updated_days_ago', { days })
+}
+
 const features = computed(() => {
   // Track locale so this list recomputes immediately on language switch.
   void i18n.global.locale.value
@@ -188,7 +192,7 @@ onMounted(async () => {
       <div class="hero-content">
         <h1 class="hero-title">{{ $t('authentication.login.brand_title') }}</h1>
         <p class="hero-subtitle">{{ $t('authentication.login.brand_subtitle') }}</p>
-        <p class="hero-description">基于 Go + Vue3 的高性能、多语言 CMS 系统</p>
+        <p class="hero-description">{{ $t('page.home.hero_description') }}</p>
         <div class="hero-actions">
           <n-button type="primary" size="large" class="btn-primary" @click="router.push('/post')">
             <template #icon>
@@ -243,7 +247,7 @@ onMounted(async () => {
               <!-- Updated Badge -->
               <div class="category-badge">
                 <XIcon name="carbon:time" :size="14"/>
-                <span>3 天前更新</span>
+                <span>{{ getUpdatedDaysAgo(3) }}</span>
               </div>
             </div>
           </div>
@@ -680,13 +684,19 @@ onMounted(async () => {
     margin-bottom: 1.5rem;
     line-height: 1.1;
     letter-spacing: -2px;
-    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.3),
-                 0 2px 8px rgba(0, 0, 0, 0.2);
-    animation: slideDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-    background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.95) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+
+    // 直接使用纯白色，配合多层发光阴影表达迅疾感
+    color: #ffffff;
+    text-shadow:
+      0 0 30px rgba(255, 255, 255, 0.8),
+      0 0 60px rgba(168, 85, 247, 0.6),
+      0 4px 20px rgba(0, 0, 0, 0.4),
+      0 2px 8px rgba(0, 0, 0, 0.3);
+
+    // 添加发光动画，制造迅疾风动的效果
+    filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.5));
+    animation: slideDown 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),
+              glowPulse 3s ease-in-out infinite 0.5s;
   }
 
   .hero-subtitle {
@@ -783,6 +793,25 @@ onMounted(async () => {
   }
   50% {
     opacity: 1;
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.3));
+    text-shadow:
+      0 0 20px rgba(255, 255, 255, 0.6),
+      0 0 40px rgba(168, 85, 247, 0.4),
+      0 4px 15px rgba(0, 0, 0, 0.3),
+      0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.7));
+    text-shadow:
+      0 0 40px rgba(255, 255, 255, 0.9),
+      0 0 70px rgba(168, 85, 247, 0.8),
+      0 4px 20px rgba(0, 0, 0, 0.4),
+      0 2px 8px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -1410,12 +1439,13 @@ html.dark {
     }
 
     .hero-title {
-      background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.9) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
-                   0 2px 10px rgba(0, 0, 0, 0.3);
+      color: #ffffff;
+      text-shadow:
+        0 0 30px rgba(255, 255, 255, 0.8),
+        0 0 60px rgba(168, 85, 247, 0.6),
+        0 4px 20px rgba(0, 0, 0, 0.4),
+        0 2px 10px rgba(0, 0, 0, 0.3);
+      filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.5));
     }
 
     .hero-subtitle {
