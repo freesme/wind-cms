@@ -8694,6 +8694,11 @@ export type identityservicev1_User = {
   lastLoginIp?: string;
   status?: identityservicev1_User_Status;
   lockedUntil?: wellKnownTimestamp;
+  followers?: number;
+  following?: number;
+  postCount?: number;
+  commentCount?: number;
+  likeCount?: number;
   createdBy?: number;
   updatedBy?: number;
   deletedBy?: number;
