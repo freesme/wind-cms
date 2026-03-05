@@ -80,24 +80,38 @@ function loadExample() {
     flex: 1;
     display: flex;
     flex-direction: column;
+    min-height: 0; // Important for flex children with overflow
+
+    :deep(.n-card__header) {
+      flex-shrink: 0;
+    }
 
     :deep(.n-card__content) {
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding: 0;
+      padding: 1rem;
       overflow: hidden;
+      min-height: 0;
     }
 
     .editor-container {
       flex: 1;
       display: flex;
-      overflow: hidden;
+      overflow: auto; // Allow scrolling if content is too large
+      min-height: 0;
 
       :deep(.content-editor) {
         flex: 1;
-        height: 100%;
+        min-height: 300px;
+        min-width: 100%;
       }
+    }
+
+    :deep(.n-card__footer) {
+      flex-shrink: 0;
+      border-top: 1px solid var(--color-border);
+      padding: 1rem;
     }
   }
 
@@ -106,7 +120,6 @@ function loadExample() {
     justify-content: space-between;
     gap: 2rem;
     flex-wrap: wrap;
-    padding: 0 1rem;
   }
 }
 
@@ -117,6 +130,7 @@ function loadExample() {
 
     .editor-card {
       height: 600px;
+      min-height: 500px;
 
       .editor-info {
         gap: 1rem;
