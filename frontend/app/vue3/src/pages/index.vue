@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {definePage} from 'unplugin-vue-router/runtime'
 import {useRouter} from 'vue-router'
-import {ref, onMounted, computed} from 'vue'
+import {ref, onMounted, computed, onUnmounted} from 'vue'
 import {usePostStore, useCategoryStore} from '@/stores/modules/app'
 import {$t, i18n} from '@/locales'
 import {XIcon} from "@/plugins/xicon";
@@ -29,6 +29,42 @@ const popularTags = ref<any[]>([
   { id: 6, name: '性能优化', color: 'hsl(160, 100%, 50%)' },
 ])
 const loading = ref(false)
+
+// 滚动动画相关
+const observerRef = ref<IntersectionObserver | null>(null)
+
+// 初始化滚动观察器
+function initScrollObserver() {
+  const options = {
+    root: null,
+    threshold: 0.1,
+    rootMargin: '0px 0px -100px 0px'
+  }
+
+  observerRef.value = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible')
+        // 一旦动画触发，停止观察该元素
+        observerRef.value?.unobserve(entry.target)
+      }
+    })
+  }, options)
+
+  // 观察所有需要动画的元素
+  const elements = document.querySelectorAll('.scroll-reveal-item')
+  elements.forEach((el) => {
+    observerRef.value?.observe(el)
+  })
+}
+
+// 销毁观察器
+function destroyScrollObserver() {
+  if (observerRef.value) {
+    observerRef.value.disconnect()
+    observerRef.value = null
+  }
+}
 
 // 加载最新文章
 async function loadLatestPosts() {
@@ -153,6 +189,15 @@ onMounted(async () => {
     loadCategories(),
   ])
   loading.value = false
+
+  // 数据加载完成后初始化滚动动画
+  setTimeout(() => {
+    initScrollObserver()
+  }, 100)
+})
+
+onUnmounted(() => {
+  destroyScrollObserver()
 })
 </script>
 
@@ -218,8 +263,59 @@ onMounted(async () => {
       </div>
     </section>
 
+    <!-- Featured Posts Section (推荐阅读) - 上移到Categories之前 -->
+    <section v-if="featuredPosts.length > 0" class="featured-section scroll-reveal">
+      <div class="section-header">
+        <h2>
+          <XIcon name="carbon:star-filled" :size="28" style="color: var(--color-brand); margin-right: 8px;"/>
+          {{ $t('page.home.featured_posts') }}
+        </h2>
+        <n-button text type="primary" @click="router.push('/post')">
+          {{ $t('page.home.view_all') }} →
+        </n-button>
+      </div>
+      <n-spin :show="loading">
+        <div class="featured-grid">
+          <div
+            v-for="post in featuredPosts"
+            :key="post.id"
+            class="featured-card scroll-reveal-item"
+            @click="handleViewPost(post.id)"
+          >
+            <div class="featured-image">
+              <img :src="getPostThumbnail(post)" :alt="getPostTitle(post)"/>
+              <div class="featured-overlay">
+                <span class="featured-badge">
+                  <XIcon name="carbon:star-filled" :size="14"/>
+                  推荐
+                </span>
+              </div>
+            </div>
+            <div class="featured-content">
+              <h3>{{ getPostTitle(post) }}</h3>
+              <p>{{ getPostSummary(post) }}</p>
+              <div class="featured-meta">
+                <span>
+                  <XIcon name="carbon:user" :size="14"/>
+                  {{ post.authorName || '匿名' }}
+                </span>
+                <span>
+                  <XIcon name="carbon:time" :size="14"/>
+                  {{ formatDate(post.createdAt) }}
+                </span>
+                <span>
+                  <XIcon name="carbon:view" :size="14"/>
+                  {{ post.viewCount || 0 }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </n-spin>
+    </section>
+
     <!-- Categories Section -->
-    <section class="categories-section">
+    <section class="categories-section scroll-reveal">
       <div class="section-header">
         <h2>{{ $t('page.home.categories') }}</h2>
         <n-button text type="primary" @click="router.push('/category')">
@@ -232,7 +328,7 @@ onMounted(async () => {
           <div
             v-for="category in categories"
             :key="category.id"
-            class="category-card"
+            class="category-card scroll-reveal-item"
             :style="{ '--card-hue': (category.id % 6) * 60 }"
             @click="handleViewCategory(category.id)"
           >
@@ -333,37 +429,9 @@ onMounted(async () => {
       </div>
     </section>
 
-    <!-- Featured Posts Section -->
-    <section v-if="featuredPosts.length > 0" class="featured-section">
-      <div class="section-header">
-        <h2>{{ $t('page.home.featured_posts') }}</h2>
-      </div>
-      <n-spin :show="loading">
-        <div class="featured-grid">
-          <div
-            v-for="post in featuredPosts"
-            :key="post.id"
-            class="featured-card"
-            @click="handleViewPost(post.id)"
-          >
-            <div class="featured-image">
-              <img :src="getPostThumbnail(post)" :alt="getPostTitle(post)"/>
-            </div>
-            <div class="featured-content">
-              <h3>{{ getPostTitle(post) }}</h3>
-              <p>{{ getPostSummary(post) }}</p>
-              <div class="featured-meta">
-                <span>{{ post.authorName }}</span>
-                <span>{{ formatDate(post.createdAt) }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </n-spin>
-    </section>
 
     <!-- Latest Posts Section -->
-    <section class="latest-section">
+    <section class="latest-section scroll-reveal">
       <div class="section-header">
         <h2>{{ $t('page.home.latest_posts') }}</h2>
         <n-button text type="primary" @click="router.push('/post')">
@@ -375,7 +443,7 @@ onMounted(async () => {
           <div
             v-for="post in latestPosts"
             :key="post.id"
-            class="post-card"
+            class="post-card scroll-reveal-item"
             @click="handleViewPost(post.id)"
           >
             <div class="post-image">
@@ -422,16 +490,62 @@ onMounted(async () => {
   background: var(--color-bg);
 }
 
+// ========== Scroll Reveal Animations ==========
+.scroll-reveal-item {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  // 为每个卡片添加延迟，创造波浪效果
+  &:nth-child(1) { transition-delay: 0.08s; }
+  &:nth-child(2) { transition-delay: 0.16s; }
+  &:nth-child(3) { transition-delay: 0.24s; }
+  &:nth-child(4) { transition-delay: 0.32s; }
+  &:nth-child(5) { transition-delay: 0.4s; }
+  &:nth-child(6) { transition-delay: 0.48s; }
+  &:nth-child(7) { transition-delay: 0.56s; }
+  &:nth-child(8) { transition-delay: 0.64s; }
+  &:nth-child(9) { transition-delay: 0.72s; }
+  &:nth-child(10) { transition-delay: 0.8s; }
+  &:nth-child(11) { transition-delay: 0.88s; }
+  &:nth-child(12) { transition-delay: 0.96s; }
+}
+
+.scroll-reveal {
+  .section-header {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease-out 0.2s forwards;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 // Hero Section
 .hero {
-  padding: 4rem 2rem 3rem;
+  padding: 3.5rem 2rem 2.5rem;
   text-align: center;
   max-width: 100%;
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
   color: white;
   position: relative;
   overflow: hidden;
-  min-height: 350px;
+  min-height: 280px;
   height: auto;
   display: flex;
   align-items: center;
@@ -1094,7 +1208,7 @@ onMounted(async () => {
 
 // Categories Section
 .categories-section {
-  padding: 4rem 0;
+  padding: 3rem 0;
   background: var(--color-surface);
 
   .section-header {
@@ -1477,13 +1591,13 @@ onMounted(async () => {
 
 // Featured Posts Section
 .featured-section {
-  padding: 4rem 0;
+  padding: 2.5rem 0;
   background: var(--color-bg);
 
   .featured-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 2rem;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 2rem;
@@ -1497,19 +1611,22 @@ onMounted(async () => {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid var(--color-card-border, #e5e7eb);
     box-shadow: 0 2px 8px var(--color-card-shadow, rgba(0, 0, 0, 0.08)), 0 1px 3px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
     &:hover {
-      transform: translateY(-12px);
-      box-shadow: 0 20px 40px var(--color-hover-shadow, rgba(0, 0, 0, 0.12)), 0 8px 16px var(--color-hover-shadow, rgba(0, 0, 0, 0.08));
+      transform: translateY(-8px);
+      box-shadow: 0 16px 32px var(--color-hover-shadow, rgba(0, 0, 0, 0.15)), 0 8px 16px var(--color-hover-shadow, rgba(0, 0, 0, 0.08));
       border-color: var(--color-brand);
 
       .featured-image {
-        &::after {
-          opacity: 1;
+        img {
+          transform: scale(1.08);
         }
 
-        img {
-          transform: scale(1.1);
+        .featured-overlay {
+          opacity: 1;
         }
       }
 
@@ -1521,62 +1638,106 @@ onMounted(async () => {
     .featured-image {
       position: relative;
       width: 100%;
-      height: 240px;
+      height: 220px;
       overflow: hidden;
-      background: var(--color-bg);
-
-      &::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: radial-gradient(ellipse at center, transparent 30%, rgba(102, 126, 234, 0.1) 100%);
-        opacity: 0;
-        transition: opacity 0.3s;
-        mix-blend-mode: screen;
-      }
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .featured-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0.3) 100%
+        );
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-end;
+        padding: 12px;
+      }
+
+      .featured-badge {
+        background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+        backdrop-filter: blur(8px);
+
+        :deep(svg) {
+          filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.8));
+        }
       }
     }
 
     .featured-content {
-      padding: 2rem;
+      padding: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
 
       h3 {
-        font-size: 1.35rem;
-        font-weight: 700;
-        margin: 0 0 0.75rem 0;
+        font-size: 20px;
+        font-weight: 600;
+        margin: 0 0 12px 0;
         color: var(--color-text-primary);
         line-height: 1.4;
-        transition: color 0.3s;
-      }
-
-      p {
-        color: var(--color-text-secondary);
-        line-height: 1.8;
-        margin: 0 0 1.25rem 0;
+        transition: color 0.3s ease;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        font-size: 0.95rem;
+        text-overflow: ellipsis;
+      }
+
+      p {
+        font-size: 15px;
+        line-height: 1.7;
+        color: var(--color-text-secondary);
+        margin: 0 0 16px 0;
+        flex: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .featured-meta {
         display: flex;
-        gap: 1.5rem;
-        font-size: 0.85rem;
-        color: var(--color-text-secondary);
-        padding-top: 1rem;
+        align-items: center;
+        gap: 16px;
+        padding-top: 16px;
         border-top: 1px solid var(--color-border);
-        font-weight: 500;
+        font-size: 13px;
+        color: var(--color-text-secondary);
+
+        span {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+
+          :deep(svg) {
+            opacity: 0.7;
+          }
+        }
       }
     }
   }
@@ -1584,7 +1745,7 @@ onMounted(async () => {
 
 // Latest Posts Section
 .latest-section {
-  padding: 4rem 0;
+  padding: 3rem 0;
   background: var(--color-surface);
 
   .posts-grid {
@@ -2195,6 +2356,25 @@ html.dark {
     gap: 1.5rem;
   }
 
+  .featured-card {
+    .featured-image {
+      height: 200px;
+    }
+
+    .featured-content {
+      padding: 20px;
+
+      h3 {
+        font-size: 18px;
+      }
+
+      p {
+        font-size: 14px;
+        -webkit-line-clamp: 3;
+      }
+    }
+  }
+
   .hero {
     padding: 3rem 1.5rem 2.5rem;
     min-height: 300px;
@@ -2336,6 +2516,40 @@ html.dark {
     grid-template-columns: 1fr;
     gap: 1.5rem;
     padding: 0 1.5rem;
+  }
+
+  .featured-card {
+    .featured-image {
+      height: 200px;
+    }
+
+    .featured-content {
+      padding: 20px;
+
+      h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      p {
+        font-size: 14px;
+        -webkit-line-clamp: 2;
+        margin-bottom: 12px;
+      }
+
+      .featured-meta {
+        padding-top: 12px;
+        gap: 14px;
+        font-size: 12px;
+
+        span {
+          :deep(svg) {
+            width: 14px;
+            height: 14px;
+          }
+        }
+      }
+    }
   }
 
   .popular-tags-container {
@@ -2528,6 +2742,63 @@ html.dark {
   .features-grid {
     gap: 1rem;
     padding: 0 1rem;
+  }
+
+  .featured-card {
+    border-radius: 12px;
+
+    &:hover {
+      transform: translateY(-6px);
+    }
+
+    .featured-image {
+      height: 180px;
+    }
+
+    .featured-content {
+      padding: 16px;
+
+      h3 {
+        font-size: 16px;
+        margin-bottom: 8px;
+        line-height: 1.4;
+        -webkit-line-clamp: 2;
+      }
+
+      p {
+        font-size: 13px;
+        line-height: 1.6;
+        -webkit-line-clamp: 2;
+        margin-bottom: 10px;
+      }
+
+      .featured-meta {
+        gap: 12px;
+        padding-top: 10px;
+        font-size: 11px;
+        flex-wrap: wrap;
+
+        span {
+          gap: 3px;
+
+          :deep(svg) {
+            width: 13px;
+            height: 13px;
+          }
+        }
+      }
+    }
+
+    .featured-badge {
+      padding: 4px 10px;
+      font-size: 11px;
+      gap: 3px;
+
+      :deep(svg) {
+        width: 12px;
+        height: 12px;
+      }
+    }
   }
 
   .category-card {
