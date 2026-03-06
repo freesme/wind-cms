@@ -2646,6 +2646,13 @@ html.dark {
     padding: 3rem 0;
   }
 
+  // Scroll Indicator responsive - hide on mobile
+  .featured-section {
+    .scroll-indicator {
+      display: none; // 移动端隐藏滚动指示器
+    }
+  }
+
   .categories-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
@@ -2846,6 +2853,7 @@ html.dark {
   .features {
     padding: 2.5rem 0;
   }
+
 
   .categories-carousel.mobile-carousel {
     padding: 0 0.5rem;
