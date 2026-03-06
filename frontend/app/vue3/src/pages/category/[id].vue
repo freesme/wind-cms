@@ -515,29 +515,114 @@ onMounted(async () => {
 }
 
 // Responsive Design
-// Hero 区的响应式样式已在 hero.less 中定义
 @media (max-width: 1024px) {
+  .hero-section {
+    padding: 3rem 1.5rem 2.5rem;
+    min-height: 300px;
+
+    .hero-content {
+      h1 {
+        font-size: 40px;
+        letter-spacing: -0.8px;
+        margin-bottom: 14px;
+      }
+
+      .category-description {
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+
+      .category-stats {
+        gap: 24px;
+
+        .stat-item {
+          font-size: 15px;
+
+          span[class^="i-"] {
+            font-size: 18px;
+          }
+        }
+      }
+    }
+  }
+
   .page-container {
     padding: 0 24px 60px;
   }
 
   .posts-grid {
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 24px;
+  }
+
+  .post-card {
+    .post-image {
+      height: 200px;
+    }
+
+    .post-content {
+      padding: 22px;
+    }
   }
 }
 
 @media (max-width: 768px) {
+  .hero-section {
+    padding: 2.5rem 1.5rem 2rem;
+    min-height: 280px;
+
+    &::after {
+      background-size: 30px 30px;
+    }
+
+    .hero-content {
+      h1 {
+        font-size: 34px;
+        margin-bottom: 12px;
+        line-height: 1.2;
+        letter-spacing: -0.6px;
+      }
+
+      .category-description {
+        font-size: 17px;
+        margin-bottom: 18px;
+        line-height: 1.6;
+      }
+
+      .category-stats {
+        gap: 20px;
+
+        .stat-item {
+          font-size: 14px;
+
+          span[class^="i-"] {
+            font-size: 17px;
+          }
+        }
+      }
+    }
+  }
+
   .page-container {
-    padding: 0 20px 40px;
+    padding: 0 20px 50px;
+  }
+
+  .results-info {
+    font-size: 14px;
+    margin-bottom: 20px;
   }
 
   .posts-grid {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
+    margin-bottom: 40px;
   }
 
   .post-card {
+    &:hover {
+      transform: translateY(-6px);
+    }
+
     .post-image {
       height: 200px;
     }
@@ -547,47 +632,266 @@ onMounted(async () => {
 
       .post-title {
         font-size: 17px;
+        min-height: 48px;
       }
 
       .post-summary {
         font-size: 14px;
+        margin-bottom: 14px;
+      }
+
+      .post-meta {
+        gap: 14px;
+        padding-top: 14px;
+        font-size: 12px;
+
+        .meta-item {
+          gap: 5px;
+
+          span[class^="i-"] {
+            font-size: 15px;
+          }
+        }
+      }
+    }
+  }
+
+  .pagination-wrapper {
+    padding: 32px 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-section {
+    padding: 2rem 1rem;
+    min-height: 240px;
+    margin-bottom: 32px;
+
+    &::after {
+      background-size: 25px 25px;
+    }
+
+    .hero-content {
+      h1 {
+        font-size: 28px;
+        margin-bottom: 10px;
+        letter-spacing: -0.4px;
+      }
+
+      .category-description {
+        font-size: 16px;
+        margin-bottom: 16px;
+      }
+
+      .category-stats {
+        gap: 18px;
+
+        .stat-item {
+          font-size: 13px;
+
+          span[class^="i-"] {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+
+  .page-container {
+    padding: 0 16px 40px;
+  }
+
+  .results-info {
+    font-size: 13px;
+    margin-bottom: 18px;
+  }
+
+  .posts-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-bottom: 36px;
+  }
+
+  .post-card {
+    border-radius: 14px;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    .post-image {
+      height: 180px;
+    }
+
+    .post-content {
+      padding: 18px;
+
+      .post-title {
+        font-size: 16px;
+        min-height: auto;
+        margin-bottom: 10px;
+        -webkit-line-clamp: 2;
+      }
+
+      .post-summary {
+        font-size: 13px;
+        margin-bottom: 12px;
+        -webkit-line-clamp: 2;
+      }
+
+      .post-meta {
+        gap: 12px;
+        padding-top: 12px;
+        font-size: 11px;
+
+        .meta-item {
+          span[class^="i-"] {
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+
+  .pagination-wrapper {
+    padding: 28px 0;
+
+    :deep(.n-pagination) {
+      .n-pagination-item {
+        min-width: 34px;
+        height: 34px;
+        font-size: 13px;
+      }
+
+      .n-pagination-prefix,
+      .n-pagination-suffix {
+        font-size: 13px;
       }
     }
   }
 }
 
 @media (max-width: 480px) {
+  .hero-section {
+    padding: 1.75rem 1rem 1.5rem;
+    min-height: 220px;
+    margin-bottom: 28px;
+
+    &::before {
+      animation: gradientShift 20s ease-in-out infinite;
+    }
+
+    &::after {
+      background-size: 20px 20px;
+      animation: gridMove 30s linear infinite;
+    }
+
+    .hero-content {
+      padding: 0;
+
+      h1 {
+        font-size: 24px;
+        margin-bottom: 8px;
+        letter-spacing: -0.3px;
+        line-height: 1.3;
+
+        // 移动端简化发光效果
+        text-shadow:
+          0 0 30px rgba(255, 255, 255, 0.8),
+          0 0 60px rgba(var(--color-primary-purple-rgb), 0.6),
+          0 4px 16px rgba(0, 0, 0, 0.4);
+
+        filter:
+          drop-shadow(0 0 20px rgba(var(--color-primary-purple-rgb), 0.5))
+          drop-shadow(0 3px 10px rgba(0, 0, 0, 0.3));
+      }
+
+      .category-description {
+        font-size: 14px;
+        margin-bottom: 14px;
+        line-height: 1.5;
+        max-width: 100%;
+      }
+
+      .category-stats {
+        gap: 16px;
+        justify-content: center;
+
+        .stat-item {
+          font-size: 12px;
+          gap: 6px;
+
+          span[class^="i-"] {
+            font-size: 15px;
+          }
+        }
+      }
+    }
+  }
 
   .page-container {
-    padding: 0 16px 40px;
+    padding: 0 12px 32px;
+  }
+
+  .results-info {
+    font-size: 12px;
+    margin-bottom: 16px;
   }
 
   .posts-grid {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 14px;
+    margin-bottom: 32px;
   }
 
   .post-card {
+    border-radius: 12px;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+    }
+
     .post-image {
-      height: 180px;
+      height: 160px;
+
+      img {
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
     }
 
     .post-content {
       padding: 16px;
 
       .post-title {
-        font-size: 16px;
+        font-size: 15px;
+        margin-bottom: 8px;
         min-height: auto;
+        line-height: 1.4;
       }
 
       .post-summary {
-        font-size: 13px;
+        font-size: 12px;
+        margin-bottom: 10px;
+        line-height: 1.6;
         -webkit-line-clamp: 2;
       }
 
       .post-meta {
-        gap: 12px;
-        font-size: 12px;
+        gap: 10px;
+        padding-top: 10px;
+        font-size: 10px;
+        flex-wrap: wrap;
+
+        .meta-item {
+          gap: 4px;
+
+          span[class^="i-"] {
+            font-size: 13px;
+          }
+        }
       }
     }
   }
@@ -596,11 +900,51 @@ onMounted(async () => {
     padding: 24px 0;
 
     :deep(.n-pagination) {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+
       .n-pagination-item {
         min-width: 32px;
         height: 32px;
+        font-size: 12px;
+      }
+
+      .n-pagination-prefix,
+      .n-pagination-suffix {
+        font-size: 12px;
+        margin: 0 4px;
+      }
+
+      .n-pagination-item__button {
+        padding: 0 6px;
+      }
+
+      // 隐藏 size picker 在小屏幕
+      .n-pagination-size-picker {
+        display: none;
       }
     }
+  }
+
+  // Empty state 优化
+  :deep(.n-empty) {
+    margin: 50px 0 !important;
+
+    .n-empty__icon {
+      span[class^="i-"] {
+        font-size: 48px !important;
+      }
+    }
+
+    .n-empty__description {
+      font-size: 13px;
+    }
+  }
+
+  // Spin 加载优化
+  :deep(.n-spin-container) {
+    min-height: 300px;
   }
 }
 
@@ -617,5 +961,6 @@ html.dark {
     }
   }
 }
+
 </style>
 

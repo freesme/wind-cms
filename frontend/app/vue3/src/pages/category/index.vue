@@ -378,17 +378,19 @@ onMounted(() => {
 // Responsive Design
 @media (max-width: 1024px) {
   .hero-section {
-    padding: 2.5rem 1.5rem;
-    min-height: 320px;
+    padding: 3rem 1.5rem 2.5rem;
+    min-height: 300px;
+    margin-bottom: 36px;
 
     .hero-content {
       h1 {
-        font-size: 3.5rem;
-        letter-spacing: -1.5px;
+        font-size: 40px;
+        letter-spacing: -0.8px;
+        margin-bottom: 14px;
       }
 
       p {
-        font-size: 1.4rem;
+        font-size: 18px;
       }
     }
   }
@@ -398,45 +400,70 @@ onMounted(() => {
   }
 
   .categories-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 24px;
+  }
+
+  .category-card {
+    &:hover {
+      transform: translateY(-10px);
+    }
+
+    .category-image {
+      height: 220px;
+    }
   }
 }
 
 @media (max-width: 768px) {
   .hero-section {
-    padding: 2rem 1.5rem;
-    min-height: 220px;
+    padding: 2.5rem 1.5rem 2rem;
+    min-height: 280px;
+    margin-bottom: 32px;
+
+    &::after {
+      background-size: 30px 30px;
+    }
 
     .hero-content {
       h1 {
-        font-size: 2.8rem;
-        margin-bottom: 0.75rem;
-        letter-spacing: -1px;
+        font-size: 34px;
+        margin-bottom: 12px;
+        letter-spacing: -0.6px;
+        line-height: 1.2;
       }
 
       p {
-        font-size: 1.15rem;
-        margin-bottom: 0.75rem;
+        font-size: 17px;
+        line-height: 1.5;
       }
     }
   }
 
   .page-container {
-    padding: 0 20px 40px;
+    padding: 0 20px 50px;
   }
 
   .categories-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 20px;
   }
 
   .category-card {
+    &:hover {
+      transform: translateY(-8px);
+    }
+
     .category-image {
       height: 200px;
 
       .view-button {
         padding: 20px 16px;
         font-size: 14px;
+
+        span[class^="i-"] {
+          font-size: 16px;
+        }
       }
     }
 
@@ -445,27 +472,41 @@ onMounted(() => {
 
       h3 {
         font-size: 18px;
+        margin-bottom: 10px;
       }
 
       p {
         font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 14px;
+      }
+
+      .category-meta {
+        padding-top: 14px;
       }
     }
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 640px) {
   .hero-section {
-    padding: 1.5rem 1rem;
-    min-height: 200px;
+    padding: 2rem 1rem;
+    min-height: 240px;
+    margin-bottom: 28px;
+
+    &::after {
+      background-size: 25px 25px;
+    }
 
     .hero-content {
       h1 {
-        font-size: 1.75rem;
+        font-size: 28px;
+        margin-bottom: 10px;
+        letter-spacing: -0.4px;
       }
 
       p {
-        font-size: 0.95rem;
+        font-size: 16px;
       }
     }
   }
@@ -476,16 +517,138 @@ onMounted(() => {
 
   .categories-grid {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 18px;
   }
 
   .category-card {
+    border-radius: 14px;
+
+    &:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+    }
+
+    .category-image {
+      height: 200px;
+
+      img {
+        &:hover {
+          transform: scale(1.08);
+        }
+      }
+
+      .view-button {
+        padding: 18px 14px;
+        font-size: 14px;
+
+        span[class^="i-"] {
+          font-size: 16px;
+        }
+      }
+    }
+
+    .category-content {
+      padding: 18px;
+
+      h3 {
+        font-size: 17px;
+        margin-bottom: 10px;
+      }
+
+      p {
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 12px;
+        -webkit-line-clamp: 2;
+      }
+
+      .category-meta {
+        padding-top: 12px;
+        font-size: 13px;
+
+        .meta-icon {
+          font-size: 17px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 1.75rem 1rem 1.5rem;
+    min-height: 220px;
+    margin-bottom: 24px;
+
+    &::before {
+      animation: gradientShift 20s ease-in-out infinite;
+    }
+
+    &::after {
+      background-size: 20px 20px;
+      animation: gridMove 30s linear infinite;
+    }
+
+    .hero-content {
+      padding: 0;
+
+      h1 {
+        font-size: 24px;
+        margin-bottom: 8px;
+        letter-spacing: -0.3px;
+        line-height: 1.3;
+
+        // 移动端简化发光效果
+        text-shadow:
+          0 0 30px rgba(255, 255, 255, 0.8),
+          0 0 60px rgba(var(--color-primary-purple-rgb), 0.6),
+          0 4px 16px rgba(0, 0, 0, 0.4);
+
+        filter:
+          drop-shadow(0 0 20px rgba(var(--color-primary-purple-rgb), 0.5))
+          drop-shadow(0 3px 10px rgba(0, 0, 0, 0.3));
+      }
+
+      p {
+        font-size: 14px;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  .page-container {
+    padding: 0 12px 32px;
+  }
+
+  .categories-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .category-card {
+    border-radius: 12px;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+
     .category-image {
       height: 180px;
+
+      img {
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
 
       .view-button {
         padding: 16px 12px;
         font-size: 13px;
+
+        span[class^="i-"] {
+          font-size: 15px;
+        }
       }
     }
 
@@ -494,13 +657,19 @@ onMounted(() => {
 
       h3 {
         font-size: 16px;
+        margin-bottom: 8px;
+        line-height: 1.4;
       }
 
       p {
         font-size: 13px;
+        line-height: 1.6;
+        margin-bottom: 10px;
+        -webkit-line-clamp: 2;
       }
 
       .category-meta {
+        padding-top: 10px;
         font-size: 12px;
         gap: 6px;
 
@@ -509,6 +678,26 @@ onMounted(() => {
         }
       }
     }
+  }
+
+  // Empty state 优化
+  :deep(.n-empty) {
+    margin: 50px 0 !important;
+
+    .n-empty__icon {
+      span[class^="i-"] {
+        font-size: 48px !important;
+      }
+    }
+
+    .n-empty__description {
+      font-size: 13px;
+    }
+  }
+
+  // Spin 加载优化
+  :deep(.n-spin-container) {
+    min-height: 300px;
   }
 }
 

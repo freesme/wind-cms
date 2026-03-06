@@ -1048,44 +1048,125 @@ onBeforeUnmount(() => {
   .post-article,
   .comments-section,
   .related-section {
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-left: 24px;
+    margin-right: 24px;
   }
 
-  .article-content,
+  .article-content {
+    padding: 48px 48px 40px;
+
+    &::before {
+      height: 6px;
+    }
+  }
+
+  .post-header {
+    margin-bottom: 36px;
+
+    .post-title {
+      font-size: 36px;
+      margin-bottom: 20px;
+      letter-spacing: -0.4px;
+    }
+
+    .post-meta {
+      gap: 20px;
+
+      .meta-item {
+        font-size: 14px;
+
+        span[class^="i-"] {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+  .post-content {
+    font-size: 17px;
+    margin-bottom: 40px;
+
+    :deep(h2) {
+      font-size: 28px;
+      margin: 48px 0 24px;
+      padding-bottom: 14px;
+
+      &::after {
+        width: 50px;
+      }
+    }
+
+    :deep(h3) {
+      font-size: 23px;
+      margin: 36px 0 20px;
+      padding-left: 14px;
+    }
+
+    :deep(p) {
+      margin: 20px 0;
+      line-height: 2.1;
+    }
+
+    :deep(img) {
+      margin: 36px 0;
+    }
+  }
+
   .comments-section,
   .related-section {
-    padding: 32px 40px;
+    padding: 40px 48px;
   }
 
   .post-banner {
-    padding-top: 56.25%; // 保持 16:9 比例
+    padding-top: 50%; // 调整为 2:1 比例
   }
 
   .back-to-top {
-    bottom: 30px;
-    right: 30px;
+    bottom: 32px;
+    right: 32px;
+    width: 54px !important;
+    height: 54px !important;
+  }
+
+  .related-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
   }
 }
 
 @media (max-width: 768px) {
   .back-navigation {
     padding: 16px 20px;
+
+    :deep(.n-button) {
+      font-size: 14px;
+    }
+  }
+
+  .post-article,
+  .comments-section,
+  .related-section {
+    margin-left: 20px;
+    margin-right: 20px;
+    border-radius: 14px;
   }
 
   .post-banner {
-    padding-top: 56.25%; // 保持 16:9 比例
+    padding-top: 56.25%; // 16:9 比例
   }
 
-  .article-content,
-  .comments-section,
-  .related-section {
-    padding: 24px 20px;
+  .article-content {
+    padding: 40px 32px 36px;
   }
 
   .post-header {
+    margin-bottom: 32px;
+
     .post-title {
-      font-size: 28px;
+      font-size: 30px;
+      margin-bottom: 18px;
+      letter-spacing: -0.3px;
+      line-height: 1.35;
     }
 
     .post-meta {
@@ -1093,91 +1174,837 @@ onBeforeUnmount(() => {
 
       .meta-item {
         font-size: 13px;
+
+        span[class^="i-"] {
+          font-size: 15px;
+        }
       }
     }
   }
 
   .post-content {
     font-size: 16px;
+    line-height: 1.9;
+    margin-bottom: 36px;
 
     :deep(h2) {
-      font-size: 24px;
-      margin: 32px 0 16px;
+      font-size: 26px;
+      margin: 40px 0 20px;
+      padding-bottom: 12px;
+      border-bottom-width: 2px;
+
+      &::after {
+        width: 45px;
+        height: 2px;
+        bottom: -2px;
+      }
     }
 
     :deep(h3) {
-      font-size: 20px;
-      margin: 24px 0 12px;
+      font-size: 21px;
+      margin: 32px 0 18px;
+      padding-left: 12px;
+      border-left-width: 3px;
+    }
+
+    :deep(p) {
+      margin: 18px 0;
+      line-height: 2;
+      text-indent: 1.5em;
+
+      & + p {
+        margin-top: 16px;
+      }
+    }
+
+    :deep(img) {
+      margin: 32px 0;
+      border-radius: 10px;
+    }
+
+    :deep(code) {
+      padding: 3px 8px;
+      font-size: 0.88em;
+    }
+
+    :deep(pre) {
+      padding: 20px;
+      margin: 28px 0;
+      border-radius: 10px;
+    }
+
+    :deep(blockquote) {
+      padding: 16px 20px;
+      margin: 28px 0;
+      border-left-width: 4px;
+
+      &::before {
+        font-size: 50px;
+        top: -8px;
+      }
+    }
+
+    :deep(ul), :deep(ol) {
+      padding-left: 32px;
+      margin: 24px 0;
+
+      li {
+        margin: 14px 0;
+        line-height: 1.9;
+      }
+    }
+
+    :deep(table) {
+      margin: 28px 0;
+
+      th {
+        padding: 14px;
+        font-size: 14px;
+      }
+
+      td {
+        padding: 12px 14px;
+        font-size: 14px;
+      }
     }
   }
 
   .post-actions {
+    padding: 28px 0;
+
     :deep(.n-button) {
-      width: 48px;
-      height: 48px;
+      width: 52px;
+      height: 52px;
+      border-width: 1.5px;
+    }
+
+    :deep(.n-space) {
+      gap: 16px !important;
     }
   }
 
-  .section-header h2 {
-    font-size: 22px;
+  .comments-section,
+  .related-section {
+    padding: 36px 32px;
+  }
+
+  .section-header {
+    margin-bottom: 28px;
+
+    h2 {
+      font-size: 24px;
+
+      span[class^="i-"] {
+        font-size: 28px;
+      }
+    }
   }
 
   .comment-form {
-    padding: 20px;
+    padding: 24px;
+    margin-bottom: 32px;
 
     h3 {
       font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    :deep(.n-form-item) {
+      margin-bottom: 20px;
+    }
+
+    :deep(.n-grid) {
+      gap: 12px !important;
+    }
+
+    :deep(.n-button) {
+      padding: 0 28px;
+      height: 44px;
     }
   }
 
   .comment-item {
-    padding: 16px;
+    padding: 20px;
+    gap: 14px;
 
     .comment-avatar {
       :deep(.n-avatar) {
-        --n-size: 40px !important;
+        --n-size: 44px !important;
+      }
+    }
+
+    .comment-body {
+      .comment-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        margin-bottom: 10px;
+
+        .comment-author {
+          font-size: 15px;
+        }
+
+        .comment-date {
+          font-size: 13px;
+        }
+      }
+
+      .comment-content {
+        font-size: 14px;
+        line-height: 1.65;
       }
     }
   }
 
   .related-grid {
     grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .related-card {
+    .related-image {
+      height: 180px;
+    }
+
+    .related-content {
+      padding: 18px;
+
+      h3 {
+        font-size: 17px;
+        margin-bottom: 10px;
+      }
+
+      p {
+        font-size: 13px;
+        margin-bottom: 14px;
+      }
+
+      .related-meta {
+        gap: 16px;
+        font-size: 12px;
+
+        span span[class^="i-"] {
+          font-size: 15px;
+        }
+      }
+    }
+  }
+
+  .back-to-top {
+    bottom: 28px;
+    right: 28px;
+    width: 50px !important;
+    height: 50px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .back-navigation {
+    padding: 14px 16px;
+
+    :deep(.n-button) {
+      font-size: 13px;
+      padding: 0 8px;
+    }
+  }
+
+  .post-article,
+  .comments-section,
+  .related-section {
+    margin-left: 16px;
+    margin-right: 16px;
+    border-radius: 12px;
+  }
+
+  .post-banner {
+    padding-top: 60%; // 5:3 比例
+  }
+
+  .article-content {
+    padding: 32px 24px 28px;
+  }
+
+  .post-header {
+    margin-bottom: 28px;
+
+    .post-title {
+      font-size: 26px;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .post-meta {
+      gap: 14px;
+      font-size: 12px;
+
+      .meta-item {
+        font-size: 12px;
+
+        span[class^="i-"] {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .post-content {
+    font-size: 15px;
+    line-height: 1.85;
+    margin-bottom: 32px;
+
+    :deep(h2) {
+      font-size: 22px;
+      margin: 36px 0 18px;
+      padding-bottom: 10px;
+
+      &::after {
+        width: 40px;
+      }
+    }
+
+    :deep(h3) {
+      font-size: 19px;
+      margin: 28px 0 16px;
+      padding-left: 10px;
+    }
+
+    :deep(p) {
+      margin: 16px 0;
+      line-height: 1.9;
+      text-indent: 1em;
+
+      & + p {
+        margin-top: 14px;
+      }
+    }
+
+    :deep(img) {
+      margin: 28px 0;
+      border-radius: 8px;
+    }
+
+    :deep(code) {
+      padding: 2px 6px;
+      font-size: 0.86em;
+    }
+
+    :deep(pre) {
+      padding: 16px;
+      margin: 24px 0;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    :deep(blockquote) {
+      padding: 14px 18px;
+      margin: 24px 0;
+      font-size: 14px;
+
+      &::before {
+        font-size: 45px;
+      }
+    }
+
+    :deep(ul), :deep(ol) {
+      padding-left: 28px;
+      margin: 20px 0;
+
+      li {
+        margin: 12px 0;
+      }
+    }
+
+    :deep(table) {
+      font-size: 13px;
+
+      th, td {
+        padding: 10px 12px;
+      }
+    }
+  }
+
+  .post-actions {
+    padding: 24px 0;
+
+    :deep(.n-button) {
+      width: 48px;
+      height: 48px;
+    }
+
+    :deep(.n-space) {
+      gap: 14px !important;
+    }
+  }
+
+  .comments-section,
+  .related-section {
+    padding: 28px 24px;
+  }
+
+  .section-header {
+    margin-bottom: 24px;
+
+    h2 {
+      font-size: 20px;
+
+      span[class^="i-"] {
+        font-size: 24px;
+      }
+    }
+  }
+
+  .comment-form {
+    padding: 20px;
+    margin-bottom: 28px;
+    border-radius: 10px;
+
+    h3 {
+      font-size: 17px;
+      margin-bottom: 18px;
+    }
+
+    :deep(.n-grid) {
+      grid-template-columns: 1fr !important;
+      gap: 0 !important;
+    }
+
+    :deep(.n-form-item) {
+      margin-bottom: 18px;
+    }
+
+    :deep(.n-input) {
+      font-size: 14px;
+    }
+
+    :deep(.n-button) {
+      width: 100%;
+      padding: 0 24px;
+      height: 42px;
+      font-size: 14px;
+    }
+  }
+
+  .comments-list {
+    gap: 18px;
+  }
+
+  .comment-item {
+    padding: 16px;
+    gap: 12px;
+    border-radius: 10px;
+
+    .comment-avatar {
+      :deep(.n-avatar) {
+        --n-size: 40px !important;
+      }
+    }
+
+    .comment-body {
+      .comment-header {
+        .comment-author {
+          font-size: 14px;
+        }
+
+        .comment-date {
+          font-size: 12px;
+        }
+      }
+
+      .comment-content {
+        font-size: 13px;
+        line-height: 1.6;
+      }
+    }
+  }
+
+  .related-card {
+    border-radius: 10px;
+
+    &:hover {
+      transform: translateY(-6px);
+    }
+
+    .related-image {
+      height: 160px;
+    }
+
+    .related-content {
+      padding: 16px;
+
+      h3 {
+        font-size: 16px;
+        margin-bottom: 8px;
+        -webkit-line-clamp: 2;
+      }
+
+      p {
+        font-size: 13px;
+        margin-bottom: 12px;
+        -webkit-line-clamp: 2;
+      }
+
+      .related-meta {
+        gap: 14px;
+        font-size: 11px;
+      }
+    }
+  }
+
+  .back-to-top {
+    bottom: 24px;
+    right: 24px;
+    width: 48px !important;
+    height: 48px !important;
   }
 }
 
 @media (max-width: 480px) {
-  .back-navigation,
+  .back-navigation {
+    padding: 12px 12px;
+
+    :deep(.n-button) {
+      font-size: 12px;
+      padding: 0 6px;
+
+      span[class^="i-"] {
+        font-size: 16px;
+      }
+    }
+  }
+
   .post-article,
   .comments-section,
   .related-section {
     margin-left: 12px;
     margin-right: 12px;
-    border-radius: 12px;
-  }
-
-  .article-content,
-  .comments-section,
-  .related-section {
-    padding: 20px 16px;
+    border-radius: 10px;
   }
 
   .post-banner {
-    padding-top: 75%; // 移动端采用 4:3 比例，更紧凑
+    padding-top: 66.67%; // 3:2 比例，更适合小屏
   }
 
-  .post-header .post-title {
-    font-size: 24px;
+  .article-content {
+    padding: 28px 20px 24px;
+
+    &::before {
+      height: 5px;
+    }
+  }
+
+  .post-header {
+    margin-bottom: 24px;
+
+    .post-title {
+      font-size: 22px;
+      margin-bottom: 14px;
+      letter-spacing: -0.2px;
+      line-height: 1.45;
+    }
+
+    .post-meta {
+      gap: 12px;
+      flex-wrap: wrap;
+
+      .meta-item {
+        font-size: 11px;
+
+        span[class^="i-"] {
+          font-size: 13px;
+        }
+      }
+    }
   }
 
   .post-content {
-    font-size: 15px;
+    font-size: 14px;
+    line-height: 1.8;
+    letter-spacing: 0.2px;
+    margin-bottom: 28px;
+
+    :deep(h2) {
+      font-size: 20px;
+      margin: 32px 0 16px;
+      padding-bottom: 8px;
+      letter-spacing: -0.2px;
+
+      &::after {
+        width: 35px;
+      }
+    }
+
+    :deep(h3) {
+      font-size: 17px;
+      margin: 24px 0 14px;
+      padding-left: 8px;
+      border-left-width: 3px;
+    }
+
+    :deep(p) {
+      margin: 14px 0;
+      line-height: 1.85;
+      text-indent: 0; // 移动端取消首行缩进
+      text-align: left; // 左对齐更适合小屏
+
+      & + p {
+        margin-top: 12px;
+      }
+    }
+
+    :deep(img) {
+      margin: 24px 0;
+      border-radius: 6px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+
+      &:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        transform: none; // 移动端取消 hover 位移
+      }
+    }
+
+    :deep(code) {
+      padding: 2px 6px;
+      font-size: 0.85em;
+      border-radius: 4px;
+    }
+
+    :deep(pre) {
+      padding: 14px;
+      margin: 20px -4px; // 负边距让代码块更宽
+      border-radius: 6px;
+      font-size: 12px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    :deep(blockquote) {
+      padding: 12px 16px;
+      margin: 20px 0;
+      border-left-width: 3px;
+      font-size: 13px;
+      border-radius: 0 6px 6px 0;
+
+      &::before {
+        font-size: 40px;
+        top: -6px;
+        left: 8px;
+      }
+    }
+
+    :deep(ul), :deep(ol) {
+      padding-left: 24px;
+      margin: 18px 0;
+
+      li {
+        margin: 10px 0;
+        font-size: 14px;
+        line-height: 1.8;
+      }
+    }
+
+    :deep(a) {
+      border-bottom-width: 1px;
+
+      &:hover {
+        padding: 1px 3px;
+        margin: -1px -3px;
+      }
+    }
+
+    :deep(hr) {
+      margin: 32px 0;
+    }
+
+    :deep(table) {
+      font-size: 12px;
+      margin: 20px -4px; // 让表格更宽
+      border-radius: 6px;
+
+      th {
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+
+      td {
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+    }
+  }
+
+  .post-actions {
+    padding: 20px 0;
+
+    :deep(.n-button) {
+      width: 44px;
+      height: 44px;
+      border-width: 1px;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+    }
+
+    :deep(.n-space) {
+      gap: 12px !important;
+    }
+  }
+
+  .comments-section,
+  .related-section {
+    padding: 24px 20px;
+  }
+
+  .section-header {
+    margin-bottom: 20px;
+
+    h2 {
+      font-size: 18px;
+      gap: 10px;
+
+      span[class^="i-"] {
+        font-size: 22px;
+      }
+    }
+  }
+
+  .comment-form {
+    padding: 16px;
+    margin-bottom: 24px;
+
+    h3 {
+      font-size: 16px;
+      margin-bottom: 16px;
+    }
+
+    :deep(.n-form-item) {
+      margin-bottom: 16px;
+    }
+
+    :deep(.n-form-item-label) {
+      font-size: 13px;
+    }
+
+    :deep(.n-input) {
+      font-size: 13px;
+
+      &.n-input--textarea {
+        .n-input__textarea-el {
+          min-height: 100px !important;
+        }
+      }
+    }
+
+    :deep(.n-button) {
+      height: 40px;
+      font-size: 13px;
+      padding: 0 20px;
+    }
+  }
+
+  .comments-list {
+    gap: 16px;
+  }
+
+  .comment-item {
+    padding: 14px;
+    gap: 10px;
+
+    .comment-avatar {
+      :deep(.n-avatar) {
+        --n-size: 36px !important;
+        font-size: 14px;
+      }
+    }
+
+    .comment-body {
+      .comment-header {
+        gap: 5px;
+        margin-bottom: 8px;
+
+        .comment-author {
+          font-size: 13px;
+        }
+
+        .comment-date {
+          font-size: 11px;
+        }
+      }
+
+      .comment-content {
+        font-size: 12px;
+        line-height: 1.6;
+      }
+    }
+  }
+
+  .related-grid {
+    gap: 14px;
+  }
+
+  .related-card {
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .related-image {
+      height: 140px;
+    }
+
+    .related-content {
+      padding: 14px;
+
+      h3 {
+        font-size: 15px;
+        margin-bottom: 8px;
+      }
+
+      p {
+        font-size: 12px;
+        margin-bottom: 10px;
+      }
+
+      .related-meta {
+        gap: 12px;
+        font-size: 10px;
+
+        span span[class^="i-"] {
+          font-size: 13px;
+        }
+      }
+    }
   }
 
   .back-to-top {
     bottom: 20px;
     right: 20px;
-    width: 48px !important;
-    height: 48px !important;
+    width: 46px !important;
+    height: 46px !important;
+    box-shadow: 0 6px 18px rgba(168, 85, 247, 0.25);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(168, 85, 247, 0.35);
+    }
+  }
+
+  // Empty state 优化
+  :deep(.n-empty) {
+    margin: 40px 0 !important;
+
+    .n-empty__icon {
+      font-size: 48px !important;
+    }
+
+    .n-empty__description {
+      font-size: 13px;
+    }
+  }
+
+  // Spin 加载优化
+  :deep(.n-spin-container) {
+    min-height: 300px;
   }
 }
 </style>

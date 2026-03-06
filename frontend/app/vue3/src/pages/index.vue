@@ -2176,6 +2176,10 @@ html.dark {
 @media (max-width: 1024px) {
   .section-header {
     padding: 0 1.5rem;
+
+    h2 {
+      font-size: 1.875rem;
+    }
   }
 
   .categories-grid {
@@ -2188,29 +2192,56 @@ html.dark {
   .posts-grid,
   .features-grid {
     padding: 0 1.5rem;
+    gap: 1.5rem;
   }
 
   .hero {
-    padding: 2.5rem 1.5rem;
-    min-height: 320px;
+    padding: 3rem 1.5rem 2.5rem;
+    min-height: 300px;
+
+    .hero-title {
+      font-size: 3rem;
+      letter-spacing: -1.2px;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.35rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero-description {
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .hero-actions {
+      gap: 1rem;
+
+      :deep(.n-button) {
+        padding: 12px 32px;
+        font-size: 15px;
+      }
+    }
+
+    // 隐藏代码片段在小屏幕上
+    .hero-code-snippets {
+      display: none;
+    }
   }
 
-  .hero-title {
-    font-size: 3.5rem;
-    letter-spacing: -1.5px;
+  .category-card {
+    padding: 1.5rem 1.25rem;
+    min-height: 180px;
+
+    .category-icon {
+      width: 56px;
+      height: 56px;
+    }
   }
 
-  .hero-subtitle {
-    font-size: 1.4rem;
-  }
-
-  .hero-description {
-    font-size: 1rem;
-  }
-
-  // 隐藏代码片段在小屏幕上
-  .hero-code-snippets {
-    display: none;
+  .popular-tags-container {
+    padding: 0 1.5rem;
   }
 }
 
@@ -2218,48 +2249,52 @@ html.dark {
   // 隐藏桌面网格，显示手机走马灯
   .categories-grid.desktop-grid {
     display: none !important;
-    visibility: hidden !important;
-    height: 0 !important;
-    overflow: hidden !important;
   }
 
   .categories-carousel.mobile-carousel {
     display: block !important;
-    visibility: visible !important;
+    padding: 0 1rem;
   }
 
   .hero {
-    padding: 2rem 1.5rem;
-    min-height: 220px;
+    padding: 2.5rem 1.5rem 2rem;
+    min-height: 280px;
 
     .hero-title {
-      font-size: 2.8rem;
-      margin-bottom: 0.75rem;
-      letter-spacing: -1px;
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.8px;
     }
 
     .hero-subtitle {
       font-size: 1.15rem;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.875rem;
     }
 
     .hero-description {
       font-size: 0.95rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.75rem;
+      line-height: 1.6;
     }
 
     // 隐藏装饰元素在移动端
     .hero-code-snippets,
-    .hero-grid-bg {
+    .hero-grid-bg,
+    .hero-animated-shapes {
       display: none;
     }
 
     .hero-actions {
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.875rem;
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
 
       :deep(.n-button) {
         width: 100%;
+        padding: 12px 24px;
+        font-size: 15px;
       }
     }
   }
@@ -2273,6 +2308,21 @@ html.dark {
     h2 {
       font-size: 1.75rem;
     }
+
+    :deep(.n-button) {
+      font-size: 14px;
+      padding: 8px 16px;
+    }
+  }
+
+  .categories-section {
+    padding: 3rem 0;
+  }
+
+  .featured-section,
+  .latest-section,
+  .features {
+    padding: 3rem 0;
   }
 
   .categories-grid {
@@ -2291,12 +2341,17 @@ html.dark {
   .popular-tags-container {
     padding: 0 1.5rem;
 
+    .tags-title {
+      font-size: 1.125rem;
+      margin-bottom: 1.25rem;
+    }
+
     .tags-grid {
       gap: 0.75rem;
     }
 
     .tag-item {
-      padding: 0.4rem 0.8rem;
+      padding: 0.4rem 0.875rem;
       font-size: 0.85rem;
     }
   }
@@ -2307,6 +2362,20 @@ html.dark {
     .category-icon {
       width: 50px;
       height: 50px;
+      font-size: 1.75rem;
+    }
+
+    .category-info h3 {
+      font-size: 1rem;
+    }
+
+    .post-count {
+      font-size: 0.8rem;
+    }
+
+    .update-badge {
+      font-size: 0.7rem;
+      padding: 0.3rem 0.7rem;
     }
   }
 
@@ -2314,7 +2383,25 @@ html.dark {
   .post-card {
     .featured-image,
     .post-image {
-      height: 180px;
+      height: 200px;
+    }
+
+    .featured-content,
+    .post-content {
+      padding: 1.25rem;
+
+      h3 {
+        font-size: 1.125rem;
+      }
+
+      p {
+        font-size: 0.9rem;
+      }
+
+      .category-badge {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.75rem;
+      }
     }
   }
 
@@ -2331,33 +2418,102 @@ html.dark {
       width: 70px;
       height: 70px;
       font-size: 2.5rem;
+      margin-bottom: 1.25rem;
     }
 
     h3 {
       font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      font-size: 0.9rem;
     }
   }
 }
 
 @media (max-width: 480px) {
   .hero {
-    padding: 1.5rem 1rem;
-    min-height: 200px;
+    padding: 2rem 1rem 1.5rem;
+    min-height: 240px;
+
+    .hero-content {
+      padding: 0;
+    }
 
     .hero-title {
       font-size: 1.75rem;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.5px;
     }
 
     .hero-subtitle {
-      font-size: 0.95rem;
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-description {
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .hero-actions {
+      gap: 0.75rem;
+      max-width: 100%;
+
+      :deep(.n-button) {
+        width: 100%;
+        padding: 11px 20px;
+        font-size: 14px;
+        border-radius: 10px;
+      }
     }
   }
 
   .section-header {
     padding: 0 1rem;
+    margin-bottom: 1.5rem;
 
     h2 {
       font-size: 1.5rem;
+    }
+
+    :deep(.n-button) {
+      font-size: 13px;
+      padding: 6px 12px;
+    }
+  }
+
+  .categories-section,
+  .featured-section,
+  .latest-section,
+  .features {
+    padding: 2.5rem 0;
+  }
+
+  .categories-carousel.mobile-carousel {
+    padding: 0 0.5rem;
+    margin-bottom: 2rem;
+
+    .carousel-item {
+      width: calc(100vw - 1rem);
+      padding: 0 0.25rem;
+    }
+
+    :deep(.n-carousel__arrow) {
+      width: 32px;
+      height: 32px;
+      font-size: 18px;
+    }
+
+    :deep(.n-carousel__dots) {
+      bottom: -32px;
+
+      .n-carousel__dot {
+        width: 8px;
+        height: 8px;
+      }
     }
   }
 
@@ -2379,15 +2535,20 @@ html.dark {
     gap: 0.75rem;
     min-height: 160px;
 
+    &:hover {
+      transform: translateY(-4px);
+    }
+
     .category-icon {
-      width: 45px;
-      height: 45px;
+      width: 44px;
+      height: 44px;
       font-size: 1.5rem;
     }
 
     .category-info {
       h3 {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
       }
 
       .post-count {
@@ -2397,7 +2558,7 @@ html.dark {
 
     .update-badge {
       padding: 0.25rem 0.6rem;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
     }
   }
 
@@ -2405,7 +2566,7 @@ html.dark {
   .post-card {
     .featured-image,
     .post-image {
-      height: 150px;
+      height: 160px;
     }
 
     .featured-content,
@@ -2414,26 +2575,58 @@ html.dark {
 
       h3 {
         font-size: 1rem;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
       }
 
       p {
         font-size: 0.85rem;
+        line-height: 1.5;
       }
 
       .featured-meta,
       .post-meta {
         font-size: 0.75rem;
         gap: 0.75rem;
+        margin-top: 0.75rem;
       }
+
+      .category-badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.625rem;
+      }
+    }
+  }
+
+  .popular-tags-container {
+    padding: 0 1rem;
+
+    .tags-title {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .tags-grid {
+      gap: 0.625rem;
+    }
+
+    .tag-item {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.8rem;
     }
   }
 
   .features-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   .feature-card {
     padding: 1.5rem 1rem;
+
+    &:hover {
+      transform: translateY(-4px);
+    }
 
     .feature-icon {
       width: 60px;
@@ -2444,10 +2637,12 @@ html.dark {
 
     h3 {
       font-size: 1rem;
+      margin-bottom: 0.625rem;
     }
 
     p {
-      font-size: 0.9rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
     }
   }
 }

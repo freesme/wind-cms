@@ -867,19 +867,19 @@ const teamMembers = computed(() => {
   }
 }
 
-// ...existing code...
+// Responsive Design
 @media (max-width: 1024px) {
   .hero {
-    padding: 2.5rem 1.5rem;
-    min-height: 320px;
+    padding: 3rem 2rem;
+    min-height: 300px;
 
     .hero-title {
-      font-size: 3.5rem;
-      letter-spacing: -1.5px;
+      font-size: 2.5rem;
+      letter-spacing: -0.8px;
     }
 
     .hero-subtitle {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
     }
 
     .hero-description {
@@ -887,108 +887,273 @@ const teamMembers = computed(() => {
     }
   }
 
-  .about-section .section-container {
-    gap: 40px;
+  .about-section {
+    padding: 60px 24px;
+
+    .section-container {
+      gap: 40px;
+    }
+
+    .about-content h2 {
+      font-size: 36px;
+    }
+  }
+
+  .features-section,
+  .team-section,
+  .values-section {
+    padding: 60px 24px;
   }
 
   .section-header h2 {
     font-size: 36px;
   }
+
+  .cta-section {
+    padding: 60px 24px;
+
+    h2 {
+      font-size: 36px;
+    }
+  }
 }
 
 @media (max-width: 768px) {
   .hero {
-    padding: 2rem 1.5rem;
-    min-height: 220px;
+    padding: 2.5rem 1.5rem;
+    min-height: 280px;
+
+    &::after {
+      background-size: 30px 30px;
+    }
 
     .hero-title {
-      font-size: 2.8rem;
-      margin-bottom: 0.75rem;
-      letter-spacing: -1px;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.5px;
     }
 
     .hero-subtitle {
-      font-size: 1.15rem;
-      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+      margin-bottom: 0.875rem;
     }
 
     .hero-description {
       font-size: 0.95rem;
-      margin-bottom: 0.75rem;
+      line-height: 1.6;
     }
   }
 
   .about-section {
-    padding: 60px 20px;
+    padding: 50px 20px;
 
     .section-container {
       grid-template-columns: 1fr;
       gap: 40px;
     }
 
-    .about-content h2 {
-      font-size: 32px;
+    .about-content {
+      h2 {
+        font-size: 28px;
+        margin-bottom: 24px;
+      }
+
+      p {
+        font-size: 15px;
+        margin-bottom: 20px;
+      }
+    }
+
+    .about-stats {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+
+      .stat-card {
+        padding: 24px 20px;
+
+        .stat-number {
+          font-size: 32px;
+        }
+
+        .stat-label {
+          font-size: 13px;
+        }
+      }
     }
   }
 
   .features-section,
   .team-section,
   .values-section {
-    padding: 60px 20px;
+    padding: 50px 20px;
 
     .section-header {
       margin-bottom: 40px;
 
       h2 {
-        font-size: 32px;
+        font-size: 28px;
+        margin-bottom: 16px;
       }
 
       p {
         font-size: 16px;
       }
     }
+
+    .features-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+
+      .feature-card {
+        padding: 32px 24px;
+
+        .feature-icon {
+          width: 70px;
+          height: 70px;
+          margin-bottom: 20px;
+        }
+
+        h3 {
+          font-size: 18px;
+        }
+
+        p {
+          font-size: 14px;
+        }
+      }
+    }
+
+    .team-grid {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+
+      .team-card {
+        padding: 28px 20px;
+
+        .team-avatar {
+          width: 100px;
+          height: 100px;
+        }
+
+        h3 {
+          font-size: 18px;
+        }
+      }
+    }
+
+    .values-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+
+      .value-card {
+        padding: 32px 24px;
+
+        h3 {
+          font-size: 18px;
+        }
+
+        p {
+          font-size: 14px;
+        }
+      }
+    }
   }
 
   .cta-section {
-    padding: 60px 20px;
+    padding: 50px 20px;
 
     h2 {
-      font-size: 32px;
+      font-size: 28px;
+      margin-bottom: 16px;
     }
 
     p {
       font-size: 16px;
+      margin-bottom: 32px;
     }
 
     .cta-buttons {
       gap: 12px;
+
+      :deep(.n-button) {
+        padding: 10px 28px;
+        font-size: 15px;
+      }
     }
   }
 }
 
 @media (max-width: 480px) {
   .hero {
-    padding: 1.5rem 1rem;
-    min-height: 200px;
+    padding: 2rem 1rem;
+    min-height: 240px;
+
+    &::after {
+      background-size: 20px 20px;
+    }
+
+    .hero-content {
+      padding: 0;
+    }
 
     .hero-title {
-      font-size: 1.75rem;
+      font-size: 1.6rem;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.3px;
     }
 
     .hero-subtitle {
-      font-size: 0.95rem;
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
     }
 
     .hero-description {
-      font-size: 0.9rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
     }
   }
 
   .about-section {
     padding: 40px 16px;
 
+    .section-container {
+      gap: 32px;
+      padding: 0;
+    }
+
+    .about-content {
+      h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+
+      p {
+        font-size: 14px;
+        line-height: 1.7;
+        margin-bottom: 16px;
+      }
+    }
+
     .about-stats {
       grid-template-columns: 1fr;
+      gap: 12px;
+
+      .stat-card {
+        padding: 20px 16px;
+
+        &:hover {
+          transform: translateY(-3px);
+        }
+
+        .stat-number {
+          font-size: 28px;
+          margin-bottom: 8px;
+        }
+
+        .stat-label {
+          font-size: 12px;
+        }
+      }
     }
   }
 
@@ -997,35 +1162,128 @@ const teamMembers = computed(() => {
   .values-section {
     padding: 40px 16px;
 
+    .section-container {
+      padding: 0;
+    }
+
     .section-header {
-      margin-bottom: 30px;
+      margin-bottom: 32px;
 
       h2 {
         font-size: 24px;
+        margin-bottom: 12px;
       }
 
       p {
         font-size: 14px;
+        line-height: 1.6;
       }
     }
 
-    .features-grid,
-    .team-grid,
-    .values-grid {
+    .features-grid {
+      grid-template-columns: 1fr;
       gap: 16px;
+
+      .feature-card {
+        padding: 28px 20px;
+
+        &:hover {
+          transform: translateY(-6px);
+        }
+
+        .feature-icon {
+          width: 60px;
+          height: 60px;
+          margin-bottom: 16px;
+          border-radius: 10px;
+
+          :deep(svg) {
+            width: 28px;
+            height: 28px;
+          }
+        }
+
+        h3 {
+          font-size: 17px;
+          margin-bottom: 12px;
+        }
+
+        p {
+          font-size: 14px;
+          line-height: 1.6;
+        }
+      }
+    }
+
+    .team-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+
+      .team-card {
+        padding: 24px 20px;
+
+        &:hover {
+          transform: translateY(-6px);
+        }
+
+        .team-avatar {
+          width: 90px;
+          height: 90px;
+          margin-bottom: 16px;
+          border-width: 3px;
+        }
+
+        h3 {
+          font-size: 17px;
+          margin-bottom: 6px;
+        }
+
+        p {
+          font-size: 13px;
+        }
+      }
+    }
+
+    .values-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+
+      .value-card {
+        padding: 28px 20px;
+
+        &:hover {
+          transform: translateY(-4px);
+        }
+
+        h3 {
+          font-size: 17px;
+          margin-bottom: 12px;
+        }
+
+        p {
+          font-size: 14px;
+          line-height: 1.6;
+        }
+      }
     }
   }
 
   .cta-section {
     padding: 40px 16px;
 
+    .section-container {
+      padding: 0;
+    }
+
     h2 {
       font-size: 24px;
+      margin-bottom: 12px;
     }
 
     p {
       font-size: 14px;
-      margin-bottom: 24px;
+      line-height: 1.6;
+      margin-bottom: 28px;
     }
 
     .cta-buttons {
@@ -1034,6 +1292,9 @@ const teamMembers = computed(() => {
 
       :deep(.n-button) {
         width: 100%;
+        padding: 12px 24px;
+        font-size: 15px;
+        border-radius: 8px;
       }
     }
   }
