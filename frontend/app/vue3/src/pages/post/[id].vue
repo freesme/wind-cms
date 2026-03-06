@@ -3,10 +3,14 @@ import {definePage} from 'unplugin-vue-router/runtime'
 import {computed, nextTick, onBeforeUnmount, onMounted, ref, watch} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {useMessage} from 'naive-ui'
-import {useCommentStore, usePostStore} from '@/stores/modules/app'
+
+import {usePostStore} from '@/stores/modules/app'
 import {$t, currentLocaleLanguageCode} from '@/locales'
+
 import {ContentViewer} from '@/components/ContentViewer'
-import type {commentservicev1_Comment, contentservicev1_Post} from "@/api/generated/app/service/v1"
+import CommentSection from '@/components/CommentSection'
+
+import type {contentservicev1_Post} from "@/api/generated/app/service/v1"
 
 // --- 常量定义 ---
 const SCROLL_THRESHOLD = 500
@@ -19,12 +23,6 @@ interface TocItem {
   level: number
   text: string
   element: HTMLElement
-}
-
-interface CommentForm {
-  content: string
-  authorName: string
-  email: string
 }
 
 // --- 路由定义 ---
@@ -40,27 +38,19 @@ definePage({
 const route = useRoute()
 const router = useRouter()
 const postStore = usePostStore()
-const commentStore = useCommentStore()
 const message = useMessage()
 
 // 修复类型定义，允许 null
 const post = ref<contentservicev1_Post | null>(null)
-const comments = ref<commentservicev1_Comment[]>([])
 const relatedPosts = ref<contentservicev1_Post[]>([])
 const tableOfContents = ref<TocItem[]>([])
 const activeHeading = ref<string>('')
-const submitting = ref(false)
+
 const loading = ref(false)
 const showBackToTop = ref(false)
 const isLiked = ref(false)
 const isBookmarked = ref(false)
 const isTocExpanded = ref(true)
-
-const newComment = ref<CommentForm>({
-  content: '',
-  authorName: '',
-  email: '',
-})
 
 // --- 计算属性 ---
 const postId = computed(() => {
@@ -114,19 +104,6 @@ async function loadPost() {
   }
 }
 
-async function loadComments() {
-  if (!postId.value) return
-  try {
-    const res = await commentStore.listComment(
-      {page: 1, pageSize: 50},
-      {postId: postId.value, status: 'COMMENT_STATUS_APPROVED'}
-    )
-    comments.value = res.items || []
-  } catch (error) {
-    console.error('Load comments failed:', error)
-  }
-}
-
 async function loadRelatedPosts() {
   if (!post.value) return
   try {
@@ -147,37 +124,6 @@ async function loadRelatedPosts() {
 }
 
 // --- 交互逻辑 ---
-async function handleSubmitComment() {
-  if (!newComment.value.content || !newComment.value.authorName || !newComment.value.email) {
-    message.warning($t('page.post_detail.fill_form_info'))
-    return
-  }
-  if (!postId.value || submitting.value) return
-
-  submitting.value = true
-  try {
-    await commentStore.createComment({
-      postId: postId.value,
-      content: newComment.value.content,
-      authorName: newComment.value.authorName,
-      email: newComment.value.email,
-      status: 'COMMENT_STATUS_PENDING',
-    })
-    message.success($t('page.post_detail.comment_submitted'))
-    newComment.value = {content: '', authorName: '', email: ''}
-    await loadComments()
-    // 用户体验优化：提交后滚动到评论列表
-    setTimeout(() => {
-      document.querySelector('.comments-list')?.scrollIntoView({behavior: 'smooth'})
-    }, 100)
-  } catch (error) {
-    console.error('Submit comment failed:', error)
-    message.error($t('page.post_detail.submit_comment_failed'))
-  } finally {
-    submitting.value = false
-  }
-}
-
 function handleViewRelatedPost(id: number) {
   router.push(`/post/${id}`)
   window.scrollTo({top: 0, behavior: 'smooth'})
@@ -309,7 +255,6 @@ const throttledScroll = throttle(handleScroll, THROTTLE_DELAY)
 // --- 生命周期 ---
 onMounted(async () => {
   await loadPost()
-  await Promise.all([loadComments(), loadRelatedPosts()])
 
   // 等待内容完全加载后生成目录
   setTimeout(() => {
@@ -322,6 +267,9 @@ onMounted(async () => {
       }, 300)
     }
   }, 100)
+
+  // 加载相关文章 (确保 post 已加载)
+  await loadRelatedPosts()
 
   window.addEventListener('scroll', throttledScroll)
 })
@@ -481,85 +429,11 @@ watch(() => displayContent.value, () => {
         </article>
 
         <!-- Comments Section -->
-        <section v-if="!post.disallowComment" class="comments-section">
-          <div class="section-header">
-            <h2>
-              <span class="i-carbon:chat"/>
-              {{ $t('page.post_detail.comments_count', {count: comments.length}) }}
-            </h2>
-          </div>
-
-          <!-- Comment Form -->
-          <div class="comment-form">
-            <h3>{{ $t('page.post_detail.write_comment') }}</h3>
-            <n-form>
-              <n-grid :cols="2" :x-gap="16">
-                <n-form-item-gi :label="$t('page.post_detail.nickname')">
-                  <n-input
-                    v-model:value="newComment.authorName"
-                    :placeholder="$t('page.post_detail.enter_nickname')"
-                    size="large"
-                    :disabled="submitting"
-                  />
-                </n-form-item-gi>
-                <n-form-item-gi :label="$t('page.post_detail.email')">
-                  <n-input
-                    v-model:value="newComment.email"
-                    :placeholder="$t('page.post_detail.enter_email')"
-                    type="text"
-                    size="large"
-                    :disabled="submitting"
-                  />
-                </n-form-item-gi>
-              </n-grid>
-              <n-form-item :label="$t('page.post_detail.comment_content')">
-                <n-input
-                  v-model:value="newComment.content"
-                  type="textarea"
-                  :rows="5"
-                  :placeholder="$t('page.post_detail.write_comment')"
-                  size="large"
-                  :disabled="submitting"
-                />
-              </n-form-item>
-              <n-form-item>
-                <n-button
-                  type="primary"
-                  size="large"
-                  @click="handleSubmitComment"
-                  :loading="submitting"
-                >
-                  <template #icon>
-                    <span class="i-carbon:send-alt"/>
-                  </template>
-                  {{ $t('page.post_detail.submit_comment') }}
-                </n-button>
-              </n-form-item>
-            </n-form>
-          </div>
-
-          <!-- Comments List -->
-          <div v-if="comments.length > 0" class="comments-list">
-            <div v-for="comment in comments" :key="comment.id" class="comment-item">
-              <div class="comment-avatar">
-                <n-avatar :size="48" round>
-                  {{ comment.authorName?.charAt(0) || 'U' }}
-                </n-avatar>
-              </div>
-              <div class="comment-body">
-                <div class="comment-header">
-                  <strong class="comment-author">{{ comment.authorName }}</strong>
-                  <span class="comment-date">{{ formatDate(comment.createdAt) }}</span>
-                </div>
-                <div class="comment-content">
-                  <ContentViewer :content="comment.content" type="text"/>
-                </div>
-              </div>
-            </div>
-          </div>
-          <n-empty v-else :description="$t('page.post_detail.no_comments')"
-                   style="margin-top: 40px;"/>
-        </section>
+        <CommentSection
+          :object-id="postId"
+          content-type="CONTENT_TYPE_POST"
+          @update:comments="() => {}"
+        />
 
         <!-- Related Posts -->
         <section v-if="relatedPosts.length > 0" class="related-section">
@@ -744,12 +618,12 @@ watch(() => displayContent.value, () => {
   flex: 0 0 200px;
   width: 200px;
   padding: 40px 16px;
-  background: 
+  background:
     var(--color-surface),
     linear-gradient(135deg, rgba(168, 85, 247, 0.06), rgba(102, 126, 234, 0.04)); // 渐变紫色调，增强层次
   backdrop-filter: blur(10px);
-  box-shadow: 
-    2px 0 16px rgba(0, 0, 0, 0.1), 
+  box-shadow:
+    2px 0 16px rgba(0, 0, 0, 0.1),
     -2px 0 12px rgba(0, 0, 0, 0.06),
     inset 0 0 0 1px rgba(168, 85, 247, 0.12); // 增强边框和阴影，提升层次感
   max-height: calc(100vh - 120px);
@@ -869,8 +743,8 @@ watch(() => displayContent.value, () => {
   width: 100%;
   padding-top: 56.25%; // 16:9 比例（优化过的）
   overflow: hidden;
-  background: linear-gradient(135deg, 
-    var(--color-bg) 0%, 
+  background: linear-gradient(135deg,
+    var(--color-bg) 0%,
     var(--color-surface) 100%); // 使用 CSS 变量支持明暗主题
 
   img {
@@ -1221,253 +1095,6 @@ watch(() => displayContent.value, () => {
   }
 }
 
-// Post Actions
-.post-actions {
-  padding: 32px 0;
-  border-top: 1px solid var(--color-border);
-  display: flex;
-  justify-content: center;
-
-  :deep(.n-button) {
-    width: 56px;
-    height: 56px;
-    border: 2px solid var(--color-border);
-    background: var(--color-surface);
-    transition: all 0.3s;
-
-    &:hover {
-      border-color: var(--color-brand);
-      color: var(--color-brand);
-      transform: translateY(-4px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    }
-  }
-}
-
-// Section Header
-.section-header {
-  margin-bottom: 32px;
-
-  h2 {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 28px;
-    font-weight: 700;
-    margin: 0;
-    color: var(--color-text-primary);
-
-    span[class^="i-"] {
-      font-size: 32px;
-      color: var(--color-brand);
-    }
-  }
-}
-
-// Comments Section
-.comments-section {
-  max-width: 1200px;
-  margin: 0 auto 40px;
-  background: var(--color-surface);
-  border-radius: 16px;
-  padding: 48px 64px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-// Comment Form
-.comment-form {
-  background: var(--color-bg);
-  border-radius: 12px;
-  padding: 32px;
-  margin-bottom: 40px;
-  border: 1px solid var(--color-border);
-
-  h3 {
-    font-size: 20px;
-    font-weight: 600;
-    margin: 0 0 24px 0;
-    color: var(--color-text-primary);
-  }
-
-  :deep(.n-form-item) {
-    margin-bottom: 24px;
-  }
-
-  :deep(.n-button) {
-    padding: 0 32px;
-  }
-}
-
-// Comments List
-.comments-list {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.comment-item {
-  display: flex;
-  gap: 16px;
-  padding: 24px;
-  background: var(--color-bg);
-  border-radius: 12px;
-  border: 1px solid var(--color-border);
-  transition: all 0.3s;
-
-  &:hover {
-    border-color: var(--color-brand);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  }
-
-  .comment-avatar {
-    flex-shrink: 0;
-
-    :deep(.n-avatar) {
-      background: linear-gradient(135deg, var(--color-brand) 0%, #764ba2 100%);
-      color: #fff;
-      font-weight: 600;
-    }
-  }
-
-  .comment-body {
-    flex: 1;
-    min-width: 0;
-
-    .comment-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-
-      .comment-author {
-        font-size: 16px;
-        font-weight: 600;
-        color: var(--color-text-primary);
-      }
-
-      .comment-date {
-        font-size: 14px;
-        color: var(--color-text-secondary);
-      }
-    }
-
-    .comment-content {
-      font-size: 15px;
-      line-height: 1.7;
-      color: var(--color-text-primary);
-    }
-  }
-}
-
-// Related Section
-.related-section {
-  max-width: 1200px;
-  margin: 0 auto;
-  background: var(--color-surface);
-  border-radius: 16px;
-  padding: 48px 64px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.related-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
-}
-
-.related-card {
-  cursor: pointer;
-  transition: all 0.3s;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid var(--color-border);
-  background: var(--color-bg);
-
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
-    border-color: var(--color-brand);
-
-    .related-image {
-      .image-overlay {
-        background: rgba(0, 0, 0, 0.3);
-      }
-
-      img {
-        transform: scale(1.1);
-      }
-    }
-  }
-
-  .related-image {
-    position: relative;
-    width: 100%;
-    height: 200px;
-    overflow: hidden;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s;
-    }
-
-    .image-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.1);
-      transition: all 0.3s;
-    }
-  }
-
-  .related-content {
-    padding: 20px;
-
-    h3 {
-      font-size: 18px;
-      font-weight: 600;
-      margin: 0 0 12px 0;
-      color: var(--color-text-primary);
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      line-height: 1.4;
-    }
-
-    p {
-      font-size: 14px;
-      color: var(--color-text-secondary);
-      margin: 0 0 16px 0;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      line-height: 1.6;
-    }
-
-    .related-meta {
-      display: flex;
-      gap: 20px;
-      font-size: 13px;
-      color: var(--color-text-secondary);
-
-      span {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-
-        span[class^="i-"] {
-          font-size: 16px;
-        }
-      }
-    }
-  }
-}
-
 // Back to Top Button
 .back-to-top {
   position: fixed;
@@ -1479,6 +1106,132 @@ watch(() => displayContent.value, () => {
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 32px rgba(168, 85, 247, 0.4);
+  }
+}
+
+// Related Posts Section
+.related-section {
+  max-width: 1200px;
+  margin: 0 auto 40px;
+  background: var(--color-surface);
+  border-radius: 16px;
+  padding: 48px 64px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+  .section-header {
+    margin-bottom: 32px;
+
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0;
+      color: var(--color-text-primary);
+
+      span[class^="i-"] {
+        font-size: 32px;
+        color: var(--color-brand);
+      }
+    }
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 32px;
+  }
+
+  .related-card {
+    background: var(--color-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    transition: all 0.3s;
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--color-brand);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      transform: translateY(-4px);
+    }
+
+    .related-image {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; // 16:9
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-surface) 100%);
+
+      img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: all 0.3s;
+      }
+
+      .image-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 120px;
+        background: linear-gradient(to bottom,
+          transparent 0%,
+          rgba(0, 0, 0, 0.15) 30%,
+          rgba(0, 0, 0, 0.4) 70%,
+          rgba(0, 0, 0, 0.6) 100%);
+        pointer-events: none;
+      }
+    }
+
+    .related-content {
+      padding: 24px;
+
+      h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0 0 12px 0;
+        color: var(--color-text-primary);
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      p {
+        font-size: 14px;
+        color: var(--color-text-secondary);
+        margin: 0 0 16px 0;
+        line-height: 1.6;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .related-meta {
+        display: flex;
+        gap: 16px;
+        font-size: 13px;
+        color: var(--color-text-secondary);
+
+        span {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+
+          span[class^="i-"] {
+            font-size: 16px;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -1596,11 +1349,6 @@ watch(() => displayContent.value, () => {
     }
   }
 
-  .comments-section,
-  .related-section {
-    padding: 40px 48px;
-  }
-
   .post-banner {
     padding-top: 50%; // 调整为 2:1 比例
   }
@@ -1629,7 +1377,6 @@ watch(() => displayContent.value, () => {
   }
 
   .post-article,
-  .comments-section,
   .related-section {
     margin-left: 20px;
     margin-right: 20px;
@@ -1749,572 +1496,12 @@ watch(() => displayContent.value, () => {
     }
 
     :deep(ul), :deep(ol) {
-      padding-left: 32px;
-      margin: 24px 0;
-
-      li {
-        margin: 14px 0;
-        line-height: 1.9;
-      }
-    }
-
-    :deep(table) {
-      margin: 28px 0;
-
-      th {
-        padding: 14px;
-        font-size: 14px;
-      }
-
-      td {
-        padding: 12px 14px;
-        font-size: 14px;
-      }
-    }
-  }
-
-  .post-actions {
-    padding: 28px 0;
-
-    :deep(.n-button) {
-      width: 52px;
-      height: 52px;
-      border-width: 1.5px;
-    }
-
-    :deep(.n-space) {
-      gap: 16px !important;
-    }
-  }
-
-  .comments-section,
-  .related-section {
-    padding: 36px 32px;
-  }
-
-  .section-header {
-    margin-bottom: 28px;
-
-    h2 {
-      font-size: 24px;
-
-      span[class^="i-"] {
-        font-size: 28px;
-      }
-    }
-  }
-
-  .comment-form {
-    padding: 24px;
-    margin-bottom: 32px;
-
-    h3 {
-      font-size: 18px;
-      margin-bottom: 20px;
-    }
-
-    :deep(.n-form-item) {
-      margin-bottom: 20px;
-    }
-
-    :deep(.n-grid) {
-      gap: 12px !important;
-    }
-
-    :deep(.n-button) {
-      padding: 0 28px;
-      height: 44px;
-    }
-  }
-
-  .comment-item {
-    padding: 20px;
-    gap: 14px;
-
-    .comment-avatar {
-      :deep(.n-avatar) {
-        --n-size: 44px !important;
-      }
-    }
-
-    .comment-body {
-      .comment-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
-        margin-bottom: 10px;
-
-        .comment-author {
-          font-size: 15px;
-        }
-
-        .comment-date {
-          font-size: 13px;
-        }
-      }
-
-      .comment-content {
-        font-size: 14px;
-        line-height: 1.65;
-      }
-    }
-  }
-
-  .related-grid {
-    grid-template-columns: 1fr;
-    gap: 18px;
-  }
-
-  .related-card {
-    .related-image {
-      height: 180px;
-    }
-
-    .related-content {
-      padding: 18px;
-
-      h3 {
-        font-size: 17px;
-        margin-bottom: 10px;
-      }
-
-      p {
-        font-size: 13px;
-        margin-bottom: 14px;
-      }
-
-      .related-meta {
-        gap: 16px;
-        font-size: 12px;
-
-        span span[class^="i-"] {
-          font-size: 15px;
-        }
-      }
-    }
-  }
-
-  .back-to-top {
-    bottom: 28px;
-    right: 28px;
-    width: 50px !important;
-    height: 50px !important;
-  }
-}
-
-@media (max-width: 640px) {
-  .back-navigation {
-    padding: 14px 16px;
-
-    :deep(.n-button) {
-      font-size: 13px;
-      padding: 0 8px;
-    }
-  }
-
-  .post-article,
-  .comments-section,
-  .related-section {
-    margin-left: 16px;
-    margin-right: 16px;
-    border-radius: 12px;
-  }
-
-  .post-banner {
-    padding-top: 60%; // 5:3 比例
-  }
-
-  .article-content {
-    padding: 32px 24px 28px;
-  }
-
-  .post-header {
-    margin-bottom: 28px;
-
-    .post-title {
-      font-size: 26px;
-      margin-bottom: 16px;
-      line-height: 1.4;
-    }
-
-    .post-meta {
-      gap: 14px;
-      font-size: 12px;
-
-      .meta-item {
-        font-size: 12px;
-
-        span[class^="i-"] {
-          font-size: 14px;
-        }
-      }
-    }
-  }
-
-  .post-wrapper {
-    &::after {
-      display: none;
-    }
-  }
-
-  .post-content {
-    font-size: 15px;
-    line-height: 1.85;
-    margin-bottom: 32px;
-
-    :deep(h2) {
-      font-size: 22px;
-      margin: 36px 0 18px;
-      padding-bottom: 10px;
-
-      &::after {
-        width: 40px;
-      }
-    }
-
-    :deep(h3) {
-      font-size: 19px;
-      margin: 28px 0 16px;
-      padding-left: 10px;
-    }
-
-    :deep(p) {
-      margin: 16px 0;
-      line-height: 1.9;
-      text-indent: 1em;
-
-      & + p {
-        margin-top: 14px;
-      }
-    }
-
-    :deep(img) {
-      margin: 28px 0;
-      border-radius: 8px;
-    }
-
-    :deep(code) {
-      padding: 2px 6px;
-      font-size: 0.86em;
-    }
-
-    :deep(pre) {
-      padding: 16px;
-      margin: 24px 0;
-      border-radius: 8px;
-      font-size: 13px;
-    }
-
-    :deep(blockquote) {
-      padding: 14px 18px;
-      margin: 24px 0;
-      font-size: 14px;
-
-      &::before {
-        font-size: 45px;
-      }
-    }
-
-    :deep(ul), :deep(ol) {
-      padding-left: 28px;
-      margin: 20px 0;
-
-      li {
-        margin: 12px 0;
-      }
-    }
-
-    :deep(table) {
-      font-size: 13px;
-
-      th, td {
-        padding: 10px 12px;
-      }
-    }
-  }
-
-  .post-actions {
-    padding: 24px 0;
-
-    :deep(.n-button) {
-      width: 48px;
-      height: 48px;
-    }
-
-    :deep(.n-space) {
-      gap: 14px !important;
-    }
-  }
-
-  .comments-section,
-  .related-section {
-    padding: 28px 24px;
-  }
-
-  .section-header {
-    margin-bottom: 24px;
-
-    h2 {
-      font-size: 20px;
-
-      span[class^="i-"] {
-        font-size: 24px;
-      }
-    }
-  }
-
-  .comment-form {
-    padding: 20px;
-    margin-bottom: 28px;
-    border-radius: 10px;
-
-    h3 {
-      font-size: 17px;
-      margin-bottom: 18px;
-    }
-
-    :deep(.n-grid) {
-      grid-template-columns: 1fr !important;
-      gap: 0 !important;
-    }
-
-    :deep(.n-form-item) {
-      margin-bottom: 18px;
-    }
-
-    :deep(.n-input) {
-      font-size: 14px;
-    }
-
-    :deep(.n-button) {
-      width: 100%;
-      padding: 0 24px;
-      height: 42px;
-      font-size: 14px;
-    }
-  }
-
-  .comments-list {
-    gap: 18px;
-  }
-
-  .comment-item {
-    padding: 16px;
-    gap: 12px;
-    border-radius: 10px;
-
-    .comment-avatar {
-      :deep(.n-avatar) {
-        --n-size: 40px !important;
-      }
-    }
-
-    .comment-body {
-      .comment-header {
-        .comment-author {
-          font-size: 14px;
-        }
-
-        .comment-date {
-          font-size: 12px;
-        }
-      }
-
-      .comment-content {
-        font-size: 13px;
-        line-height: 1.6;
-      }
-    }
-  }
-
-  .related-card {
-    border-radius: 10px;
-
-    &:hover {
-      transform: translateY(-6px);
-    }
-
-    .related-image {
-      height: 160px;
-    }
-
-    .related-content {
-      padding: 16px;
-
-      h3 {
-        font-size: 16px;
-        margin-bottom: 8px;
-        -webkit-line-clamp: 2;
-      }
-
-      p {
-        font-size: 13px;
-        margin-bottom: 12px;
-        -webkit-line-clamp: 2;
-      }
-
-      .related-meta {
-        gap: 14px;
-        font-size: 11px;
-      }
-    }
-  }
-
-  .back-to-top {
-    bottom: 24px;
-    right: 24px;
-    width: 48px !important;
-    height: 48px !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .back-navigation {
-    padding: 12px 12px;
-
-    :deep(.n-button) {
-      font-size: 12px;
-      padding: 0 6px;
-
-      span[class^="i-"] {
-        font-size: 16px;
-      }
-    }
-  }
-
-  .post-article,
-  .comments-section,
-  .related-section {
-    margin-left: 12px;
-    margin-right: 12px;
-    border-radius: 10px;
-  }
-
-  .post-banner {
-    padding-top: 66.67%; // 3:2 比例，更适合小屏
-  }
-
-  .article-content {
-    padding: 28px 20px 24px;
-
-    &::before {
-      height: 5px;
-    }
-  }
-
-  .post-header {
-    margin-bottom: 24px;
-
-    .post-title {
-      font-size: 22px;
-      margin-bottom: 14px;
-      letter-spacing: -0.2px;
-      line-height: 1.45;
-    }
-
-    .post-meta {
-      gap: 12px;
-      flex-wrap: wrap;
-
-      .meta-item {
-        font-size: 11px;
-
-        span[class^="i-"] {
-          font-size: 13px;
-        }
-      }
-    }
-  }
-
-  .post-wrapper {
-    &::after {
-      display: none;
-    }
-  }
-
-  .post-content {
-    font-size: 14px;
-    line-height: 1.8;
-    letter-spacing: 0.2px;
-    margin-bottom: 28px;
-
-    :deep(h2) {
-      font-size: 20px;
-      margin: 32px 0 16px;
-      padding-bottom: 8px;
-      letter-spacing: -0.2px;
-
-      &::after {
-        width: 35px;
-      }
-    }
-
-    :deep(h3) {
-      font-size: 17px;
-      margin: 24px 0 14px;
-      padding-left: 8px;
-      border-left-width: 3px;
-    }
-
-    :deep(p) {
-      margin: 14px 0;
-      line-height: 1.85;
-      text-indent: 0; // 移动端取消首行缩进
-      text-align: left; // 左对齐更适合小屏
-
-      & + p {
-        margin-top: 12px;
-      }
-    }
-
-    :deep(img) {
-      margin: 24px 0;
-      border-radius: 6px;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-
-      &:hover {
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-        transform: none; // 移动端取消 hover 位移
-      }
-    }
-
-    :deep(code) {
-      padding: 2px 6px;
-      font-size: 0.85em;
-      border-radius: 4px;
-    }
-
-    :deep(pre) {
-      padding: 14px;
-      margin: 20px -4px; // 负边距让代码块更宽
-      border-radius: 6px;
-      font-size: 12px;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    :deep(blockquote) {
-      padding: 12px 16px;
-      margin: 20px 0;
-      border-left-width: 3px;
-      font-size: 13px;
-      border-radius: 0 6px 6px 0;
-
-      &::before {
-        font-size: 40px;
-        top: -6px;
-        left: 8px;
-      }
-    }
-
-    :deep(ul), :deep(ol) {
       padding-left: 24px;
       margin: 18px 0;
 
       li {
-        margin: 10px 0;
-        font-size: 14px;
-        line-height: 1.8;
+        margin: 14px 0;
+        line-height: 1.9;
       }
     }
 
@@ -2346,181 +1533,6 @@ watch(() => displayContent.value, () => {
         font-size: 12px;
       }
     }
-  }
-
-  .post-actions {
-    padding: 20px 0;
-
-    :deep(.n-button) {
-      width: 44px;
-      height: 44px;
-      border-width: 1px;
-
-      &:hover {
-        transform: translateY(-2px);
-      }
-    }
-
-    :deep(.n-space) {
-      gap: 12px !important;
-    }
-  }
-
-  .comments-section,
-  .related-section {
-    padding: 24px 20px;
-  }
-
-  .section-header {
-    margin-bottom: 20px;
-
-    h2 {
-      font-size: 18px;
-      gap: 10px;
-
-      span[class^="i-"] {
-        font-size: 22px;
-      }
-    }
-  }
-
-  .comment-form {
-    padding: 16px;
-    margin-bottom: 24px;
-
-    h3 {
-      font-size: 16px;
-      margin-bottom: 16px;
-    }
-
-    :deep(.n-form-item) {
-      margin-bottom: 16px;
-    }
-
-    :deep(.n-form-item-label) {
-      font-size: 13px;
-    }
-
-    :deep(.n-input) {
-      font-size: 13px;
-
-      &.n-input--textarea {
-        .n-input__textarea-el {
-          min-height: 100px !important;
-        }
-      }
-    }
-
-    :deep(.n-button) {
-      height: 40px;
-      font-size: 13px;
-      padding: 0 20px;
-    }
-  }
-
-  .comments-list {
-    gap: 16px;
-  }
-
-  .comment-item {
-    padding: 14px;
-    gap: 10px;
-
-    .comment-avatar {
-      :deep(.n-avatar) {
-        --n-size: 36px !important;
-        font-size: 14px;
-      }
-    }
-
-    .comment-body {
-      .comment-header {
-        gap: 5px;
-        margin-bottom: 8px;
-
-        .comment-author {
-          font-size: 13px;
-        }
-
-        .comment-date {
-          font-size: 11px;
-        }
-      }
-
-      .comment-content {
-        font-size: 12px;
-        line-height: 1.6;
-      }
-    }
-  }
-
-  .related-grid {
-    gap: 14px;
-  }
-
-  .related-card {
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .related-image {
-      height: 140px;
-    }
-
-    .related-content {
-      padding: 14px;
-
-      h3 {
-        font-size: 15px;
-        margin-bottom: 8px;
-      }
-
-      p {
-        font-size: 12px;
-        margin-bottom: 10px;
-      }
-
-      .related-meta {
-        gap: 12px;
-        font-size: 10px;
-
-        span span[class^="i-"] {
-          font-size: 13px;
-        }
-      }
-    }
-  }
-
-  .back-to-top {
-    bottom: 20px;
-    right: 20px;
-    width: 46px !important;
-    height: 46px !important;
-    box-shadow: 0 6px 18px rgba(168, 85, 247, 0.25);
-
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(168, 85, 247, 0.35);
-    }
-  }
-
-  // Empty state 优化
-  :deep(.n-empty) {
-    margin: 40px 0 !important;
-
-    .n-empty__icon {
-      font-size: 48px !important;
-    }
-
-    .n-empty__description {
-      font-size: 13px;
-    }
-  }
-
-  // Spin 加载优化
-  :deep(.n-spin-container) {
-    min-height: 300px;
   }
 }
 </style>
