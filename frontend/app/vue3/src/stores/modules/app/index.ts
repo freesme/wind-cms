@@ -8,3 +8,4 @@ export * from './tag.state';
 export * from './navigation.state';
 export * from './comment.state';
 export * from './tenant.state';
+export * from './language-change.state';

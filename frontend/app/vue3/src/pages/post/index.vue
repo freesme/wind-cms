@@ -6,6 +6,7 @@ import {useRouter, useRoute} from 'vue-router'
 import {usePostStore, useCategoryStore} from '@/stores/modules/app'
 import {$t} from '@/locales'
 import {formatDate} from "@/utils/date";
+import {useLanguageChangeEffect} from '@/hooks/useLanguageChangeEffect';
 
 definePage({
   name: 'post-list',
@@ -124,6 +125,17 @@ onMounted(async () => {
 
   await loadPosts()
 })
+
+// 监听语言切换，自动重新加载数据
+useLanguageChangeEffect(async () => {
+  await Promise.all([
+    loadPosts(),
+    loadCategories(),
+  ]);
+}, {
+  immediate: false,    // 已经在 onMounted 中加载，不需要立即执行
+  autoCleanup: true,   // 组件卸载时自动取消订阅
+});
 
 watch(() => route.query.category, (newVal) => {
   if (newVal) {

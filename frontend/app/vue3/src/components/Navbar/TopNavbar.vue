@@ -4,12 +4,10 @@ import {useRouter} from 'vue-router';
 
 import {useNavbarStore, useNavigationStore} from "@/stores";
 import {XIcon} from '@/plugins/xicon';
-import {
-  currentLocaleLanguageCode
-} from '@/locales';
 
 import type {TopNavBarTabItem} from "./types";
 import TopNavbarTab from './TopNavbarTab.vue';
+import {useLanguageChangeEffect} from '@/hooks/useLanguageChangeEffect';
 
 const router = useRouter();
 const navbarStore = useNavbarStore();
@@ -61,6 +59,12 @@ function handleNavigate(item: any) {
 
 onMounted(() => {
   loadNavigation();
+});
+
+// 监听语言切换，自动重新加载导航数据
+useLanguageChangeEffect(loadNavigation, {
+  immediate: false,    // 已经在 onMounted 中加载，不需要立即执行
+  autoCleanup: true,   // 组件卸载时自动取消订阅
 });
 </script>
 

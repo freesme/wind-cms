@@ -6,6 +6,7 @@ import {useMessage} from 'naive-ui'
 
 import {usePostStore} from '@/stores/modules/app'
 import {$t, currentLocaleLanguageCode} from '@/locales'
+import {useLanguageChangeEffect} from '@/hooks/useLanguageChangeEffect';
 
 import {ContentViewer} from '@/components/ContentViewer'
 import CommentSection from '@/components/CommentSection'
@@ -118,6 +119,20 @@ async function loadRelatedPosts() {
     console.error('Load related posts failed:', error)
   }
 }
+
+// 加载所有数据
+async function loadAllData() {
+  await Promise.all([
+    loadPost(),
+    loadRelatedPosts(),
+  ]);
+}
+
+// 监听语言切换，自动重新加载数据
+useLanguageChangeEffect(loadAllData, {
+  immediate: false,    // 已经在 onMounted 中加载，不需要立即执行
+  autoCleanup: true,   // 组件卸载时自动取消订阅
+});
 
 // --- 交互逻辑 ---
 function handleViewRelatedPost(id: number) {

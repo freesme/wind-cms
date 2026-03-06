@@ -6,6 +6,7 @@ import { useUserProfileStore } from '@/stores/modules/app/user-profile.state'
 import { usePostStore } from '@/stores/modules/app/post.state'
 import { $t } from '@/locales'
 import type { identityservicev1_User } from '@/api/generated/app/service/v1'
+import {useLanguageChangeEffect} from '@/hooks/useLanguageChangeEffect';
 
 definePage({
   name: 'user-profile',
@@ -175,6 +176,17 @@ async function handleTabChange(tabName: string) {
 onMounted(() => {
   loadUserProfile()
 })
+
+// 监听语言切换，自动重新加载用户数据和帖子
+useLanguageChangeEffect(async () => {
+  await Promise.all([
+    loadUserProfile(),
+    activeTab.value === 'posts' ? loadUserPosts() : Promise.resolve(),
+  ]);
+}, {
+  immediate: false,    // 已经在 onMounted 中加载，不需要立即执行
+  autoCleanup: true,   // 组件卸载时自动取消订阅
+});
 </script>
 
 <template>

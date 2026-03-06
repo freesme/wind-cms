@@ -12,6 +12,7 @@ import useAutoThemeSwitcher from '@/hooks/useAutoThemeSwitcher'
 import {$t, i18n} from '@/locales'
 
 import {ApplicationProvider} from "@/components/ApplicationProvider";
+import {useLanguageChangeStore} from "@/stores/modules/app/language-change.state";
 
 useHead({
   title: $t('app.title'),
@@ -71,6 +72,12 @@ const theme = computed(() => {
 
 onMounted(() => {
   initializeThemeSwitcher()
+  
+  // 初始化语言切换监听器
+  const languageChangeStore = useLanguageChangeStore()
+  languageChangeStore.initializeLanguageWatcher()
+  
+  console.log('[App] Language change watcher initialized')
 })
 </script>
 

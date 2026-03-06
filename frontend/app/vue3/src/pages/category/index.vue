@@ -4,6 +4,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCategoryStore } from '@/stores/modules/app'
 import { $t } from '@/locales'
+import {useLanguageChangeEffect} from '@/hooks/useLanguageChangeEffect';
 
 definePage({
   name: 'category-list',
@@ -56,6 +57,12 @@ function handleViewCategory(id: number) {
 onMounted(() => {
   loadCategories()
 })
+
+// 监听语言切换，自动重新加载数据
+useLanguageChangeEffect(loadCategories, {
+  immediate: false,    // 已经在 onMounted 中加载，不需要立即执行
+  autoCleanup: true,   // 组件卸载时自动取消订阅
+});
 </script>
 
 <template>

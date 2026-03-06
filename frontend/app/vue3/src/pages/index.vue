@@ -7,6 +7,7 @@ import {usePostStore, useCategoryStore, useTagStore} from '@/stores/modules/app'
 import {$t, i18n} from '@/locales'
 import {XIcon} from "@/plugins/xicon";
 import {formatDate} from "@/utils/date";
+import {useLanguageChangeEffect} from '@/hooks/useLanguageChangeEffect';
 
 definePage({
   name: 'home',
@@ -217,6 +218,21 @@ onMounted(async () => {
     initScrollObserver()
   }, 100)
 })
+
+// 监听语言切换，自动重新加载数据
+useLanguageChangeEffect(async () => {
+  loading.value = true
+  await Promise.all([
+    loadLatestPosts(),
+    loadFeaturedPosts(),
+    loadCategories(),
+    loadPopularTags(),
+  ])
+  loading.value = false
+}, {
+  immediate: false,    // 已经在 onMounted 中加载过，不需要立即执行
+  autoCleanup: true,  // 组件卸载时自动取消订阅
+});
 
 onUnmounted(() => {
   destroyScrollObserver()
