@@ -73,7 +73,13 @@
     "fill_form_info": "Please fill in the complete information",
     "comment_submitted": "Comment submitted, waiting for review",
     "submit_comment_failed": "Failed to submit comment",
-    "load_failed": "Failed to load post"
+    "load_failed": "Failed to load post",
+    "liked": "Liked",
+    "bookmarked": "Bookmarked",
+    "unbookmarked": "Bookmark removed",
+    "shared": "Shared successfully",
+    "link_copied": "Link copied to clipboard",
+    "copy_failed": "Copy failed, please copy manually"
   },
   "error": {
     "not_found": "404 - Page Not Found",

@@ -25,6 +25,9 @@ const loading = ref(false)
 const post = ref<any>(null)
 const comments = ref<any[]>([])
 const relatedPosts = ref<any[]>([])
+const showBackToTop = ref(false)
+const isLiked = ref(false)
+const isBookmarked = ref(false)
 
 const newComment = ref({
   content: '',
@@ -164,12 +167,76 @@ function handleBack() {
   }
 }
 
+function handleLike() {
+  isLiked.value = !isLiked.value
+  if (isLiked.value) {
+    message.success($t('page.post_detail.liked'))
+    if (post.value) {
+      post.value.likes = (post.value.likes || 0) + 1
+    }
+  } else {
+    if (post.value && post.value.likes > 0) {
+      post.value.likes -= 1
+    }
+  }
+}
+
+function handleBookmark() {
+  isBookmarked.value = !isBookmarked.value
+  if (isBookmarked.value) {
+    message.success($t('page.post_detail.bookmarked'))
+  } else {
+    message.info($t('page.post_detail.unbookmarked'))
+  }
+}
+
+function handleShare() {
+  const url = window.location.href
+  if (navigator.share) {
+    navigator.share({
+      title: getTitle(),
+      url: url
+    }).then(() => {
+      message.success($t('page.post_detail.shared'))
+    }).catch(() => {
+      copyToClipboard(url)
+    })
+  } else {
+    copyToClipboard(url)
+  }
+}
+
+function copyToClipboard(text: string) {
+  navigator.clipboard.writeText(text).then(() => {
+    message.success($t('page.post_detail.link_copied'))
+  }).catch(() => {
+    message.error($t('page.post_detail.copy_failed'))
+  })
+}
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+function handleScroll() {
+  showBackToTop.value = window.scrollY > 500
+}
+
 onMounted(async () => {
   await loadPost()
   await Promise.all([
     loadComments(),
     loadRelatedPosts(),
   ])
+
+  // 监听滚动事件
+  window.addEventListener('scroll', handleScroll)
+})
+
+// 清理事件监听
+import { onBeforeUnmount } from 'vue'
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll)
 })
 </script>
 
@@ -230,17 +297,31 @@ onMounted(async () => {
             <!-- Post Actions -->
             <footer class="post-actions">
               <n-space size="large">
-                <n-button size="large" circle>
+                <n-button
+                  size="large"
+                  circle
+                  :type="isLiked ? 'primary' : 'default'"
+                  @click="handleLike"
+                >
                   <template #icon>
-                    <span class="i-carbon:thumbs-up" />
+                    <span :class="isLiked ? 'i-carbon:thumbs-up-filled' : 'i-carbon:thumbs-up'" />
                   </template>
                 </n-button>
-                <n-button size="large" circle>
+                <n-button
+                  size="large"
+                  circle
+                  :type="isBookmarked ? 'primary' : 'default'"
+                  @click="handleBookmark"
+                >
                   <template #icon>
-                    <span class="i-carbon:bookmark" />
+                    <span :class="isBookmarked ? 'i-carbon:bookmark-filled' : 'i-carbon:bookmark'" />
                   </template>
                 </n-button>
-                <n-button size="large" circle>
+                <n-button
+                  size="large"
+                  circle
+                  @click="handleShare"
+                >
                   <template #icon>
                     <span class="i-carbon:share" />
                   </template>
@@ -362,6 +443,22 @@ onMounted(async () => {
 
       <n-empty v-else :description="$t('page.post_detail.post_not_found')" />
     </n-spin>
+
+    <!-- Back to Top Button -->
+    <transition name="fade">
+      <n-button
+        v-show="showBackToTop"
+        class="back-to-top"
+        circle
+        size="large"
+        type="primary"
+        @click="scrollToTop"
+      >
+        <template #icon>
+          <span class="i-carbon:arrow-up" />
+        </template>
+      </n-button>
+    </transition>
   </div>
 </template>
 
@@ -404,10 +501,14 @@ onMounted(async () => {
 .post-banner {
   position: relative;
   width: 100%;
-  height: 500px;
+  padding-top: 56.25%; // 16:9 比例
   overflow: hidden;
+  background: var(--color-bg);
 
   img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -418,14 +519,34 @@ onMounted(async () => {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 150px;
-    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.6));
+    height: 200px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(0, 0, 0, 0.3) 40%,
+      rgba(0, 0, 0, 0.7) 80%,
+      rgba(0, 0, 0, 0.85) 100%
+    );
+    pointer-events: none;
   }
 }
 
 // Article Content
 .article-content {
-  padding: 48px 64px;
+  padding: 56px 64px 48px;
+  background: var(--color-surface);
+  position: relative;
+
+  // 顶部留白过渡区域
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.03), transparent);
+  }
 }
 
 // Post Header
@@ -465,43 +586,74 @@ onMounted(async () => {
 // Post Content
 .post-content {
   font-size: 18px;
-  line-height: 1.8;
+  line-height: 2;
+  letter-spacing: 0.3px;
   color: var(--color-text-primary);
   margin-bottom: 48px;
 
   :deep(h2) {
     font-size: 32px;
     font-weight: 700;
-    margin: 48px 0 24px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid var(--color-border);
+    margin: 56px 0 28px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid var(--color-brand);
+    color: var(--color-text-primary);
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #a855f7, transparent);
+    }
   }
 
   :deep(h3) {
     font-size: 26px;
     font-weight: 600;
-    margin: 36px 0 20px;
+    margin: 44px 0 24px;
+    color: var(--color-text-primary);
+    padding-left: 16px;
+    border-left: 4px solid var(--color-brand);
   }
 
   :deep(p) {
-    margin: 20px 0;
+    margin: 24px 0;
     text-align: justify;
+    text-indent: 2em;
+    line-height: 2.2;
+
+    // 段落间距
+    & + p {
+      margin-top: 20px;
+    }
   }
 
   :deep(img) {
     max-width: 100%;
     border-radius: 12px;
-    margin: 32px 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin: 40px 0;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transition: all 0.3s;
+    cursor: zoom-in;
+
+    &:hover {
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+      transform: translateY(-4px);
+    }
   }
 
   :deep(code) {
     background: var(--color-bg);
-    padding: 4px 8px;
+    padding: 4px 10px;
     border-radius: 6px;
     font-family: 'Fira Code', 'Courier New', monospace;
     font-size: 0.9em;
     color: var(--color-brand);
+    border: 1px solid rgba(168, 85, 247, 0.2);
   }
 
   :deep(pre) {
@@ -510,39 +662,109 @@ onMounted(async () => {
     border-radius: 12px;
     overflow-x: auto;
     border: 1px solid var(--color-border);
+    margin: 32px 0;
 
     code {
       background: none;
       padding: 0;
       color: var(--color-text-primary);
+      border: none;
     }
   }
 
   :deep(blockquote) {
-    border-left: 4px solid var(--color-brand);
-    padding-left: 24px;
-    margin: 24px 0;
+    border-left: 5px solid var(--color-brand);
+    padding: 20px 24px;
+    margin: 32px 0;
+    background: rgba(168, 85, 247, 0.05);
+    border-radius: 0 8px 8px 0;
     color: var(--color-text-secondary);
     font-style: italic;
+    position: relative;
+
+    &::before {
+      content: '"';
+      position: absolute;
+      top: -10px;
+      left: 10px;
+      font-size: 60px;
+      color: var(--color-brand);
+      opacity: 0.3;
+      font-family: Georgia, serif;
+    }
   }
 
   :deep(ul), :deep(ol) {
-    padding-left: 32px;
-    margin: 20px 0;
+    padding-left: 40px;
+    margin: 28px 0;
 
     li {
-      margin: 12px 0;
+      margin: 16px 0;
+      line-height: 2;
+
+      &::marker {
+        color: var(--color-brand);
+        font-weight: 600;
+      }
     }
   }
 
   :deep(a) {
     color: var(--color-brand);
     text-decoration: none;
-    border-bottom: 1px solid transparent;
+    border-bottom: 2px solid rgba(168, 85, 247, 0.3);
     transition: all 0.3s;
+    font-weight: 500;
 
     &:hover {
       border-bottom-color: var(--color-brand);
+      background: rgba(168, 85, 247, 0.08);
+      padding: 2px 4px;
+      margin: -2px -4px;
+      border-radius: 4px;
+    }
+  }
+
+  :deep(strong) {
+    color: var(--color-brand);
+    font-weight: 700;
+  }
+
+  :deep(em) {
+    color: var(--color-text-secondary);
+    font-style: italic;
+  }
+
+  :deep(hr) {
+    border: none;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--color-brand), transparent);
+    margin: 48px 0;
+  }
+
+  :deep(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 32px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+    th {
+      background: var(--color-brand);
+      color: white;
+      padding: 16px;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    tr:hover {
+      background: rgba(168, 85, 247, 0.05);
     }
   }
 }
@@ -794,6 +1016,32 @@ onMounted(async () => {
   }
 }
 
+// Back to Top Button
+.back-to-top {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  z-index: 999;
+  box-shadow: 0 8px 24px rgba(168, 85, 247, 0.3);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(168, 85, 247, 0.4);
+  }
+}
+
+// Fade Transition
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
 // Responsive Design
 @media (max-width: 1024px) {
   .back-navigation,
@@ -811,7 +1059,12 @@ onMounted(async () => {
   }
 
   .post-banner {
-    height: 400px;
+    padding-top: 56.25%; // 保持 16:9 比例
+  }
+
+  .back-to-top {
+    bottom: 30px;
+    right: 30px;
   }
 }
 
@@ -821,7 +1074,7 @@ onMounted(async () => {
   }
 
   .post-banner {
-    height: 300px;
+    padding-top: 56.25%; // 保持 16:9 比例
   }
 
   .article-content,
@@ -909,7 +1162,7 @@ onMounted(async () => {
   }
 
   .post-banner {
-    height: 250px;
+    padding-top: 75%; // 移动端采用 4:3 比例，更紧凑
   }
 
   .post-header .post-title {
@@ -918,6 +1171,13 @@ onMounted(async () => {
 
   .post-content {
     font-size: 15px;
+  }
+
+  .back-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 48px !important;
+    height: 48px !important;
   }
 }
 </style>
