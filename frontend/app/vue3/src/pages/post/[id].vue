@@ -965,8 +965,8 @@ watch(() => displayContent.value, () => {
 // Post Content
 .post-content {
   font-size: 17px;
-  line-height: 2.0; // 优化行高，提升长文阅读舒适度
-  letter-spacing: 0.25px;
+  line-height: 2.05; // 黄金行高比例，提升长文阅读舒适度
+  letter-spacing: 0.3px; // 微调字间距，增强可读性
   color: var(--color-text-primary);
   margin-bottom: 40px;
   text-rendering: optimizeLegibility;
@@ -976,12 +976,12 @@ watch(() => displayContent.value, () => {
   :deep(h2) {
     font-size: 26px;
     font-weight: 700;
-    margin: 52px 0 26px; // 增加标题间距
-    padding-bottom: 10px;
+    margin: 56px 0 28px; // 增加标题上下间距，章节更清晰
+    padding-bottom: 12px; // 增加下划线与文字距离
     border-bottom: 2px solid var(--color-brand);
     color: var(--color-text-primary);
     position: relative;
-    line-height: 1.35;
+    line-height: 1.4; // 稍微增加标题行高
     letter-spacing: -0.3px;
 
     &::after {
@@ -998,22 +998,22 @@ watch(() => displayContent.value, () => {
   :deep(h3) {
     font-size: 21px;
     font-weight: 600;
-    margin: 40px 0 22px; // 优化三级标题间距
+    margin: 44px 0 24px; // 增加三级标题间距
     color: var(--color-text-primary);
     padding-left: 10px;
     border-left: 3px solid var(--color-brand);
-    line-height: 1.4;
+    line-height: 1.45; // 优化标题行高
   }
 
   :deep(p) {
-    margin: 24px 0; // 增加段间距，提升阅读舒适度
+    margin: 26px 0; // 增加段间距到 26px，呼吸感更强
     text-align: justify;
-    line-height: 2.1; // 优化行高
-    letter-spacing: 0.28px; // 微调字间距
-    word-spacing: 0.06em; // 微调词间距
+    line-height: 2.15; // 优化行高到 2.15
+    letter-spacing: 0.32px; // 微调字间距
+    word-spacing: 0.08em; // 增加词间距，提升可读性
 
     & + p {
-      margin-top: 22px; // 相邻段落间距稍小
+      margin-top: 24px; // 相邻段落间距同步增加
     }
 
     &:first-of-type::first-letter {
@@ -1029,7 +1029,7 @@ watch(() => displayContent.value, () => {
   :deep(img) {
     max-width: 100%;
     border-radius: 10px;
-    margin: 32px 0;
+    margin: 36px 0; // 增加图片上下间距
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     transition: all 0.3s;
     cursor: zoom-in;
@@ -1059,13 +1059,13 @@ watch(() => displayContent.value, () => {
 
   :deep(pre) {
     background: #282c34; // One Dark 主题色
-    padding: 22px;
+    padding: 24px; // 增加内边距
     border-radius: 12px;
     overflow-x: auto;
     border: 1px solid rgba(255, 255, 255, 0.12); // 加强边框
-    margin: 36px 0; // 增加间距
-    line-height: 1.6;
-    letter-spacing: 0.15px;
+    margin: 40px 0; // 增加代码块整体间距
+    line-height: 1.65; // 优化代码行高
+    letter-spacing: 0.18px; // 微调字间距
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.08); // 增强阴影
     position: relative;
     white-space: pre;
@@ -1100,15 +1100,15 @@ watch(() => displayContent.value, () => {
 
   :deep(blockquote) {
     border-left: 5px solid var(--color-brand); // 加粗左边框
-    padding: 24px 28px; // 增加内边距
-    margin: 36px 0; // 增加外边距
+    padding: 26px 30px; // 进一步增加内边距
+    margin: 40px 0; // 增加外边距
     background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(168, 85, 247, 0.05)); // 渐变背景
     border-radius: 0 10px 10px 0;
     color: var(--color-text-secondary);
     font-style: italic;
     position: relative;
-    letter-spacing: 0.2px;
-    line-height: 1.9;
+    letter-spacing: 0.25px; // 微调字间距
+    line-height: 2.0; // 增加引用块行高
     box-shadow: 0 2px 8px rgba(168, 85, 247, 0.1); // 添加阴影
 
     &::before {
@@ -1124,7 +1124,7 @@ watch(() => displayContent.value, () => {
     }
 
     p {
-      margin: 16px 0;
+      margin: 18px 0; // 增加引用段落间距
       text-indent: 0;
       text-align: left;
       position: relative;
@@ -1132,18 +1132,18 @@ watch(() => displayContent.value, () => {
     }
 
     &:last-child {
-      margin-bottom: 36px;
+      margin-bottom: 40px; // 增加底部间距
     }
   }
 
   :deep(ul), :deep(ol) {
     padding-left: 32px;
-    margin: 28px 0;
+    margin: 32px 0; // 增加列表整体间距
 
     li {
-      margin: 12px 0;
-      line-height: 1.95;
-      letter-spacing: 0.2px;
+      margin: 14px 0; // 增加列表项间距
+      line-height: 2.0; // 优化列表项行高
+      letter-spacing: 0.25px; // 微调字间距
       position: relative;
 
       &::marker {
