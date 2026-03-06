@@ -369,14 +369,15 @@ onMounted(async () => {
 
 // Hero Section
 .hero {
-  padding: 6rem 2rem;
+  padding: 3rem 2rem;
   text-align: center;
   max-width: 100%;
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
   color: white;
   position: relative;
   overflow: hidden;
-  min-height: 600px;
+  min-height: 350px;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -437,7 +438,7 @@ onMounted(async () => {
         line-height: 1.6;
         box-shadow:
           0 10px 40px rgba(0, 0, 0, 0.4),
-          0 0 20px rgba(168, 85, 247, 0.2),
+          0 0 20px rgba(var(--color-primary-purple-rgb), 0.2),
           inset 0 1px 0 rgba(255, 255, 255, 0.1);
         opacity: 0.9;
         transform-style: preserve-3d;
@@ -736,14 +737,14 @@ onMounted(async () => {
     // 多层外发光和阴影，创造强烈的视觉冲击
     text-shadow:
       0 0 40px rgba(255, 255, 255, 0.9),
-      0 0 80px rgba(168, 85, 247, 0.7),
+      0 0 80px rgba(var(--color-primary-purple-rgb), 0.7),
       0 0 120px rgba(99, 102, 241, 0.5),
       0 6px 24px rgba(0, 0, 0, 0.5),
       0 3px 12px rgba(0, 0, 0, 0.4);
 
     // 添加多层滤镜外发光
     filter:
-      drop-shadow(0 0 30px rgba(168, 85, 247, 0.6))
+      drop-shadow(0 0 30px rgba(var(--color-primary-purple-rgb), 0.6))
       drop-shadow(0 0 60px rgba(99, 102, 241, 0.4))
       drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
 
@@ -765,7 +766,7 @@ onMounted(async () => {
       height: 40px;
       background: radial-gradient(
         ellipse at center,
-        rgba(168, 85, 247, 0.3) 0%,
+        rgba(var(--color-primary-purple-rgb), 0.3) 0%,
         rgba(99, 102, 241, 0.2) 50%,
         transparent 100%
       );
@@ -874,18 +875,18 @@ onMounted(async () => {
 
 @keyframes glowPulse {
   0%, 100% {
-    filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.3));
+    filter: drop-shadow(0 0 10px rgba(var(--color-primary-purple-rgb), 0.3));
     text-shadow:
       0 0 20px rgba(255, 255, 255, 0.6),
-      0 0 40px rgba(168, 85, 247, 0.4),
+      0 0 40px rgba(var(--color-primary-purple-rgb), 0.4),
       0 4px 15px rgba(0, 0, 0, 0.3),
       0 2px 5px rgba(0, 0, 0, 0.2);
   }
   50% {
-    filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.7));
+    filter: drop-shadow(0 0 30px rgba(var(--color-primary-purple-rgb), 0.7));
     text-shadow:
       0 0 40px rgba(255, 255, 255, 0.9),
-      0 0 70px rgba(168, 85, 247, 0.8),
+      0 0 70px rgba(var(--color-primary-purple-rgb), 0.8),
       0 4px 20px rgba(0, 0, 0, 0.4),
       0 2px 8px rgba(0, 0, 0, 0.3);
   }
@@ -912,14 +913,14 @@ onMounted(async () => {
   0%, 100% {
     box-shadow:
       0 10px 40px rgba(0, 0, 0, 0.3),
-      0 0 15px rgba(168, 85, 247, 0.15),
+      0 0 15px rgba(var(--color-primary-purple-rgb), 0.15),
       inset 0 1px 0 rgba(255, 255, 255, 0.1);
     opacity: 0.85;
   }
   50% {
     box-shadow:
       0 15px 50px rgba(0, 0, 0, 0.4),
-      0 0 30px rgba(168, 85, 247, 0.4),
+      0 0 30px rgba(var(--color-primary-purple-rgb), 0.4),
       0 0 60px rgba(99, 102, 241, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.15);
     opacity: 1;
@@ -930,13 +931,13 @@ onMounted(async () => {
 @keyframes glowPulseTitle {
   0%, 100% {
     filter:
-      drop-shadow(0 0 25px rgba(168, 85, 247, 0.5))
+      drop-shadow(0 0 25px rgba(var(--color-primary-purple-rgb), 0.5))
       drop-shadow(0 0 50px rgba(99, 102, 241, 0.3))
       drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
   }
   50% {
     filter:
-      drop-shadow(0 0 40px rgba(168, 85, 247, 0.8))
+      drop-shadow(0 0 40px rgba(var(--color-primary-purple-rgb), 0.8))
       drop-shadow(0 0 80px rgba(99, 102, 241, 0.6))
       drop-shadow(0 8px 20px rgba(0, 0, 0, 0.4));
   }
@@ -1718,7 +1719,7 @@ html.dark {
     bottom: 0;
     background-image:
       radial-gradient(ellipse at 20% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 70%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
+      radial-gradient(ellipse at 80% 70%, rgba(var(--color-primary-purple-rgb), 0.08) 0%, transparent 50%);
     pointer-events: none;
     z-index: -1;
   }
@@ -1746,7 +1747,7 @@ html.dark {
       border: 1px solid rgba(255, 255, 255, 0.2);
       box-shadow:
         0 12px 48px rgba(0, 0, 0, 0.6),
-        0 0 30px rgba(168, 85, 247, 0.3),
+        0 0 30px rgba(var(--color-primary-purple-rgb), 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.15);
     }
 
@@ -1766,13 +1767,13 @@ html.dark {
 
       text-shadow:
         0 0 50px rgba(255, 255, 255, 1),
-        0 0 100px rgba(168, 85, 247, 0.8),
+        0 0 100px rgba(var(--color-primary-purple-rgb), 0.8),
         0 0 150px rgba(99, 102, 241, 0.6),
         0 8px 30px rgba(0, 0, 0, 0.6),
         0 4px 15px rgba(0, 0, 0, 0.4);
 
       filter:
-        drop-shadow(0 0 35px rgba(168, 85, 247, 0.7))
+        drop-shadow(0 0 35px rgba(var(--color-primary-purple-rgb), 0.7))
         drop-shadow(0 0 70px rgba(99, 102, 241, 0.5))
         drop-shadow(0 6px 20px rgba(0, 0, 0, 0.4));
     }
@@ -1826,10 +1827,10 @@ html.dark {
     &:hover {
       background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%),
                   linear-gradient(135deg, rgba(100, 120, 160, 0.95) 0%, rgba(80, 100, 140, 0.95) 100%);
-      border-color: rgba(168, 85, 247, 0.6) !important;
+      border-color: rgba(var(--color-primary-purple-rgb), 0.6) !important;
       box-shadow: 0 12px 32px rgba(99, 102, 241, 0.3),
-                  0 0 0 1px rgba(168, 85, 247, 0.5),
-                  0 0 20px rgba(168, 85, 247, 0.15);
+                  0 0 0 1px rgba(var(--color-primary-purple-rgb), 0.5),
+                  0 0 20px rgba(var(--color-primary-purple-rgb), 0.15);
     }
   }
 
@@ -1842,10 +1843,10 @@ html.dark {
     &:hover {
       background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%),
                   linear-gradient(135deg, rgba(100, 120, 160, 0.95) 0%, rgba(80, 100, 140, 0.95) 100%);
-      border-color: rgba(168, 85, 247, 0.6) !important;
+      border-color: rgba(var(--color-primary-purple-rgb), 0.6) !important;
       box-shadow: 0 12px 32px rgba(99, 102, 241, 0.3),
-                  0 0 0 1px rgba(168, 85, 247, 0.5),
-                  0 0 20px rgba(168, 85, 247, 0.15);
+                  0 0 0 1px rgba(var(--color-primary-purple-rgb), 0.5),
+                  0 0 20px rgba(var(--color-primary-purple-rgb), 0.15);
     }
   }
 
@@ -1972,10 +1973,10 @@ html.dark {
     &:hover {
       background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%),
                   linear-gradient(135deg, rgba(100, 120, 160, 0.95) 0%, rgba(80, 100, 140, 0.95) 100%);
-      border-color: rgba(168, 85, 247, 0.6) !important;
+      border-color: rgba(var(--color-primary-purple-rgb), 0.6) !important;
       box-shadow: 0 12px 32px rgba(99, 102, 241, 0.3),
-                  0 0 0 1px rgba(168, 85, 247, 0.5),
-                  0 0 20px rgba(168, 85, 247, 0.15);
+                  0 0 0 1px rgba(var(--color-primary-purple-rgb), 0.5),
+                  0 0 20px rgba(var(--color-primary-purple-rgb), 0.15);
 
       h3 {
         color: #f9fafb !important;
@@ -2050,6 +2051,11 @@ html.dark {
     padding: 0 1.5rem;
   }
 
+  .hero {
+    padding: 2.5rem 1.5rem;
+    min-height: 320px;
+  }
+
   .hero-title {
     font-size: 3.5rem;
     letter-spacing: -1.5px;
@@ -2071,7 +2077,8 @@ html.dark {
 
 @media (max-width: 768px) {
   .hero {
-    padding: 4rem 1.5rem;
+    padding: 2rem 1.5rem;
+    min-height: 220px;
 
     .hero-title {
       font-size: 2.8rem;
@@ -2086,7 +2093,7 @@ html.dark {
 
     .hero-description {
       font-size: 0.95rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     // 隐藏装饰元素在移动端
@@ -2177,7 +2184,8 @@ html.dark {
 
 @media (max-width: 480px) {
   .hero {
-    padding: 3rem 1rem;
+    padding: 1.5rem 1rem;
+    min-height: 200px;
 
     .hero-title {
       font-size: 1.75rem;

@@ -253,12 +253,20 @@ watch(() => route.query.category, (newVal) => {
 
 // Hero Section
 .hero-section {
-  background: linear-gradient(135deg, var(--color-brand) 0%, #764ba2 100%);
-  padding: 60px 32px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+  padding: 3rem 2rem;
   margin-bottom: 40px;
   position: relative;
   overflow: hidden;
+  min-height: 350px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
 
+  // 背景装饰：渐变和网格
   &::before {
     content: '';
     position: absolute;
@@ -266,9 +274,29 @@ watch(() => route.query.category, (newVal) => {
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.05)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,101.3C1248,85,1344,75,1392,69.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
-    background-size: cover;
-    opacity: 0.3;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(100, 200, 255, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(200, 100, 255, 0.12) 0%, transparent 50%),
+      linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+    animation: gradientShift 15s ease-in-out infinite;
+    z-index: 0;
+  }
+
+  // 网格背景
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridMove 20s linear infinite;
+    opacity: 0.6;
+    z-index: 1;
   }
 
   .hero-content {
@@ -276,15 +304,48 @@ watch(() => route.query.category, (newVal) => {
     margin: 0 auto;
     text-align: center;
     position: relative;
-    z-index: 1;
+    z-index: 2;
+    animation: fadeInUp 0.8s ease-out;
 
     h1 {
       font-size: 48px;
       font-weight: 800;
       margin: 0 0 16px 0;
       color: #ffffff;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
       letter-spacing: -1px;
+      line-height: 1.1;
+
+      // 添加发光效果
+      background: linear-gradient(
+        135deg,
+        #ffffff 0%,
+        #f0f0ff 25%,
+        #e0e0ff 50%,
+        #f0f0ff 75%,
+        #ffffff 100%
+      );
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+
+      text-shadow:
+        0 0 40px rgba(255, 255, 255, 0.9),
+        0 0 80px rgba(var(--color-primary-purple-rgb), 0.7),
+        0 0 120px rgba(99, 102, 241, 0.5),
+        0 6px 24px rgba(0, 0, 0, 0.5),
+        0 3px 12px rgba(0, 0, 0, 0.4);
+
+      filter:
+        drop-shadow(0 0 30px rgba(var(--color-primary-purple-rgb), 0.6))
+        drop-shadow(0 0 60px rgba(99, 102, 241, 0.4))
+        drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+
+      animation-name: slideDown, glowPulseTitle, gradientShine;
+      animation-duration: 0.8s, 3s, 6s;
+      animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1), ease-in-out, linear;
+      animation-iteration-count: 1, infinite, infinite;
+      animation-delay: 0s, 0.5s, 0s;
     }
 
     p {
@@ -292,6 +353,8 @@ watch(() => route.query.category, (newVal) => {
       color: rgba(255, 255, 255, 0.95);
       margin: 0;
       font-weight: 500;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+      animation: fadeInUp 0.8s ease-out 0.2s both;
     }
   }
 }
@@ -496,24 +559,44 @@ watch(() => route.query.category, (newVal) => {
 }
 
 // Responsive Design
-@media (max-width: 1200px) {
+@media (max-width: 1024px) {
+  .hero-section {
+    padding: 2.5rem 1.5rem;
+    min-height: 320px;
+
+    .hero-content {
+      h1 {
+        font-size: 3.5rem;
+        letter-spacing: -1.5px;
+      }
+
+      p {
+        font-size: 1.4rem;
+      }
+    }
+  }
+
   .posts-grid {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 24px;
   }
 }
 
-@media (max-width: 968px) {
+@media (max-width: 768px) {
   .hero-section {
-    padding: 48px 24px;
+    padding: 2rem 1.5rem;
+    min-height: 220px;
 
     .hero-content {
       h1 {
-        font-size: 36px;
+        font-size: 2.8rem;
+        margin-bottom: 0.75rem;
+        letter-spacing: -1px;
       }
 
       p {
-        font-size: 18px;
+        font-size: 1.15rem;
+        margin-bottom: 0.75rem;
       }
     }
   }
@@ -625,11 +708,131 @@ watch(() => route.query.category, (newVal) => {
   }
 }
 
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 1.5rem 1rem;
+    min-height: 200px;
+
+    .hero-content {
+      h1 {
+        font-size: 1.75rem;
+      }
+
+      p {
+        font-size: 0.95rem;
+      }
+    }
+  }
+}
+
+// 动画关键帧定义
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(100, 200, 255, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(200, 100, 255, 0.12) 0%, transparent 50%),
+      linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+  }
+  50% {
+    background:
+      radial-gradient(ellipse at 80% 50%, rgba(100, 200, 255, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 20% 80%, rgba(200, 100, 255, 0.12) 0%, transparent 50%),
+      linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #6366f1 100%);
+  }
+}
+
+@keyframes gridMove {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(50px, 50px);
+  }
+}
+
+@keyframes glowPulseTitle {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0 25px rgba(var(--color-primary-purple-rgb), 0.5))
+      drop-shadow(0 0 50px rgba(99, 102, 241, 0.3))
+      drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 40px rgba(var(--color-primary-purple-rgb), 0.8))
+      drop-shadow(0 0 80px rgba(99, 102, 241, 0.6))
+      drop-shadow(0 8px 20px rgba(0, 0, 0, 0.4));
+  }
+}
+
+@keyframes gradientShine {
+  0% {
+    background-position: 0 center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
 // Dark Mode Enhancements
 html.dark {
   .hero-section {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+    box-shadow: 0 20px 60px rgba(99, 102, 241, 0.3);
+
     &::before {
-      opacity: 0.1;
+      opacity: 1;
+    }
+
+    .hero-content {
+      h1 {
+        background: linear-gradient(
+          135deg,
+          #ffffff 0%,
+          #f5f5ff 25%,
+          #ebebff 50%,
+          #f5f5ff 75%,
+          #ffffff 100%
+        );
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+
+        text-shadow:
+          0 0 50px rgba(255, 255, 255, 1),
+          0 0 100px rgba(var(--color-primary-purple-rgb), 0.8),
+          0 0 150px rgba(99, 102, 241, 0.6),
+          0 8px 30px rgba(0, 0, 0, 0.6),
+          0 4px 15px rgba(0, 0, 0, 0.4);
+
+        filter:
+          drop-shadow(0 0 35px rgba(var(--color-primary-purple-rgb), 0.7))
+          drop-shadow(0 0 70px rgba(99, 102, 241, 0.5))
+          drop-shadow(0 6px 20px rgba(0, 0, 0, 0.4));
+      }
     }
   }
 
