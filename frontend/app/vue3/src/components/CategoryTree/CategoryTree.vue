@@ -310,11 +310,13 @@ function isExpanded(category: Category) {
   .category-node {
     .category-item {
       flex-direction: column;
+      position: relative; // 为绝对定位的按钮提供参考
 
       .category-info {
         flex-direction: column;
         padding: 16px;
         gap: 16px;
+        width: 100%; // 确保内容占满宽度
       }
 
       .category-image {
@@ -324,9 +326,35 @@ function isExpanded(category: Category) {
 
       .expand-btn {
         position: absolute;
-        top: 16px;
-        right: 16px;
+        top: 12px;
+        right: 12px;
         margin: 0;
+        z-index: 10;
+        background: var(--color-surface); // 使用主题色
+        backdrop-filter: blur(8px);
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+        border: 1px solid var(--color-border);
+        color: var(--color-text-secondary);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%; // 圆形按钮
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        
+        &:hover {
+          background: var(--color-brand);
+          border-color: var(--color-brand);
+          color: #fff;
+          transform: scale(1.1);
+          box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        span[class^="i-"] {
+          font-size: 18px;
+        }
       }
     }
 

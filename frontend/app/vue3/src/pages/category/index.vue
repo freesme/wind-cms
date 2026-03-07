@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { definePage } from 'unplugin-vue-router/runtime'
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+
 import { useCategoryStore } from '@/stores/modules/app'
 import { $t } from '@/locales'
 import {useLanguageChangeEffect} from '@/hooks/useLanguageChangeEffect';
@@ -15,7 +15,6 @@ definePage({
   },
 })
 
-const router = useRouter()
 const categoryStore = useCategoryStore()
 
 const loading = ref(false)
@@ -65,17 +64,17 @@ useLanguageChangeEffect(loadCategories, {
           <n-skeleton height="160px" />
         </div>
       </div>
-      
+
       <!-- Loaded Content -->
       <div v-else>
-        <CategoryTree 
-          v-if="categories.length > 0" 
-          :categories="categories" 
+        <CategoryTree
+          v-if="categories.length > 0"
+          :categories="categories"
         />
 
-        <n-empty 
-          v-else 
-          :description="$t('page.categories.no_categories')" 
+        <n-empty
+          v-else
+          :description="$t('page.categories.no_categories')"
           style="margin: 80px 0;"
         >
           <template #icon>
@@ -218,6 +217,136 @@ useLanguageChangeEffect(loadCategories, {
     background: var(--color-surface);
     border-radius: 16px;
     overflow: hidden;
+  }
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .hero-section {
+    padding: 3rem 1.5rem 2.5rem;
+    min-height: 300px;
+    margin-bottom: 36px;
+
+    .hero-content {
+      h1 {
+        font-size: 40px;
+        letter-spacing: -0.8px;
+        margin-bottom: 14px;
+      }
+
+      p {
+        font-size: 18px;
+      }
+    }
+  }
+
+  .page-container {
+    padding: 0 24px 60px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 2.5rem 1.5rem 2rem;
+    min-height: 280px;
+    margin-bottom: 32px;
+
+    &::after {
+      background-size: 30px 30px;
+    }
+
+    .hero-content {
+      h1 {
+        font-size: 34px;
+        margin-bottom: 12px;
+        letter-spacing: -0.6px;
+        line-height: 1.2;
+      }
+
+      p {
+        font-size: 17px;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  .page-container {
+    padding: 0 20px 50px;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-section {
+    padding: 2rem 1rem;
+    min-height: 240px;
+    margin-bottom: 28px;
+
+    &::after {
+      background-size: 25px 25px;
+    }
+
+    .hero-content {
+      h1 {
+        font-size: 28px;
+        margin-bottom: 10px;
+        letter-spacing: -0.4px;
+      }
+
+      p {
+        font-size: 16px;
+      }
+    }
+  }
+
+  .page-container {
+    padding: 0 16px 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 1.75rem 1rem 1.5rem;
+    min-height: 220px;
+    margin-bottom: 24px;
+
+    &::before {
+      animation: gradientShift 20s ease-in-out infinite;
+    }
+
+    &::after {
+      background-size: 20px 20px;
+      animation: gridMove 30s linear infinite;
+    }
+
+    .hero-content {
+      padding: 0;
+
+      h1 {
+        font-size: 24px;
+        margin-bottom: 8px;
+        letter-spacing: -0.3px;
+        line-height: 1.3;
+
+        // 移动端简化发光效果
+        text-shadow:
+          0 0 30px rgba(255, 255, 255, 0.8),
+          0 0 60px rgba(var(--color-primary-purple-rgb), 0.6),
+          0 4px 16px rgba(0, 0, 0, 0.4);
+
+        filter:
+          drop-shadow(0 0 20px rgba(var(--color-primary-purple-rgb), 0.5))
+          drop-shadow(0 3px 10px rgba(0, 0, 0, 0.3));
+      }
+
+      p {
+        font-size: 14px;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  .page-container {
+    padding: 0 12px 32px;
   }
 }
 
