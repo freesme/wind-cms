@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ApplicationProvider: typeof import('./components/ApplicationProvider/ApplicationProvider.vue')['default']
+    CategoryTree: typeof import('./components/CategoryTree/CategoryTree.vue')['default']
     CodeEditor: typeof import('./components/ContentEditor/CodeEditor.vue')['default']
     CommentSection: typeof import('./components/CommentSection/CommentSection.vue')['default']
     CommentTree: typeof import('./components/CommentSection/CommentTree.vue')['default']
@@ -21,6 +22,7 @@ declare module 'vue' {
     NAvatar: typeof import('naive-ui')['NAvatar']
     NBackTop: typeof import('naive-ui')['NBackTop']
     NButton: typeof import('naive-ui')['NButton']
+    NButtonGroup: typeof import('naive-ui')['NButtonGroup']
     NCard: typeof import('naive-ui')['NCard']
     NCarousel: typeof import('naive-ui')['NCarousel']
     NCheckbox: typeof import('naive-ui')['NCheckbox']

@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import { useCategoryStore } from '@/stores/modules/app'
 import { $t } from '@/locales'
 import {useLanguageChangeEffect} from '@/hooks/useLanguageChangeEffect';
+import { CategoryTree } from '@/components/CategoryTree'
 
 definePage({
   name: 'category-list',
@@ -35,25 +36,6 @@ async function loadCategories() {
   }
 }
 
-function getCategoryName(category: any) {
-  return category.translations?.[0]?.name || $t('page.home.category_default')
-}
-
-function getCategoryDescription(category: any) {
-  return category.translations?.[0]?.description || ''
-}
-
-function getCategoryThumbnail(category: any) {
-  return category.translations?.[0]?.thumbnail || '/placeholder.jpg'
-}
-
-function handleViewCategory(id: number) {
-  router.push({
-    path: '/post',
-    query: { category: id }
-  })
-}
-
 onMounted(() => {
   loadCategories()
 })
@@ -78,42 +60,24 @@ useLanguageChangeEffect(loadCategories, {
     <!-- Content Section -->
     <div class="page-container">
       <!-- Loading Skeleton -->
-      <div v-if="loading" class="categories-grid">
-        <div v-for="i in 8" :key="i" class="category-card">
-          <n-skeleton height="280px" />
+      <div v-if="loading" class="categories-loading">
+        <div v-for="i in 6" :key="i" class="category-loading-card">
+          <n-skeleton height="160px" />
         </div>
       </div>
+      
       <!-- Loaded Content -->
       <div v-else>
-        <div v-if="categories.length > 0" class="categories-grid">
-          <div
-            v-for="category in categories"
-            :key="category.id"
-            class="category-card"
-            @click="handleViewCategory(category.id)"
-          >
-            <div class="category-image">
-              <img :src="getCategoryThumbnail(category)" :alt="getCategoryName(category)" />
-              <div class="image-overlay" />
-              <div class="view-button">
-                <span>{{ $t('page.home.browse_posts') }}</span>
-                <span class="i-carbon:arrow-right" />
-              </div>
-            </div>
-            <div class="category-content">
-              <h3>{{ getCategoryName(category) }}</h3>
-              <p>{{ getCategoryDescription(category) }}</p>
-              <div class="category-meta">
-                <span class="meta-icon">
-                  <span class="i-carbon:document" />
-                </span>
-                <span class="meta-text">{{ category.postCount || 0 }} {{ $t('page.posts.articles') }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <CategoryTree 
+          v-if="categories.length > 0" 
+          :categories="categories" 
+        />
 
-        <n-empty v-else :description="$t('page.categories.no_categories')" style="margin: 80px 0;">
+        <n-empty 
+          v-else 
+          :description="$t('page.categories.no_categories')" 
+          style="margin: 80px 0;"
+        >
           <template #icon>
             <span class="i-carbon:folder-blank" style="font-size: 64px;" />
           </template>
@@ -244,474 +208,16 @@ useLanguageChangeEffect(loadCategories, {
   padding: 0 32px 80px;
 }
 
-// Categories Grid
-.categories-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 28px;
-}
-
-.category-card {
-  background: var(--color-surface);
-  border-radius: 16px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid var(--color-border);
-  height: 100%;
+// Loading State
+.categories-loading {
   display: flex;
   flex-direction: column;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  gap: 24px;
 
-  &:hover {
-    transform: translateY(-12px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    border-color: var(--color-brand);
-
-    .category-image {
-      .image-overlay {
-        opacity: 0.6;
-      }
-
-      .view-button {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      img {
-        transform: scale(1.1);
-      }
-    }
-
-    h3 {
-      color: var(--color-brand);
-    }
-  }
-
-  .category-image {
-    position: relative;
-    width: 100%;
-    height: 240px;
+  .category-loading-card {
+    background: var(--color-surface);
+    border-radius: 16px;
     overflow: hidden;
-    background: var(--color-bg);
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .image-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.2);
-      transition: opacity 0.3s;
-      opacity: 0;
-    }
-
-    .view-button {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
-      color: white;
-      padding: 24px 20px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 600;
-      font-size: 15px;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-
-      span[class^="i-"] {
-        font-size: 18px;
-      }
-    }
-  }
-
-  .category-content {
-    padding: 24px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-
-    h3 {
-      font-size: 20px;
-      font-weight: 700;
-      margin: 0 0 12px 0;
-      color: var(--color-text-primary);
-      line-height: 1.4;
-      transition: color 0.3s;
-      letter-spacing: 0.5px;
-    }
-
-    p {
-      color: var(--color-text-secondary);
-      font-size: 15px;
-      line-height: 1.7;
-      margin: 0 0 16px 0;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      flex: 1;
-    }
-
-    .category-meta {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding-top: 16px;
-      border-top: 1px solid var(--color-border);
-      font-size: 14px;
-      color: var(--color-text-secondary);
-      font-weight: 500;
-
-      .meta-icon {
-        display: flex;
-        align-items: center;
-        font-size: 18px;
-        opacity: 0.8;
-      }
-
-      .meta-text {
-        display: flex;
-        align-items: center;
-      }
-    }
-  }
-}
-
-// Responsive Design
-@media (max-width: 1024px) {
-  .hero-section {
-    padding: 3rem 1.5rem 2.5rem;
-    min-height: 300px;
-    margin-bottom: 36px;
-
-    .hero-content {
-      h1 {
-        font-size: 40px;
-        letter-spacing: -0.8px;
-        margin-bottom: 14px;
-      }
-
-      p {
-        font-size: 18px;
-      }
-    }
-  }
-
-  .page-container {
-    padding: 0 24px 60px;
-  }
-
-  .categories-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 24px;
-  }
-
-  .category-card {
-    &:hover {
-      transform: translateY(-10px);
-    }
-
-    .category-image {
-      height: 220px;
-    }
-  }
-}
-
-@media (max-width: 768px) {
-  .hero-section {
-    padding: 2.5rem 1.5rem 2rem;
-    min-height: 280px;
-    margin-bottom: 32px;
-
-    &::after {
-      background-size: 30px 30px;
-    }
-
-    .hero-content {
-      h1 {
-        font-size: 34px;
-        margin-bottom: 12px;
-        letter-spacing: -0.6px;
-        line-height: 1.2;
-      }
-
-      p {
-        font-size: 17px;
-        line-height: 1.5;
-      }
-    }
-  }
-
-  .page-container {
-    padding: 0 20px 50px;
-  }
-
-  .categories-grid {
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 20px;
-  }
-
-  .category-card {
-    &:hover {
-      transform: translateY(-8px);
-    }
-
-    .category-image {
-      height: 200px;
-
-      .view-button {
-        padding: 20px 16px;
-        font-size: 14px;
-
-        span[class^="i-"] {
-          font-size: 16px;
-        }
-      }
-    }
-
-    .category-content {
-      padding: 20px;
-
-      h3 {
-        font-size: 18px;
-        margin-bottom: 10px;
-      }
-
-      p {
-        font-size: 14px;
-        line-height: 1.6;
-        margin-bottom: 14px;
-      }
-
-      .category-meta {
-        padding-top: 14px;
-      }
-    }
-  }
-}
-
-@media (max-width: 640px) {
-  .hero-section {
-    padding: 2rem 1rem;
-    min-height: 240px;
-    margin-bottom: 28px;
-
-    &::after {
-      background-size: 25px 25px;
-    }
-
-    .hero-content {
-      h1 {
-        font-size: 28px;
-        margin-bottom: 10px;
-        letter-spacing: -0.4px;
-      }
-
-      p {
-        font-size: 16px;
-      }
-    }
-  }
-
-  .page-container {
-    padding: 0 16px 40px;
-  }
-
-  .categories-grid {
-    grid-template-columns: 1fr;
-    gap: 18px;
-  }
-
-  .category-card {
-    border-radius: 14px;
-
-    &:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
-    }
-
-    .category-image {
-      height: 200px;
-
-      img {
-        &:hover {
-          transform: scale(1.08);
-        }
-      }
-
-      .view-button {
-        padding: 18px 14px;
-        font-size: 14px;
-
-        span[class^="i-"] {
-          font-size: 16px;
-        }
-      }
-    }
-
-    .category-content {
-      padding: 18px;
-
-      h3 {
-        font-size: 17px;
-        margin-bottom: 10px;
-      }
-
-      p {
-        font-size: 14px;
-        line-height: 1.6;
-        margin-bottom: 12px;
-        -webkit-line-clamp: 2;
-      }
-
-      .category-meta {
-        padding-top: 12px;
-        font-size: 13px;
-
-        .meta-icon {
-          font-size: 17px;
-        }
-      }
-    }
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-section {
-    padding: 1.75rem 1rem 1.5rem;
-    min-height: 220px;
-    margin-bottom: 24px;
-
-    &::before {
-      animation: gradientShift 20s ease-in-out infinite;
-    }
-
-    &::after {
-      background-size: 20px 20px;
-      animation: gridMove 30s linear infinite;
-    }
-
-    .hero-content {
-      padding: 0;
-
-      h1 {
-        font-size: 24px;
-        margin-bottom: 8px;
-        letter-spacing: -0.3px;
-        line-height: 1.3;
-
-        // 移动端简化发光效果
-        text-shadow:
-          0 0 30px rgba(255, 255, 255, 0.8),
-          0 0 60px rgba(var(--color-primary-purple-rgb), 0.6),
-          0 4px 16px rgba(0, 0, 0, 0.4);
-
-        filter:
-          drop-shadow(0 0 20px rgba(var(--color-primary-purple-rgb), 0.5))
-          drop-shadow(0 3px 10px rgba(0, 0, 0, 0.3));
-      }
-
-      p {
-        font-size: 14px;
-        line-height: 1.5;
-      }
-    }
-  }
-
-  .page-container {
-    padding: 0 12px 32px;
-  }
-
-  .categories-grid {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  .category-card {
-    border-radius: 12px;
-
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-    }
-
-    .category-image {
-      height: 180px;
-
-      img {
-        &:hover {
-          transform: scale(1.05);
-        }
-      }
-
-      .view-button {
-        padding: 16px 12px;
-        font-size: 13px;
-
-        span[class^="i-"] {
-          font-size: 15px;
-        }
-      }
-    }
-
-    .category-content {
-      padding: 16px;
-
-      h3 {
-        font-size: 16px;
-        margin-bottom: 8px;
-        line-height: 1.4;
-      }
-
-      p {
-        font-size: 13px;
-        line-height: 1.6;
-        margin-bottom: 10px;
-        -webkit-line-clamp: 2;
-      }
-
-      .category-meta {
-        padding-top: 10px;
-        font-size: 12px;
-        gap: 6px;
-
-        .meta-icon {
-          font-size: 16px;
-        }
-      }
-    }
-  }
-
-  // Empty state 优化
-  :deep(.n-empty) {
-    margin: 50px 0 !important;
-
-    .n-empty__icon {
-      span[class^="i-"] {
-        font-size: 48px !important;
-      }
-    }
-
-    .n-empty__description {
-      font-size: 13px;
-    }
-  }
-
-  // Spin 加载优化
-  :deep(.n-spin-container) {
-    min-height: 300px;
   }
 }
 
@@ -759,30 +265,6 @@ useLanguageChangeEffect(loadCategories, {
   }
   100% {
     transform: translate(50px, 50px);
-  }
-}
-
-@keyframes glowPulseTitle {
-  0%, 100% {
-    filter:
-      drop-shadow(0 0 25px rgba(var(--color-primary-purple-rgb), 0.5))
-      drop-shadow(0 0 50px rgba(99, 102, 241, 0.3))
-      drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3));
-  }
-  50% {
-    filter:
-      drop-shadow(0 0 40px rgba(var(--color-primary-purple-rgb), 0.8))
-      drop-shadow(0 0 80px rgba(99, 102, 241, 0.6))
-      drop-shadow(0 8px 20px rgba(0, 0, 0, 0.4));
-  }
-}
-
-@keyframes gradientShine {
-  0% {
-    background-position: 0 center;
-  }
-  100% {
-    background-position: 200% center;
   }
 }
 

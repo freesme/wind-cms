@@ -26,6 +26,8 @@ const message = useMessage()
 const loading = ref(false)
 const category = ref<any>(null)
 const posts = ref<any[]>([])
+const childCategories = ref<any[]>([])
+const activeFilter = ref<'all' | 'direct'>('all')
 const pagination = ref({
   page: 1,
   pageSize: 10,
@@ -43,6 +45,10 @@ async function loadCategory() {
   loading.value = true
   try {
     category.value = await categoryStore.getCategory(categoryId.value)
+    // 提取子分类
+    if (category.value?.children && category.value.children.length > 0) {
+      childCategories.value = category.value.children
+    }
   } catch (error) {
     console.error('Load category failed:', error)
     message.error($t('page.post_detail.load_failed'))
@@ -56,15 +62,26 @@ async function loadPosts() {
 
   loading.value = true
   try {
+    const queryParams: any = {
+      status: 'POST_STATUS_PUBLISHED',
+    }
+    
+    // 根据筛选条件决定查询方式
+    if (activeFilter.value === 'direct') {
+      // 只看本级分类的文章
+      queryParams.categoryIds = [categoryId.value]
+    } else {
+      // 显示所有文章 (包含子分类)
+      // 后端 API 会自动包含子分类的文章
+      queryParams.categoryIds = [categoryId.value]
+    }
+    
     const res = await postStore.listPost(
       {
         page: pagination.value.page,
         pageSize: pagination.value.pageSize,
       },
-      {
-        status: 'POST_STATUS_PUBLISHED',
-        categoryIds: [categoryId.value],
-      }
+      queryParams
     )
     posts.value = res.items || []
     pagination.value.itemCount = res.total || 0
@@ -74,6 +91,16 @@ async function loadPosts() {
   } finally {
     loading.value = false
   }
+}
+
+function handleFilterChange(filter: 'all' | 'direct') {
+  activeFilter.value = filter
+  pagination.value.page = 1
+  loadPosts()
+}
+
+function handleViewChildCategory(id: number) {
+  router.push(`/category/${id}`)
 }
 
 function getTranslation() {
@@ -152,6 +179,24 @@ function handlePageSizeChange(pageSize: number) {
   loadPosts()
 }
 
+function getChildCategoryName(childCategory: any) {
+  const locale = currentLocaleLanguageCode();
+  const translation = childCategory.translations?.find((t: any) => t.languageCode === locale) || childCategory.translations?.[0]
+  return translation?.name || '未命名分类'
+}
+
+function getChildCategoryDescription(childCategory: any) {
+  const locale = currentLocaleLanguageCode();
+  const translation = childCategory.translations?.find((t: any) => t.languageCode === locale) || childCategory.translations?.[0]
+  return translation?.description || ''
+}
+
+function getChildCategoryThumbnail(childCategory: any) {
+  const locale = currentLocaleLanguageCode();
+  const translation = childCategory.translations?.find((t: any) => t.languageCode === locale) || childCategory.translations?.[0]
+  return translation?.thumbnail || '/placeholder.jpg'
+}
+
 onMounted(async () => {
   await loadCategory()
   await loadPosts()
@@ -181,7 +226,7 @@ useLanguageChangeEffect(async () => {
         <div class="category-stats">
           <div class="stat-item">
             <span class="i-carbon:document"/>
-            <span>{{ pagination.itemCount }} {{ $t('page.posts.articles') }}</span>
+            <span>{{ category?.postCount || 0 }} {{ $t('page.posts.articles') }}</span>
           </div>
         </div>
       </div>
@@ -189,6 +234,67 @@ useLanguageChangeEffect(async () => {
 
     <!-- Posts Section -->
     <div class="page-container">
+      <!-- Sub Categories Navigation -->
+      <section v-if="childCategories.length > 0" class="sub-categories-section">
+        <div class="section-header">
+          <h2>
+            <span class="i-carbon:folder-details"/>
+            {{ $t('page.categories.sub_categories') }}
+          </h2>
+        </div>
+        <div class="sub-categories-grid">
+          <div
+            v-for="childCategory in childCategories"
+            :key="childCategory.id"
+            class="sub-category-card"
+            @click="handleViewChildCategory(childCategory.id)"
+          >
+            <div class="sub-category-image">
+              <img 
+                :src="getChildCategoryThumbnail(childCategory)" 
+                :alt="getChildCategoryName(childCategory)"
+              />
+              <div class="image-overlay"/>
+            </div>
+            <div class="sub-category-content">
+              <h3>{{ getChildCategoryName(childCategory) }}</h3>
+              <p>{{ getChildCategoryDescription(childCategory) }}</p>
+              <div class="sub-category-meta">
+                <span class="meta-icon">
+                  <span class="i-carbon:document"/>
+                </span>
+                <span class="meta-text">{{ childCategory.postCount || 0 }} {{ $t('page.posts.articles') }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Filter Controls -->
+      <div v-if="posts.length > 0 || loading" class="filter-controls">
+        <n-button-group>
+          <n-button
+            :type="activeFilter === 'all' ? 'primary' : 'default'"
+            size="small"
+            @click="handleFilterChange('all')"
+          >
+            <template #icon>
+              <span class="i-carbon:folder-open"/>
+            </template>
+            {{ $t('page.categories.all_posts') }} ({{ category?.postCount || 0 }})
+          </n-button>
+          <n-button
+            :type="activeFilter === 'direct' ? 'primary' : 'default'"
+            size="small"
+            @click="handleFilterChange('direct')"
+          >
+            <template #icon>
+              <span class="i-carbon:document"/>
+            </template>
+            {{ $t('page.categories.direct_posts') }} ({{ category?.directPostCount || 0 }})
+          </n-button>
+        </n-button-group>
+      </div>
       <!-- Loading Skeleton -->
       <div v-if="loading" class="posts-grid">
         <div v-for="i in 6" :key="i" class="post-card">
@@ -404,6 +510,162 @@ useLanguageChangeEffect(async () => {
   padding: 0 32px 80px;
 }
 
+// Sub Categories Section
+.sub-categories-section {
+  margin-bottom: 48px;
+  padding: 32px;
+  background: var(--color-surface);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0;
+      color: var(--color-text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      span[class^="i-"] {
+        font-size: 28px;
+        color: var(--color-brand);
+      }
+    }
+  }
+
+  .sub-categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .sub-category-card {
+    background: var(--color-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--color-border);
+
+    &:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      border-color: var(--color-brand);
+
+      .sub-category-image {
+        .image-overlay {
+          opacity: 0.5;
+        }
+
+        img {
+          transform: scale(1.08);
+        }
+      }
+
+      h3 {
+        color: var(--color-brand);
+      }
+    }
+
+    .sub-category-image {
+      position: relative;
+      width: 100%;
+      height: 160px;
+      overflow: hidden;
+      background: var(--color-bg);
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .image-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.15);
+        transition: opacity 0.3s;
+        opacity: 0;
+      }
+    }
+
+    .sub-category-content {
+      padding: 16px;
+
+      h3 {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0 0 8px 0;
+        color: var(--color-text-primary);
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        transition: color 0.3s;
+      }
+
+      p {
+        color: var(--color-text-secondary);
+        font-size: 13px;
+        line-height: 1.6;
+        margin: 0 0 12px 0;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .sub-category-meta {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: var(--color-text-secondary);
+        font-weight: 500;
+
+        .meta-icon {
+          display: flex;
+          align-items: center;
+          font-size: 14px;
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+}
+
+// Filter Controls
+.filter-controls {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-border);
+
+  :deep(.n-button-group) {
+    .n-button {
+      min-width: 160px;
+      font-weight: 500;
+
+      span[class^="i-"] {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
 // Results Info
 .results-info {
   margin-bottom: 24px;
@@ -597,6 +859,32 @@ useLanguageChangeEffect(async () => {
     padding: 0 24px 60px;
   }
 
+  // Sub Categories Responsive
+  .sub-categories-section {
+    padding: 24px;
+    margin-bottom: 40px;
+
+    .section-header {
+      h2 {
+        font-size: 22px;
+      }
+    }
+
+    .sub-categories-grid {
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+  }
+
+  .filter-controls {
+    :deep(.n-button-group) {
+      .n-button {
+        min-width: 140px;
+        font-size: 13px;
+      }
+    }
+  }
+
   .posts-grid {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 24px;
@@ -652,6 +940,37 @@ useLanguageChangeEffect(async () => {
 
   .page-container {
     padding: 0 20px 50px;
+  }
+
+  // Sub Categories Responsive
+  .sub-categories-section {
+    padding: 20px;
+    margin-bottom: 32px;
+
+    .section-header {
+      h2 {
+        font-size: 20px;
+      }
+    }
+
+    .sub-categories-grid {
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 14px;
+    }
+  }
+
+  .filter-controls {
+    flex-direction: column;
+    gap: 12px;
+
+    :deep(.n-button-group) {
+      width: 100%;
+
+      .n-button {
+        min-width: 100%;
+        font-size: 13px;
+      }
+    }
   }
 
   .results-info {

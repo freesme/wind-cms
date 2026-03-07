@@ -51,7 +51,10 @@
   "categories": {
     "categories": "Categories",
     "browse_all": "Browse all content categories",
-    "no_categories": "No categories"
+    "no_categories": "No categories",
+    "sub_categories": "Sub Categories",
+    "all_posts": "All Posts",
+    "direct_posts": "Direct Only"
   },
   "post_detail": {
     "untitled": "Untitled",
