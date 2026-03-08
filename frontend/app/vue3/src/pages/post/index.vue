@@ -68,26 +68,6 @@ async function loadCategories() {
   }
 }
 
-function getPostTitle(post: contentservicev1_Post) {
-  const translation = postStore.getTranslation(post)
-  return translation?.title || $t('page.home.untitled')
-}
-
-function getPostSummary(post: contentservicev1_Post) {
-  const translation = postStore.getTranslation(post)
-  return translation?.summary || ''
-}
-
-function getPostThumbnail(post: contentservicev1_Post) {
-  const translation = postStore.getTranslation(post)
-  return translation?.thumbnail || '/placeholder.jpg'
-}
-
-function getCategoryName(category: contentservicev1_Category) {
-  const translation = categoryStore.getTranslation(category)
-  return translation?.name || $t('page.home.category_default')
-}
-
 function handleViewPost(postId: number) {
   const query: any = {}
 
@@ -189,7 +169,7 @@ watch(() => route.query.category, (newVal) => {
             <template #icon>
               <span class="i-carbon:folder"/>
             </template>
-            {{ getCategoryName(cat) }}
+            {{ categoryStore.getCategoryName(cat) }}
           </n-button>
         </div>
       </div>
@@ -219,12 +199,12 @@ watch(() => route.query.category, (newVal) => {
               @click="handleViewPost(post.id)"
             >
               <div class="post-image">
-                <img :src="getPostThumbnail(post)" :alt="getPostTitle(post)"/>
+                <img :src="postStore.getPostThumbnail(post)" :alt="postStore.getPostTitle(post)"/>
                 <div class="image-overlay"/>
               </div>
               <div class="post-content">
-                <h3 class="post-title">{{ getPostTitle(post) }}</h3>
-                <p class="post-summary">{{ getPostSummary(post) }}</p>
+                <h3 class="post-title">{{ postStore.getPostTitle(post) }}</h3>
+                <p class="post-summary">{{ postStore.getPostSummary(post) }}</p>
                 <div class="post-meta">
                   <div class="meta-item">
                     <span class="i-carbon:user"/>

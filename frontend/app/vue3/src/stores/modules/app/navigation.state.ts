@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia';
 
 import {
-  createNavigationServiceClient
+  createNavigationServiceClient, type siteservicev1_NavigationItem
 } from '@/api/generated/app/service/v1';
 import {type Paging, requestClientRequestHandler} from "@/transport/rpc/request";
 import {makeOrderBy, makeQueryString, makeUpdateMask} from "@/transport/rpc";
@@ -83,6 +83,17 @@ export const useNavigationStore = defineStore('navigation', () => {
     return await service.Delete({id});
   }
 
+  function findNavItem(items: siteservicev1_NavigationItem[], key: number): siteservicev1_NavigationItem | null {
+    for (const item of items) {
+      if (item.id === key) return item;
+      if (item.children) {
+        const found = findNavItem(item.children, key);
+        if (found) return found;
+      }
+    }
+    return null;
+  }
+
   function $reset() {
   }
 
@@ -93,5 +104,6 @@ export const useNavigationStore = defineStore('navigation', () => {
     createNavigation,
     updateNavigation,
     deleteNavigation,
+    findNavItem,
   };
 });

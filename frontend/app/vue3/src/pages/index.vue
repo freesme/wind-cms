@@ -126,26 +126,6 @@ async function loadPopularTags() {
   }
 }
 
-function getPostTitle(post: contentservicev1_Post) {
-  const translation = postStore.getTranslation(post)
-  return translation?.title || $t('page.home.untitled')
-}
-
-function getPostSummary(post: contentservicev1_Post) {
-  const translation = postStore.getTranslation(post)
-  return translation?.summary || ''
-}
-
-function getPostThumbnail(post: contentservicev1_Post) {
-  const translation = postStore.getTranslation(post)
-  return translation?.thumbnail || '/placeholder.jpg'
-}
-
-function getCategoryName(category: contentservicev1_Category) {
-  const translation = categoryStore.getTranslation(category)
-  return translation?.name || $t('page.home.category_default')
-}
-
 function handleViewPost(id: number) {
   router.push({
     path: `/post/${id}`,
@@ -360,7 +340,7 @@ onUnmounted(() => {
           @click="handleViewPost(post.id)"
         >
           <div class="featured-image">
-            <img :src="getPostThumbnail(post)" :alt="getPostTitle(post)"/>
+            <img :src="postStore.getPostThumbnail(post)" :alt="postStore.getPostTitle(post)"/>
             <div class="featured-overlay">
                 <span class="featured-badge">
                   <XIcon name="carbon:star-filled" :size="14"/>
@@ -369,8 +349,8 @@ onUnmounted(() => {
             </div>
           </div>
           <div class="featured-content">
-            <h3>{{ getPostTitle(post) }}</h3>
-            <p>{{ getPostSummary(post) }}</p>
+            <h3>{{ postStore.getPostTitle(post) }}</h3>
+            <p>{{ postStore.getPostSummary(post) }}</p>
             <div class="featured-meta">
                 <span>
                   <XIcon name="carbon:user" :size="14"/>
@@ -437,7 +417,7 @@ onUnmounted(() => {
                     :size="48"/>
                 </div>
                 <div class="category-info">
-                  <h3>{{ getCategoryName(category) }}</h3>
+                  <h3>{{ categoryStore.getCategoryName(category) }}</h3>
                   <span class="post-count">
                     {{ $t('page.home.article_count', {count: category.postCount || 0}) }}
                   </span>
@@ -490,7 +470,7 @@ onUnmounted(() => {
                           :size="48"/>
                       </div>
                       <div class="category-info">
-                        <h3>{{ getCategoryName(category) }}</h3>
+                        <h3>{{ categoryStore.getCategoryName(category) }}</h3>
                         <span class="post-count">
                           {{ $t('page.home.article_count', {count: category.postCount || 0}) }}
                         </span>
@@ -559,11 +539,11 @@ onUnmounted(() => {
           @click="handleViewPost(post.id)"
         >
           <div class="post-image">
-            <img :src="getPostThumbnail(post)" :alt="getPostTitle(post)"/>
+            <img :src="postStore.getPostThumbnail(post)" :alt="postStore.getPostTitle(post)"/>
           </div>
           <div class="post-content">
-            <h3>{{ getPostTitle(post) }}</h3>
-            <p>{{ getPostSummary(post) }}</p>
+            <h3>{{ postStore.getPostTitle(post) }}</h3>
+            <p>{{ postStore.getPostSummary(post) }}</p>
             <div class="post-meta">
               <span class="author">{{ post.authorName }}</span>
               <span class="date">{{ formatDate(post.createdAt) }}</span>

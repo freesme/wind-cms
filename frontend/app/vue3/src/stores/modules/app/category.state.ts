@@ -8,7 +8,7 @@ import {
 import {type Paging, requestClientRequestHandler} from "@/transport/rpc/request";
 import {makeOrderBy, makeQueryString, makeUpdateMask} from "@/transport/rpc";
 import {useUserStore} from "@/stores";
-import {currentLocaleLanguageCode} from "@/locales";
+import {$t, currentLocaleLanguageCode} from "@/locales";
 
 export const useCategoryStore = defineStore('category', () => {
   const service = createCategoryServiceClient(requestClientRequestHandler);
@@ -95,6 +95,21 @@ export const useCategoryStore = defineStore('category', () => {
     return translation || category.translations?.[0];
   }
 
+  function getCategoryName(category: contentservicev1_Category) {
+    const translation = getTranslation(category);
+    return translation?.name || $t('page.categories.category_untitled')
+  }
+
+  function getCategoryDescription(category: contentservicev1_Category) {
+    const translation = getTranslation(category);
+    return translation?.description || ''
+  }
+
+  function getCategoryThumbnail(category: contentservicev1_Category) {
+    const translation = getTranslation(category);
+    return translation?.thumbnail || '/placeholder.jpg'
+  }
+
   function $reset() {
   }
 
@@ -106,5 +121,8 @@ export const useCategoryStore = defineStore('category', () => {
     updateCategory,
     deleteCategory,
     getTranslation,
+    getCategoryName,
+    getCategoryDescription,
+    getCategoryThumbnail,
   };
 });

@@ -12,7 +12,6 @@ import type {
 import type {TopNavBarTabItem} from "./types";
 import TopNavbarTab from './TopNavbarTab.vue';
 
-
 const router = useRouter();
 const navbarStore = useNavbarStore();
 const navigationStore = useNavigationStore();
@@ -20,6 +19,21 @@ const navigationStore = useNavigationStore();
 const leftTabList: TopNavBarTabItem[] = []
 const rightTabList: TopNavBarTabItem[] = [];
 const navigationItems = ref<siteservicev1_NavigationItem[]>([]);
+
+function getMenuOptions(items: siteservicev1_NavigationItem[]) {
+  return items.map(item => ({
+    key: item.id,
+    label: item.title,
+    icon: item.icon ? () => h(XIcon, {name: `carbon:${item.icon}`, size: 22}) : undefined,
+    children: item.children && item.children.length > 0
+      ? item.children.map((child: siteservicev1_NavigationItem) => ({
+        key: child.id,
+        label: child.title,
+        icon: child.icon ? () => h(XIcon, {name: `carbon:${child.icon}`, size: 18}) : undefined,
+      }))
+      : undefined,
+  }));
+}
 
 /**
  * 隐藏所有的悬浮层
@@ -79,29 +93,10 @@ useLanguageChangeEffect(loadNavigation, {
       <n-menu
         v-if="navigationItems.length > 0"
         mode="horizontal"
-        :options="navigationItems.map(item => ({
-          key: item.id,
-          label: item.title,
-          icon: item.icon ? () => h(XIcon, { name: `carbon:${item.icon}`, size: 22 }) : undefined,
-          children: item.children && item.children.length > 0 ? item.children.map((child: any) => ({
-            key: child.id,
-            label: child.title,
-            icon: child.icon ? () => h(XIcon, { name: `carbon:${child.icon}`, size: 18 }) : undefined,
-          })) : undefined,
-        }))"
+        :options="getMenuOptions(navigationItems)"
         @update:value="(key: number) => {
-          const findItem = (items: any[]): any => {
-            for (const item of items) {
-              if (item.id === key) return item;
-              if (item.children) {
-                const found = findItem(item.children);
-                if (found) return found;
-              }
-            }
-            return null;
-          };
-          const item = findItem(navigationItems);
-          if (item) handleNavigate(item);
+            const item = navigationStore.findNavItem(navigationItems, key);
+            if (item) handleNavigate(item);
         }"
       />
 

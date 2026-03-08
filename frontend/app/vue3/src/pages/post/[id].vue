@@ -60,14 +60,12 @@ const postId = computed(() => {
   return id ? parseInt(id as string) : null
 })
 
-const currentTranslation = computed(() => {
-  if (!post.value) return null;
-  return postStore.getTranslation(post.value);
-})
+const displayTitle = computed(() => postStore.getPostTitle(post.value))
+const displayContent = computed(() => postStore.getPostContent(post.value))
+const displayThumbnail = computed(() => postStore.getPostThumbnail(post.value))
 
-const displayTitle = computed(() => currentTranslation.value?.title || $t('page.post_detail.untitled'))
-const displayContent = computed(() => currentTranslation.value?.content || '')
-const displayThumbnail = computed(() => currentTranslation.value?.thumbnail || '/placeholder.jpg')
+const throttledScroll = throttle(handleScroll, THROTTLE_DELAY)
+
 
 // --- 工具函数 ---
 // 移到这里，避免 hoisting 依赖
@@ -127,11 +125,7 @@ async function loadAllData() {
   ]);
 }
 
-// 监听语言切换，自动重新加载数据
-useLanguageChangeEffect(loadAllData, {
-  immediate: false,    // 已经在 onMounted 中加载，不需要立即执行
-  autoCleanup: true,   // 组件卸载时自动取消订阅
-});
+
 
 // --- 交互逻辑 ---
 function handleViewRelatedPost(id: number) {
@@ -264,7 +258,6 @@ function handleScroll() {
   }
 }
 
-const throttledScroll = throttle(handleScroll, THROTTLE_DELAY)
 
 // --- 生命周期 ---
 onMounted(async () => {
@@ -296,6 +289,12 @@ onBeforeUnmount(() => {
 watch(() => displayContent.value, () => {
   generateTableOfContents()
 })
+
+// 监听语言切换，自动重新加载数据
+useLanguageChangeEffect(loadAllData, {
+  immediate: false,    // 已经在 onMounted 中加载，不需要立即执行
+  autoCleanup: true,   // 组件卸载时自动取消订阅
+});
 </script>
 
 <template>
@@ -508,15 +507,15 @@ watch(() => displayContent.value, () => {
             >
               <div class="related-image">
                 <img
-                  :src="relatedPost.translations?.[0]?.thumbnail || '/placeholder.jpg'"
-                  :alt="relatedPost.translations?.[0]?.title"
+                  :src="postStore.getPostThumbnail(relatedPost)"
+                  :alt="postStore.getPostTitle(relatedPost)"
                   loading="lazy"
                 />
                 <div class="image-overlay"/>
               </div>
               <div class="related-content">
-                <h3>{{ relatedPost.translations?.[0]?.title }}</h3>
-                <p>{{ relatedPost.translations?.[0]?.summary }}</p>
+                <h3>{{ postStore.getPostTitle(relatedPost) }}</h3>
+                <p>{{ postStore.getPostSummary(relatedPost) }}</p>
                 <div class="related-meta">
                   <span><span class="i-carbon:view"/> {{ relatedPost.visits || 0 }}</span>
                   <span><span class="i-carbon:thumbs-up"/> {{ relatedPost.likes || 0 }}</span>

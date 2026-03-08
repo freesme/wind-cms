@@ -8,7 +8,7 @@ import {
 import {type Paging, requestClientRequestHandler} from "@/transport/rpc/request";
 import {makeOrderBy, makeQueryString, makeUpdateMask} from "@/transport/rpc";
 import {useUserStore} from "@/stores";
-import {currentLocaleLanguageCode} from "@/locales";
+import {$t, currentLocaleLanguageCode} from "@/locales";
 
 export const usePostStore = defineStore('post', () => {
   const service = createPostServiceClient(requestClientRequestHandler);
@@ -99,6 +99,26 @@ export const usePostStore = defineStore('post', () => {
     return translation || post.translations?.[0];
   }
 
+  function getPostTitle(post: contentservicev1_Post) {
+    const translation = getTranslation(post)
+    return translation?.title || $t('page.post_detail.untitled')
+  }
+
+  function getPostSummary(post: contentservicev1_Post) {
+    const translation = getTranslation(post)
+    return translation?.summary || ''
+  }
+
+  function getPostThumbnail(post: contentservicev1_Post) {
+    const translation = getTranslation(post)
+    return translation?.thumbnail || '/placeholder.jpg'
+  }
+
+  function getPostContent(post: contentservicev1_Post) {
+    const translation = getTranslation(post)
+    return translation?.content || ''
+  }
+
   function $reset() {
   }
 
@@ -110,5 +130,9 @@ export const usePostStore = defineStore('post', () => {
     updatePost,
     deletePost,
     getTranslation,
+    getPostTitle,
+    getPostSummary,
+    getPostThumbnail,
+    getPostContent,
   };
 });

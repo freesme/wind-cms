@@ -126,31 +126,6 @@ function handleBackToParent() {
   }
 }
 
-function getCategoryName() {
-  const translation = categoryStore.getTranslation(category.value)
-  return translation?.name || $t('page.home.category_default')
-}
-
-function getCategoryDescription() {
-  const translation = categoryStore.getTranslation(category.value)
-  return translation?.description || ''
-}
-
-function getPostTitle(post: contentservicev1_Post) {
-  const translation = postStore.getTranslation(post)
-  return translation?.title || $t('page.post_detail.untitled')
-}
-
-function getPostSummary(post: contentservicev1_Post) {
-  const translation = postStore.getTranslation(post)
-  return translation?.summary || ''
-}
-
-function getPostThumbnail(post: contentservicev1_Post) {
-  const translation = postStore.getTranslation(post)
-  return translation?.thumbnail || '/placeholder.jpg'
-}
-
 function handleViewPost(id: number) {
   router.push({
     path: `/post/${id}`,
@@ -170,21 +145,6 @@ function handlePageSizeChange(pageSize: number) {
   pagination.value.pageSize = pageSize
   pagination.value.page = 1
   loadPosts()
-}
-
-function getChildCategoryName(childCategory: contentservicev1_Category) {
-  const translation = categoryStore.getTranslation(childCategory)
-  return translation?.name || $t('page.categories.category_untitled')
-}
-
-function getChildCategoryDescription(childCategory: contentservicev1_Category) {
-  const translation = categoryStore.getTranslation(childCategory)
-  return translation?.description || ''
-}
-
-function getChildCategoryThumbnail(childCategory: contentservicev1_Category) {
-  const translation = categoryStore.getTranslation(childCategory)
-  return translation?.thumbnail || '/placeholder.jpg'
 }
 
 onMounted(async () => {
@@ -209,9 +169,9 @@ useLanguageChangeEffect(async () => {
     <!-- Hero Section -->
     <div class="hero-section">
       <div class="hero-content">
-        <h1>{{ getCategoryName() }}</h1>
-        <p v-if="getCategoryDescription()" class="category-description">{{
-            getCategoryDescription()
+        <h1>{{ categoryStore.getCategoryName(category) }}</h1>
+        <p v-if="categoryStore.getCategoryDescription(category)" class="category-description">{{
+            categoryStore.getCategoryDescription(category)
           }}</p>
         <div class="category-stats">
           <div class="stat-item">
@@ -256,14 +216,14 @@ useLanguageChangeEffect(async () => {
           >
             <div class="sub-category-image">
               <img
-                :src="getChildCategoryThumbnail(childCategory)"
-                :alt="getChildCategoryName(childCategory)"
+                :src="categoryStore.getCategoryThumbnail(childCategory)"
+                :alt="categoryStore.getCategoryName(childCategory)"
               />
               <div class="image-overlay"/>
             </div>
             <div class="sub-category-content">
-              <h3>{{ getChildCategoryName(childCategory) }}</h3>
-              <p>{{ getChildCategoryDescription(childCategory) }}</p>
+              <h3>{{ categoryStore.getCategoryName(childCategory) }}</h3>
+              <p>{{ categoryStore.getCategoryDescription(childCategory) }}</p>
               <div class="sub-category-meta">
                 <span class="meta-icon">
                   <span class="i-carbon:document"/>
@@ -326,12 +286,12 @@ useLanguageChangeEffect(async () => {
             @click="handleViewPost(post.id)"
           >
             <div class="post-image">
-              <img :src="getPostThumbnail(post)" :alt="getPostTitle(post)"/>
+              <img :src="postStore.getPostThumbnail(post)" :alt="postStore.getPostTitle(post)"/>
               <div class="image-overlay"/>
             </div>
             <div class="post-content">
-              <h3 class="post-title">{{ getPostTitle(post) }}</h3>
-              <p class="post-summary">{{ getPostSummary(post) }}</p>
+              <h3 class="post-title">{{ postStore.getPostTitle(post) }}</h3>
+              <p class="post-summary">{{ postStore.getPostSummary(post) }}</p>
               <div class="post-meta">
                 <div class="meta-item">
                   <span class="i-carbon:user"/>

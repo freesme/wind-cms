@@ -127,21 +127,6 @@ async function loadUserProfile() {
   }
 }
 
-// 编辑资料
-function handleEdit() {
-  router.push('/settings')
-}
-
-// 查看帖子详情
-function handleViewPost(postId: number) {
-  router.push({
-    path: `/post/${postId}`,
-    query: {
-      from: 'user'
-    }
-  })
-}
-
 // 加载用户的帖子列表
 async function loadUserPosts() {
   if (!user.value?.id) return
@@ -164,6 +149,21 @@ async function loadUserPosts() {
   } finally {
     postsLoading.value = false
   }
+}
+
+// 编辑资料
+function handleEdit() {
+  router.push('/settings')
+}
+
+// 查看帖子详情
+function handleViewPost(postId: number) {
+  router.push({
+    path: `/post/${postId}`,
+    query: {
+      from: 'user'
+    }
+  })
 }
 
 // 监听 activeTab 变化，加载对应内容
@@ -350,8 +350,8 @@ useLanguageChangeEffect(async () => {
                     <div v-if="posts.length > 0" class="posts-list">
                       <div v-for="post in posts" :key="post.id" class="post-item">
                         <div class="post-content">
-                          <h3 class="post-title">{{ post.translations?.[0]?.title || 'Untitled' }}</h3>
-                          <p class="post-summary">{{ post.translations?.[0]?.summary || '' }}</p>
+                          <h3 class="post-title">{{ postStore.getPostTitle(post) }}</h3>
+                          <p class="post-summary">{{ postStore.getPostSummary(post) }}</p>
                           <div class="post-meta">
                             <span class="meta-info">
                               <span class="i-carbon:view" />

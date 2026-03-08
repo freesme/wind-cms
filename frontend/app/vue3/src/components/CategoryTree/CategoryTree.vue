@@ -18,25 +18,9 @@ const router = useRouter()
 const categoryStore = useCategoryStore()
 const expandedCategories = ref<Set<number>>(new Set())
 
-function getCategoryName(category: contentservicev1_Category) {
-  const translation = categoryStore.getTranslation(category);
-  return translation?.name || $t('page.categories.category_untitled')
-}
-
-function getCategoryDescription(category: contentservicev1_Category) {
-  const translation = categoryStore.getTranslation(category);
-  return translation?.description || ''
-}
-
-function getCategoryThumbnail(category: contentservicev1_Category) {
-  const translation = categoryStore.getTranslation(category);
-  return translation?.thumbnail || '/placeholder.jpg'
-}
-
 function handleViewCategory(id: number) {
   router.push(`/category/${id}`)
 }
-
 
 function toggleExpand(category: contentservicev1_Category) {
   if (category.children && category.children.length > 0) {
@@ -64,14 +48,14 @@ function isExpanded(category: contentservicev1_Category) {
       <div class="category-item" @click="handleViewCategory(category.id)">
         <div class="category-info">
           <div class="category-image">
-            <img :src="getCategoryThumbnail(category)" :alt="getCategoryName(category)"/>
+            <img :src="categoryStore.getCategoryThumbnail(category)" :alt="categoryStore.getCategoryName(category)"/>
             <div class="image-overlay"/>
           </div>
           <div class="category-content">
             <h3 :class="{'has-children': category.children && category.children.length > 0}">
-              {{ getCategoryName(category) }}
+              {{ categoryStore.getCategoryName(category) }}
             </h3>
-            <p class="description">{{ getCategoryDescription(category) }}</p>
+            <p class="description">{{ categoryStore.getCategoryDescription(category) }}</p>
             <div class="category-meta">
               <span class="meta-icon">
                 <span class="i-carbon:document"/>
