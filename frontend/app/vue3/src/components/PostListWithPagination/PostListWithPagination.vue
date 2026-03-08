@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, onMounted} from 'vue'
+import {ref, onMounted, watch} from 'vue'
 
 import {$t} from '@/locales'
 import {usePostStore} from '@/stores'
@@ -82,6 +82,12 @@ useLanguageChangeEffect(async () => {
 
 onMounted(async () => {
   await loadPosts()
+})
+
+// 监听 categoryId 变化，自动重新加载数据
+watch(() => props.categoryId, () => {
+  pagination.value.page = 1
+  loadPosts()
 })
 
 // 暴露方法给父组件
