@@ -2060,18 +2060,13 @@ onUnmounted(() => {
   background: var(--color-bg);
 
   .featured-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem;
+    // 容器本身不设置 grid，让内部的 posts-grid 生效
   }
 
-  // ✅ 新增：覆盖 PostList 组件的 posts-grid 样式
+  // ✅ 覆盖 PostList 组件的 posts-grid 样式
   :deep(.posts-grid) {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
     max-width: 1200px;
     margin: 0 auto;
@@ -2595,9 +2590,18 @@ html.dark {
     padding: 0 1.5rem;
   }
 
-  .featured-grid,
-  .posts-grid,
+  // 平板端：featuredPosts 一行显示 2 个
+  .featured-section,
+  .latest-section {
+    :deep(.posts-grid) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      padding: 0 1.5rem;
+    }
+  }
+
   .features-grid {
+    grid-template-columns: repeat(2, 1fr);
     padding: 0 1.5rem;
     gap: 1.5rem;
   }
@@ -2746,13 +2750,15 @@ html.dark {
     padding: 0 1.5rem;
   }
 
-  .featured-grid,
-  .posts-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    padding: 0 1.5rem;
+  // 移动端：featuredPosts 一行显示 1 个
+  .featured-section,
+  .latest-section {
+    :deep(.posts-grid) {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      padding: 0 1.5rem;
+    }
   }
-
 
   .popular-tags-container {
     padding: 0 1.5rem;
