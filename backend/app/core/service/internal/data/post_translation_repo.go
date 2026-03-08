@@ -2,7 +2,6 @@ package data
 
 import (
 	"context"
-
 	"strconv"
 	"time"
 
@@ -86,17 +85,34 @@ func (r *PostTranslationRepo) CleanTranslations(
 	return nil
 }
 
-func (r *PostTranslationRepo) ListTranslations(ctx context.Context, postID uint32) ([]*contentV1.PostTranslation, error) {
-	q := r.entClient.Client().PostTranslation.Query().
+func (r *PostTranslationRepo) ListTranslations(ctx context.Context, postID uint32, locale string, viewMask *fieldmaskpb.FieldMask) ([]*contentV1.PostTranslation, error) {
+	builder := r.entClient.Client().PostTranslation.Query().
 		Where(
 			posttranslation.PostIDEQ(postID),
 		)
 
-	entities, err := q.
+	if len(locale) > 0 {
+		builder.Where(
+			posttranslation.LanguageCodeEQ(locale),
+		)
+	}
+
+	if viewMask != nil {
+		selectSelector, err := r.repository.BuildSelector(viewMask.GetPaths())
+		if err != nil {
+			r.log.Errorf("build post translation selector failed: %s", err.Error())
+			return nil, contentV1.ErrorInternalServerError("build post translation selector failed")
+		}
+		if selectSelector != nil {
+			builder.Modify(selectSelector)
+		}
+	}
+
+	entities, err := builder.
 		All(ctx)
 	if err != nil {
-		r.log.Errorf("query translations by post id failed: %s", err.Error())
-		return nil, contentV1.ErrorInternalServerError("query translations by post id failed")
+		r.log.Errorf("query post translations failed: %s", err.Error())
+		return nil, contentV1.ErrorInternalServerError("query post translations failed")
 	}
 
 	var dtos []*contentV1.PostTranslation

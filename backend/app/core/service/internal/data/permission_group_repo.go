@@ -6,10 +6,13 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/go-kratos/kratos/v2/log"
+
 	paginationV1 "github.com/tx7do/go-crud/api/gen/go/pagination/v1"
 	entCrud "github.com/tx7do/go-crud/entgo"
+
 	"github.com/tx7do/go-utils/copierutil"
 	"github.com/tx7do/go-utils/mapper"
+
 	"github.com/tx7do/kratos-bootstrap/bootstrap"
 
 	"go-wind-cms/app/core/service/internal/data/ent"
@@ -85,6 +88,19 @@ func (r *PermissionGroupRepo) Count(ctx context.Context, whereCond []func(s *sql
 	}
 
 	return count, nil
+}
+
+func (r *PermissionGroupRepo) buildPermissionGroupTree(items []*permissionV1.PermissionGroup, parentId uint32) []*permissionV1.PermissionGroup {
+	var tree []*permissionV1.PermissionGroup
+	for _, item := range items {
+		if item.GetParentId() == parentId {
+			// 递归查找子节点
+			children := r.buildPermissionGroupTree(items, item.GetId())
+			item.Children = children
+			tree = append(tree, item)
+		}
+	}
+	return tree
 }
 
 func (r *PermissionGroupRepo) List(ctx context.Context, req *paginationV1.PagingRequest, treeTravel bool) (*permissionV1.ListPermissionGroupResponse, error) {

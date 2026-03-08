@@ -2,14 +2,18 @@ package data
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/tx7do/kratos-bootstrap/bootstrap"
+	"google.golang.org/protobuf/types/known/fieldmaskpb"
 
 	paginationV1 "github.com/tx7do/go-crud/api/gen/go/pagination/v1"
 	entCrud "github.com/tx7do/go-crud/entgo"
+	"github.com/tx7do/go-crud/pagination"
+	paginationFilter "github.com/tx7do/go-crud/pagination/filter"
 
 	"github.com/tx7do/go-utils/copierutil"
 	"github.com/tx7do/go-utils/mapper"
@@ -103,12 +107,59 @@ func (r *TagRepo) IsExist(ctx context.Context, id uint32) (bool, error) {
 	return exist, nil
 }
 
+func (r *TagRepo) prepareTranslationMaskFields(req *paginationV1.PagingRequest) (
+	excludeConditions []*paginationV1.FilterCondition,
+	translationMaskFields []string,
+	needQueryTranslation bool,
+	err error,
+) {
+	var filterExpr *paginationV1.FilterExpr
+	filterExpr, err = paginationFilter.ConvertFilterByPagingRequest(req)
+	if err != nil {
+		r.log.Errorf("convert filter by paging request failed: %s", err.Error())
+		return
+	}
+
+	excludeFields := []string{"translations", "available_languages"}
+	if req.FieldMask != nil && len(req.FieldMask.Paths) > 0 {
+		for _, path := range req.FieldMask.Paths {
+			path = strings.TrimSpace(path)
+
+			if path == "translations" || strings.HasPrefix(path, "translations.") {
+				needQueryTranslation = true
+			}
+			if strings.HasPrefix(path, "translations.") {
+				excludeFields = append(excludeFields, path)
+				path = strings.TrimPrefix(path, "translations.")
+				if len(path) > 0 {
+					translationMaskFields = append(translationMaskFields, path)
+				}
+			}
+		}
+	} else {
+		needQueryTranslation = true
+	}
+	req.FieldMask = FilterViewMask(excludeFields, req.FieldMask)
+
+	excludeConditions = pagination.FilterFields(filterExpr, []string{
+		"locale",
+	})
+	req.FilteringType = &paginationV1.PagingRequest_FilterExpr{FilterExpr: filterExpr}
+
+	return
+}
+
 func (r *TagRepo) List(ctx context.Context, req *paginationV1.PagingRequest) (*contentV1.ListTagResponse, error) {
 	if req == nil {
 		return nil, contentV1.ErrorBadRequest("invalid parameter")
 	}
 
 	builder := r.entClient.Client().Tag.Query()
+
+	excludeConditions, translationMaskFields, needQueryTranslation, err := r.prepareTranslationMaskFields(req)
+	if err != nil {
+		return nil, err
+	}
 
 	ret, err := r.repository.ListWithPaging(ctx, builder, builder.Clone(), req)
 	if err != nil {
@@ -118,14 +169,30 @@ func (r *TagRepo) List(ctx context.Context, req *paginationV1.PagingRequest) (*c
 		return &contentV1.ListTagResponse{Total: 0, Items: nil}, nil
 	}
 
-	//for _, item := range ret.Items {
-	//	translations, err := r.tagTranslationRepo.ListTranslations(ctx, item.GetId())
-	//	if err != nil {
-	//		r.log.Errorf("query translations failed: %s", err.Error())
-	//		return nil, contentV1.ErrorInternalServerError("query translations failed")
-	//	}
-	//	item.Translations = translations
-	//}
+	if needQueryTranslation {
+		viewMask := &fieldmaskpb.FieldMask{
+			Paths: translationMaskFields,
+		}
+
+		var locale string
+		if len(excludeConditions) > 0 {
+			for _, cond := range excludeConditions {
+				if cond.GetField() == "locale" {
+					locale = cond.GetValue()
+					break
+				}
+			}
+		}
+
+		for _, item := range ret.Items {
+			translations, err := r.tagTranslationRepo.ListTranslations(ctx, item.GetId(), locale, viewMask)
+			if err != nil {
+				r.log.Errorf("query translations failed: %s", err.Error())
+				return nil, contentV1.ErrorInternalServerError("query translations failed")
+			}
+			item.Translations = translations
+		}
+	}
 
 	for _, item := range ret.Items {
 		languages, err := r.tagTranslationRepo.ListAvailedLanguages(ctx, item.GetId())
@@ -173,7 +240,7 @@ func (r *TagRepo) Get(ctx context.Context, req *contentV1.GetTagRequest) (*conte
 
 	dto := r.mapper.ToDTO(entity)
 
-	translations, err := r.tagTranslationRepo.ListTranslations(ctx, dto.GetId())
+	translations, err := r.tagTranslationRepo.ListTranslations(ctx, dto.GetId(), "", nil)
 	if err != nil {
 		r.log.Errorf("query translations failed: %s", err.Error())
 		return nil, contentV1.ErrorInternalServerError("query translations failed")
@@ -426,7 +493,7 @@ func (r *TagRepo) GetTranslation(ctx context.Context, req *contentV1.GetTagReque
 }
 
 func (r *TagRepo) ListTranslations(ctx context.Context, tagID uint32) ([]*contentV1.TagTranslation, error) {
-	return r.tagTranslationRepo.ListTranslations(ctx, tagID)
+	return r.tagTranslationRepo.ListTranslations(ctx, tagID, "", nil)
 }
 
 func (r *TagRepo) DeleteTranslation(ctx context.Context, req *contentV1.DeleteTagTranslationRequest) error {

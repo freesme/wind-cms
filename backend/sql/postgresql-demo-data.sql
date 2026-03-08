@@ -1567,10 +1567,10 @@ INSERT INTO public.category_translations (
 -- ----------------------------
 INSERT INTO public.posts (
     created_at, updated_at, sort_order, editor_type,
-    status, slug, disallow_comment, in_progress,
+    status, code, disallow_comment, in_progress,
     auto_summary, is_featured, visits, likes,
     comment_count, author_id, author_name, password_hash,
-    custom_fields, category_ids, tag_ids
+    custom_fields
 ) VALUES
 -- 文章1：GoWind CMS 快速上手（已发布、精选）
 (
@@ -1580,9 +1580,7 @@ INSERT INTO public.posts (
     false, false, true, true,
     15890, 892, 156,
     1, 'GoWind 官方', '',
-    '{"show_toc": "true", "toc_depth": "3", "allow_copy": "true", "copyright_notice": "GoWind 官方原创"}'::jsonb,
-    '[2,4]'::jsonb,
-    '[1,2,3]'::jsonb
+    '{"show_toc": "true", "toc_depth": "3", "allow_copy": "true", "copyright_notice": "GoWind 官方原创"}'::jsonb
 ),
 -- 文章2：GoWind v2.0 版本发布公告（已发布、精选）
 (
@@ -1592,9 +1590,7 @@ INSERT INTO public.posts (
     false, false, true, true,
     9870, 654, 89,
     1, 'GoWind 官方', '',
-    '{"show_changelog": "true", "release_date": "2024-03-01", "upgrade_guide_url": "/docs/upgrade/v2.0"}'::jsonb,
-    '[1,3]'::jsonb,
-    '[4,5,6]'::jsonb
+    '{"show_changelog": "true", "release_date": "2024-03-01", "upgrade_guide_url": "/docs/upgrade/v2.0"}'::jsonb
 ),
 -- 文章3：Linux 环境下部署 GoWind CMS（已发布）
 (
@@ -1604,9 +1600,7 @@ INSERT INTO public.posts (
     false, false, true, false,
     7650, 432, 78,
     1001, '张三', '',
-    '{"os_type": "Linux", "distro": "Ubuntu, CentOS", "tested_version": "v1.9.0"}'::jsonb,
-    '[2,4,5]'::jsonb,
-    '[1,7,8]'::jsonb
+    '{"os_type": "Linux", "distro": "Ubuntu, CentOS", "tested_version": "v1.9.0"}'::jsonb
 ),
 -- 文章4：2024 CMS 行业发展趋势分析（已发布）
 (
@@ -1616,9 +1610,7 @@ INSERT INTO public.posts (
     false, false, true, false,
     6540, 389, 67,
     1002, '李四', '',
-    '{"data_source": "IDC 2024 行业报告", "chart_support": "true", "downloadable": "true"}'::jsonb,
-    '[1,9]'::jsonb,
-    '[9,10,11]'::jsonb
+    '{"data_source": "IDC 2024 行业报告", "chart_support": "true", "downloadable": "true"}'::jsonb
 ),
 -- 文章5：GoWind CMS 自定义模板开发（草稿、未完成）
 (
@@ -1628,9 +1620,7 @@ INSERT INTO public.posts (
     true, true, false, false,
     1230, 0, 0,
     1001, '张三', '',
-    '{"dev_status": "50%", "expected_release": "2024-04-01", "required_skills": "Go, Vue3, HTML/CSS"}'::jsonb,
-    '[2,6]'::jsonb,
-    '[1,12,13]'::jsonb
+    '{"dev_status": "50%", "expected_release": "2024-04-01", "required_skills": "Go, Vue3, HTML/CSS"}'::jsonb
 ),
 -- 文章6：GoWind 企业版功能详解（加密、已发布）
 (
@@ -1640,9 +1630,7 @@ INSERT INTO public.posts (
     true, false, true, false,
     4320, 256, 0,
     1, 'GoWind 官方', '$2a$10$89jZk54G89sdkf89sdf89sd89sdf89sdf89sdf',
-    '{"is_enterprise": "true", "price_range": "¥9999-¥19999", "trial_available": "true"}'::jsonb,
-    '[3]'::jsonb,
-    '[5,14,15]'::jsonb
+    '{"is_enterprise": "true", "price_range": "¥9999-¥19999", "trial_available": "true"}'::jsonb
 ),
 -- 文章7：常见问题解答（草稿）
 (
@@ -1652,9 +1640,7 @@ INSERT INTO public.posts (
     true, false, true, false,
     890, 0, 0,
     1, 'GoWind 官方', '',
-    '{"faq_category": "installation, configuration, performance", "update_frequency": "monthly"}'::jsonb,
-    '[2,7]'::jsonb,
-    '[16,17,18]'::jsonb
+    '{"faq_category": "installation, configuration, performance", "update_frequency": "monthly"}'::jsonb
 ),
 -- 文章8：GoWind CMS 性能优化指南（已发布、精选）
 (
@@ -1664,9 +1650,7 @@ INSERT INTO public.posts (
     false, false, true, true,
     5680, 789, 123,
     1003, '王五', '',
-    '{"benchmark_data": "true", "qps_before": "50000", "qps_after": "100000", "optimization_points": "DB, Cache, Code"}'::jsonb,
-    '[1,2]'::jsonb,
-    '[1,19,20]'::jsonb
+    '{"benchmark_data": "true", "qps_before": "50000", "qps_after": "100000", "optimization_points": "DB, Cache, Code"}'::jsonb
 );
 
 -- ----------------------------
@@ -1694,7 +1678,7 @@ INSERT INTO public.post_translations (
 - Docker（可选）
 
 ## 安装步骤
-1. 克隆代码仓库：git clone https://github.com/gowind/cms.git
+1. 克隆代码仓库：git clone https://github.com/tx7do/go-wind-cms.git
 2. 配置环境变量：复制.env.example为.env并修改数据库配置
 3. 启动服务：go run main.go 或 docker-compose up -d
 4. 初始登录：http://localhost:8080，默认账号admin/admin
@@ -1710,13 +1694,13 @@ INSERT INTO public.post_translations (
 - Docker（可选）
 
 ## 安装步骤
-1. 克隆代码仓库：git clone https://github.com/gowind/cms.git
+1. 克隆代码仓库：git clone https://github.com/tx7do/go-wind-cms.git
 2. 配置环境变量：复制.env.example为.env并修改数据库配置
 3. 启动服务：go run main.go 或 docker-compose up -d
 4. 初始登录：http://localhost:8080，默认账号admin/admin
 
 > 首次登录请立即修改密码！',
-    '/images/thumbnails/post-quick-start-zh.jpg',
+    'https://picsum.photos/800/450?random=1',
     'post-default', '/blog/gowind-cms-quick-start',
     2580,
     'GoWind,CMS,快速上手,安装部署,Go语言,PostgreSQL',
@@ -1755,7 +1739,7 @@ GoWind CMS v2.0于2024年3月1日发布，是开源以来的重大版本更新�
 ## 升级指南
 - 从v1.9升级：备份数据库后执行go run scripts/upgrade/v2.0.go
 - 全新安装：直接克隆v2.0分支代码部署',
-    '/images/thumbnails/post-v2-release-zh.jpg',
+    'https://picsum.photos/800/450?random=2',
     'post-announcement', '/blog/gowind-v2-0-release',
     3200,
     'GoWind,CMS,v2.0,版本发布,多租户,性能优化,UI重构',
@@ -1782,7 +1766,7 @@ yum install -y golang postgresql git
 
 ## 部署步骤
 1. 创建数据库：createdb gowind
-2. 克隆代码：git clone https://github.com/gowind/cms.git
+2. 克隆代码：git clone https://github.com/tx7do/go-wind-cms.git
 3. 配置数据库连接：修改.env文件
 4. 启动服务：nohup go run main.go > app.log 2>&1 &
 
@@ -1802,13 +1786,13 @@ yum install -y golang postgresql git
 
 ## 部署步骤
 1. 创建数据库：createdb gowind
-2. 克隆代码：git clone https://github.com/gowind/cms.git
+2. 克隆代码：git clone https://github.com/tx7do/go-wind-cms.git
 3. 配置数据库连接：修改.env文件
 4. 启动服务：nohup go run main.go > app.log 2>&1 &
 
 ## 开机自启
 创建systemd服务文件：/etc/systemd/system/gowind.service',
-    '/images/thumbnails/post-deploy-linux-zh.jpg',
+    'https://picsum.photos/800/450?random=3',
     'post-tech', '/blog/deploy-gowind-on-linux',
     2800,
     'GoWind,CMS,Linux部署,Ubuntu,CentOS,Go语言',
@@ -1851,7 +1835,7 @@ IDC 2024年全球CMS市场研究报告
 
 ## 国内趋势
 国产化替代加速，Go/Java语言开发的CMS占比提升。',
-    '/images/thumbnails/post-cms-trends-zh.jpg',
+    'https://picsum.photos/800/450?random=4',
     'post-analysis', '/blog/2024-cms-industry-trends',
     2600,
     'CMS,2024趋势,行业分析,轻量化,私有化,AI赋能',
@@ -1904,7 +1888,7 @@ IDC 2024年全球CMS市场研究报告
 1. 模板语法详解
 2. 数据调用示例
 3. 自定义组件开发',
-    '/images/thumbnails/post-template-dev-zh.jpg',
+    'https://picsum.photos/800/450?random=5',
     'post-draft', '/blog/gowind-custom-template-dev',
     1800,
     'GoWind,CMS,自定义模板,开发教程,Go,Vue3',
@@ -1949,7 +1933,7 @@ IDC 2024年全球CMS市场研究报告
 
 ## 试用申请
 联系客服：400-123-4567，可申请15天免费试用。',
-    '/images/thumbnails/post-enterprise-zh.jpg',
+    'https://picsum.photos/800/450?random=6',
     'post-enterprise', '/blog/gowind-enterprise-features',
     2200,
     'GoWind,CMS,企业版,付费功能,多租户,高级权限',
@@ -1994,7 +1978,7 @@ A3：在后台设置-多语言中启用，上传翻译文件。
 ## 待补充
 - 性能优化相关问题
 - 升级相关问题',
-    '/images/thumbnails/post-faq-zh.jpg',
+    'https://picsum.photos/800/450?random=7',
     'post-faq', '/blog/gowind-faq',
     1500,
     'GoWind,CMS,FAQ,常见问题,安装,配置,性能',
@@ -2039,12 +2023,380 @@ v1.9版本QPS仅5万，响应时间200ms，无法满足高并发需求。
 1. 数据库：新增索引、慢查询优化、读写分离
 2. 缓存：Redis缓存分类/文章，动态过期策略
 3. 代码：优化Goroutine、JSON序列化、静态资源压缩',
-    '/images/thumbnails/post-performance-zh.jpg',
+    'https://picsum.photos/800/450?random=8',
     'post-tech', '/blog/gowind-cms-performance-optimization',
     3000,
     'GoWind,CMS,性能优化,QPS,数据库优化,缓存策略,Go语言',
     '分享GoWind CMS性能优化实战经验，涵盖数据库优化、缓存策略、代码层面，QPS提升100%。',
     'GoWind CMS 性能优化指南：从5万QPS到10万的实战经验 | GoWind 技术博客'
+),
+-- ========== 文章1：GoWind CMS 快速上手 - 英文 ==========
+(
+    NOW() - INTERVAL '30 days', NOW(), 1, 'en-US',
+    'GoWind CMS Quick Start: Build Your First CMS Site in 5 Minutes',
+    'gowind-cms-quick-start',
+    'This guide helps you set up a GoWind CMS site in 5 minutes, covering environment preparation, code cloning, configuration startup, and initial login.',
+    '# GoWind CMS Quick Start
+
+## Environment Preparation
+### Prerequisites
+- Go 1.21+ (recommended 1.22 latest version)
+- PostgreSQL 14+
+- Git (optional)
+- Docker (optional)
+
+## Installation Steps
+1. Clone repository: git clone https://github.com/tx7do/go-wind-cms.git
+2. Configure environment variables: copy .env.example to .env and modify database settings
+3. Start service: go run main.go or docker-compose up -d
+4. Initial login: http://localhost:8080, default account admin/admin
+
+> Please change password immediately after first login!',
+    '# GoWind CMS Quick Start
+
+## Environment Preparation
+### Prerequisites
+- Go 1.21+ (recommended 1.22 latest version)
+- PostgreSQL 14+
+- Git (optional)
+- Docker (optional)
+
+## Installation Steps
+1. Clone repository: git clone https://github.com/tx7do/go-wind-cms.git
+2. Configure environment variables: copy .env.example to .env and modify database settings
+3. Start service: go run main.go or docker-compose up -d
+4. Initial login: http://localhost:8080, default account admin/admin
+
+> Please change password immediately after first login!',
+    'https://picsum.photos/800/450?random=9',
+    'post-default', '/en/blog/gowind-cms-quick-start',
+    2580,
+    'GoWind,CMS,Quick Start,Installation,Go Language,PostgreSQL',
+    'This guide helps you set up a GoWind CMS site in 5 minutes, covering environment preparation, code cloning, configuration startup, and initial login.',
+    'GoWind CMS Quick Start: Build Your First CMS Site in 5 Minutes | GoWind Official Documentation'
+),
+-- ========== 文章2：GoWind v2.0 版本发布公告 - 英文 ==========
+(
+    NOW() - INTERVAL '25 days', NOW(), 2, 'en-US',
+    'GoWind CMS v2.0 Official Release: Multi-tenancy Support, 100% Performance Boost',
+    'gowind-v2-0-release',
+    'GoWind CMS v2.0 release introduces core updates including multi-tenancy support, performance optimization, UI refactoring, with QPS exceeding 100,000.',
+    '# GoWind CMS v2.0 Official Release
+
+## Release Notes
+GoWind CMS v2.0 was released on March 1, 2024, marking the most significant update since open-sourcing!
+
+## Core New Features
+1. Multi-tenancy Support: Deploy multiple independent sites on a single instance with complete data isolation
+2. Performance Optimization: QPS increased from 50,000 to 100,000, response time reduced by 60%
+3. UI Refactoring: Backend rebuilt with Vue3 + Element Plus, mobile-responsive design
+
+## Upgrade Guide
+- Upgrade from v1.9: Backup database and execute go run scripts/upgrade/v2.0.go
+- Fresh installation: Clone v2.0 branch code directly for deployment',
+    '# GoWind CMS v2.0 Official Release
+
+## Release Notes
+GoWind CMS v2.0 was released on March 1, 2024, marking the most significant update since open-sourcing!
+
+## Core New Features
+1. Multi-tenancy Support: Deploy multiple independent sites on a single instance with complete data isolation
+2. Performance Optimization: QPS increased from 50,000 to 100,000, response time reduced by 60%
+3. UI Refactoring: Backend rebuilt with Vue3 + Element Plus, mobile-responsive design
+
+## Upgrade Guide
+- Upgrade from v1.9: Backup database and execute go run scripts/upgrade/v2.0.go
+- Fresh installation: Clone v2.0 branch code directly for deployment',
+    'https://picsum.photos/800/450?random=10',
+    'post-announcement', '/en/blog/gowind-v2-0-release',
+    3200,
+    'GoWind,CMS,v2.0,Release Notes,Multi-tenancy,Performance Optimization,UI Refactoring',
+    'GoWind CMS v2.0 release introduces core updates including multi-tenancy support, performance optimization, UI refactoring, with QPS exceeding 100,000.',
+    'GoWind CMS v2.0 Official Release: Multi-tenancy Support, 100% Performance Boost | GoWind Official Announcement'
+),
+-- ========== 文章3：Linux 环境下部署 GoWind CMS - 英文 ==========
+(
+    NOW() - INTERVAL '22 days', NOW(), 3, 'en-US',
+    'Deploy GoWind CMS on Linux (Ubuntu/CentOS Universal Guide)',
+    'deploy-gowind-on-linux',
+    'Detailed deployment guide for GoWind CMS on Linux environments (Ubuntu/CentOS), including dependency installation, port configuration, and auto-start setup.',
+    '# Deploy GoWind CMS on Linux
+
+## Supported Systems
+- Ubuntu 20.04/22.04
+- CentOS 7/8
+
+## Dependency Installation
+### Ubuntu
+apt update && apt install -y golang postgresql git
+### CentOS
+yum install -y golang postgresql git
+
+## Deployment Steps
+1. Create database: createdb gowind
+2. Clone code: git clone https://github.com/tx7do/go-wind-cms.git
+3. Configure database connection: modify .env file
+4. Start service: nohup go run main.go > app.log 2>&1 &
+
+## Auto-start on Boot
+Create systemd service file: /etc/systemd/system/gowind.service',
+    '# Deploy GoWind CMS on Linux
+
+## Supported Systems
+- Ubuntu 20.04/22.04
+- CentOS 7/8
+
+## Dependency Installation
+### Ubuntu
+apt update && apt install -y golang postgresql git
+### CentOS
+yum install -y golang postgresql git
+
+## Deployment Steps
+1. Create database: createdb gowind
+2. Clone code: git clone https://github.com/tx7do/go-wind-cms.git
+3. Configure database connection: modify .env file
+4. Start service: nohup go run main.go > app.log 2>&1 &
+
+## Auto-start on Boot
+Create systemd service file: /etc/systemd/system/gowind.service',
+    'https://picsum.photos/800/450?random=11',
+    'post-tech', '/en/blog/deploy-gowind-on-linux',
+    2800,
+    'GoWind,CMS,Linux Deployment,Ubuntu,CentOS,Go Language',
+    'Detailed deployment guide for GoWind CMS on Linux environments (Ubuntu/CentOS), including dependency installation, port configuration, and auto-start setup.',
+    'Deploy GoWind CMS on Linux (Ubuntu/CentOS Universal Guide) | GoWind Technical Blog'
+),
+-- ========== 文章4：2024 CMS 行业发展趋势分析 - 英文 ==========
+(
+    NOW() - INTERVAL '20 days', NOW(), 4, 'en-US',
+    '2024 CMS Industry Trend Analysis: Lightweight, Private Deployment, AI Empowerment',
+    '2024-cms-industry-trends',
+    'Based on IDC 2024 industry report, analysis of three major CMS industry trends: lightweight architecture, private deployment, and AI-powered features.',
+    '# 2024 CMS Industry Trend Analysis
+
+## Data Source
+IDC 2024 Global CMS Market Research Report
+
+## Core Trends
+1. Lightweight: Lightweight CMS market share increased to 65%, replacing heavyweight systems
+2. Private Deployment: Enterprise private deployment demand grew by 40%
+3. AI Empowerment: AI-generated content and intelligent layout becoming standard features
+
+## Market Size
+Global CMS market size expected to reach $8.9 billion in 2024, with 18% annual growth rate.
+
+## Domestic Trends
+Accelerated domestic substitution, CMS developed with Go/Java languages gaining market share.',
+    '# 2024 CMS Industry Trend Analysis
+
+## Data Source
+IDC 2024 Global CMS Market Research Report
+
+## Core Trends
+1. Lightweight: Lightweight CMS market share increased to 65%, replacing heavyweight systems
+2. Private Deployment: Enterprise private deployment demand grew by 40%
+3. AI Empowerment: AI-generated content and intelligent layout becoming standard features
+
+## Market Size
+Global CMS market size expected to reach $8.9 billion in 2024, with 18% annual growth rate.
+
+## Domestic Trends
+Accelerated domestic substitution, CMS developed with Go/Java languages gaining market share.',
+    'https://picsum.photos/800/450?random=12',
+    'post-analysis', '/en/blog/2024-cms-industry-trends',
+    2600,
+    'CMS,2024 Trends,Industry Analysis,Lightweight,Private Deployment,AI Empowerment',
+    'Based on IDC 2024 industry report, analysis of three major CMS industry trends: lightweight architecture, private deployment, and AI-powered features.',
+    '2024 CMS Industry Trend Analysis: Lightweight, Private Deployment, AI Empowerment | GoWind Industry Insights'
+),
+-- ========== 文章5：GoWind CMS 自定义模板开发 - 英文（草稿） ==========
+(
+    NOW() - INTERVAL '15 days', NOW(), 5, 'en-US',
+    'GoWind CMS Custom Template Development Tutorial (Draft)',
+    'gowind-custom-template-dev',
+    'GoWind CMS custom template development tutorial covering template syntax, data binding, style customization, current progress 50%.',
+    '# GoWind CMS Custom Template Development
+
+> This article is under development, current progress 50%, expected completion date April 1, 2024.
+
+## Development Prerequisites
+### Required Skills
+- Go language fundamentals
+- Vue3 + Element Plus
+- HTML/CSS/JS
+
+## Template Directory Structure
+/templates/custom/
+  - index.tpl # Homepage template
+  - post.tpl # Article template
+  - style.css # Custom styles
+
+## To Be Written
+1. Template syntax detailed explanation
+2. Data binding examples
+3. Custom component development',
+    '# GoWind CMS Custom Template Development
+
+> This article is under development, current progress 50%, expected completion date April 1, 2024.
+
+## Development Prerequisites
+### Required Skills
+- Go language fundamentals
+- Vue3 + Element Plus
+- HTML/CSS/JS
+
+## Template Directory Structure
+/templates/custom/
+  - index.tpl # Homepage template
+  - post.tpl # Article template
+  - style.css # Custom styles
+
+## To Be Written
+1. Template syntax detailed explanation
+2. Data binding examples
+3. Custom component development',
+    'https://picsum.photos/800/450?random=13',
+    'post-draft', '/en/blog/gowind-custom-template-dev',
+    1800,
+    'GoWind,CMS,Custom Template,Development Tutorial,Go,Vue3',
+    'GoWind CMS custom template development tutorial covering template syntax, data binding, style customization, current progress 50%.',
+    'GoWind CMS Custom Template Development Tutorial (Draft) | GoWind Development Documentation'
+),
+-- ========== 文章6：GoWind 企业版功能详解 - 英文（加密） ==========
+(
+    NOW() - INTERVAL '12 days', NOW(), 6, 'en-US',
+    'GoWind CMS Enterprise Edition Feature Details (Paid Exclusive)',
+    'gowind-enterprise-features',
+    'GoWind Enterprise Edition exclusive features: multi-tenancy management, advanced permissions, data backup, dedicated support, pricing ¥9999-19999/year.',
+    '# GoWind CMS Enterprise Edition Feature Details
+
+## Exclusive Features
+1. Multi-tenancy Management: Manage multiple sites within single system with complete data isolation
+2. Advanced Permissions: Fine-grained permission control by role/department
+3. Data Backup: Automatic scheduled backups with cross-region disaster recovery support
+4. Dedicated Support: 7*24 technical support
+5. Custom Development: Custom feature modules on demand
+
+## Pricing Plans
+- Basic: ¥9,999/year (up to 10 tenants)
+- Standard: ¥14,999/year (up to 50 tenants)
+- Premium: ¥19,999/year (unlimited tenants)
+
+## Trial Application
+Contact support: 400-123-4567, 15-day free trial available.',
+    '# GoWind CMS Enterprise Edition Feature Details
+
+## Exclusive Features
+1. Multi-tenancy Management: Manage multiple sites within single system with complete data isolation
+2. Advanced Permissions: Fine-grained permission control by role/department
+3. Data Backup: Automatic scheduled backups with cross-region disaster recovery support
+4. Dedicated Support: 7*24 technical support
+5. Custom Development: Custom feature modules on demand
+
+## Pricing Plans
+- Basic: ¥9,999/year (up to 10 tenants)
+- Standard: ¥14,999/year (up to 50 tenants)
+- Premium: ¥19,999/year (unlimited tenants)
+
+## Trial Application
+Contact support: 400-123-4567, 15-day free trial available.',
+    'https://picsum.photos/800/450?random=14',
+    'post-enterprise', '/en/blog/gowind-enterprise-features',
+    2200,
+    'GoWind,CMS,Enterprise Edition,Paid Features,Multi-tenancy,Advanced Permissions',
+    'GoWind Enterprise Edition exclusive features: multi-tenancy management, advanced permissions, data backup, dedicated support, pricing ¥9999-19999/year.',
+    'GoWind CMS Enterprise Edition Feature Details (Paid Exclusive) | GoWind Enterprise Services'
+),
+-- ========== 文章7：常见问题解答 - 英文（草稿） ==========
+(
+    NOW() - INTERVAL '10 days', NOW(), 7, 'en-US',
+    'GoWind CMS FAQ (Frequently Asked Questions)',
+    'gowind-faq',
+    'GoWind CMS common questions summary covering installation, configuration, performance, upgrade topics, updated monthly.',
+    '# GoWind CMS FAQ
+
+## Installation Related
+Q1: Database connection failure during installation?
+A1: Check database address, port, username and password in .env file.
+
+Q2: Cannot access service after startup?
+A2: Check if port is occupied, ensure firewall allows port 8080.
+
+## Configuration Related
+Q3: How to enable multi-language support?
+A3: Enable in backend Settings > Multi-language, upload translation files.
+
+## To Be Added
+- Performance optimization questions
+- Upgrade related questions',
+    '# GoWind CMS FAQ
+
+## Installation Related
+Q1: Database connection failure during installation?
+A1: Check database address, port, username and password in .env file.
+
+Q2: Cannot access service after startup?
+A2: Check if port is occupied, ensure firewall allows port 8080.
+
+## Configuration Related
+Q3: How to enable multi-language support?
+A3: Enable in backend Settings > Multi-language, upload translation files.
+
+## To Be Added
+- Performance optimization questions
+- Upgrade related questions',
+    'https://picsum.photos/800/450?random=15',
+    'post-faq', '/en/blog/gowind-faq',
+    1500,
+    'GoWind,CMS,FAQ,Frequently Asked Questions,Installation,Configuration,Performance',
+    'GoWind CMS common questions summary covering installation, configuration, performance, upgrade topics, updated monthly.',
+    'GoWind CMS FAQ (Frequently Asked Questions) | GoWind Help Center'
+),
+-- ========== 文章8：GoWind CMS 性能优化指南 - 英文 ==========
+(
+    NOW() - INTERVAL '8 days', NOW(), 8, 'en-US',
+    'GoWind CMS Performance Optimization Guide: Practical Experience from 50K to 100K QPS',
+    'gowind-cms-performance-optimization',
+    'Share GoWind CMS performance optimization practical experience covering database optimization, caching strategies, code-level improvements, achieving 100% QPS increase.',
+    '# GoWind CMS Performance Optimization Guide
+
+## Optimization Background
+v1.9 version had only 50K QPS with 200ms response time, unable to meet high-concurrency requirements.
+
+## Optimization Metrics
+| Metric | Before | After | Improvement |
+|--------|--------|-------|-------------|
+| QPS | 50,000 | 100,000 | 100% |
+| Response Time | 200ms | 80ms | 60% |
+| Database Load | 80% | 30% | 62.5% |
+
+## Core Optimization Points
+1. Database: New indexes, slow query optimization, read-write separation
+2. Caching: Redis cache for categories/articles with dynamic expiration strategy
+3. Code: Goroutine optimization, JSON serialization improvement, static resource compression',
+    '# GoWind CMS Performance Optimization Guide
+
+## Optimization Background
+v1.9 version had only 50K QPS with 200ms response time, unable to meet high-concurrency requirements.
+
+## Optimization Metrics
+| Metric | Before | After | Improvement |
+|--------|--------|-------|-------------|
+| QPS | 50,000 | 100,000 | 100% |
+| Response Time | 200ms | 80ms | 60% |
+| Database Load | 80% | 30% | 62.5% |
+
+## Core Optimization Points
+1. Database: New indexes, slow query optimization, read-write separation
+2. Caching: Redis cache for categories/articles with dynamic expiration strategy
+3. Code: Goroutine optimization, JSON serialization improvement, static resource compression',
+    'https://picsum.photos/800/450?random=16',
+    'post-tech', '/en/blog/gowind-cms-performance-optimization',
+    3000,
+    'GoWind,CMS,Performance Optimization,QPS,Database Optimization,Caching Strategy,Go Language',
+    'Share GoWind CMS performance optimization practical experience covering database optimization, caching strategies, code-level improvements, achieving 100% QPS increase.',
+    'GoWind CMS Performance Optimization Guide: Practical Experience from 50K to 100K QPS | GoWind Technical Blog'
 );
 
 
@@ -2230,6 +2582,50 @@ INSERT INTO public.tag_translations (
     'Content Management System (CMS) is a software application for creating and managing digital content, GoWind CMS is a lightweight and high-performance CMS system.',
     'CMS | GoWind Tags'
 ),
+-- ========== 标签3：快速上手 - 中文 ==========
+(
+    NOW() - INTERVAL '55 days', NOW(), 3, 'zh-CN',
+    '快速上手', 'quick-start',
+    'GoWind CMS 快速上手指南，帮助用户在 5 分钟内完成环境搭建、代码克隆、配置启动和初始登录。',
+    '/images/tags/quick-start-zh.jpg',
+    'tag-default', '/tags/quick-start', 'https://gowind.com/tags/quick-start',
+    '快速上手,GoWind,CMS,安装部署,入门指南',
+    'GoWind CMS 快速上手指南，帮助用户在 5 分钟内完成环境搭建、代码克隆、配置启动和初始登录。',
+    '快速上手 | GoWind 标签'
+),
+-- ========== 标签3：快速上手 - 英文 ==========
+(
+    NOW() - INTERVAL '55 days', NOW(), 3, 'en-US',
+    'Quick Start', 'quick-start',
+    'Quick start guide for GoWind CMS, helping users complete environment setup, code cloning, configuration startup and initial login within 5 minutes.',
+    '/images/tags/quick-start-en.jpg',
+    'tag-default', '/en/tags/quick-start', 'https://gowind.com/en/tags/quick-start',
+    'Quick Start,GoWind,CMS,Installation,Setup Guide',
+    'Quick start guide for GoWind CMS, helping users complete environment setup, code cloning, configuration startup and initial login within 5 minutes.',
+    'Quick Start | GoWind Tags'
+),
+-- ========== 标签4：版本更新 - 中文 ==========
+(
+    NOW() - INTERVAL '50 days', NOW(), 4, 'zh-CN',
+    '版本更新', 'version-update',
+    'GoWind CMS 版本更新记录与变更日志，包含功能新增、问题修复及兼容性改进。',
+    '/images/tags/version-update-zh.jpg',
+    'tag-default', '/tags/version-update', 'https://gowind.com/tags/version-update',
+    '版本更新,GoWind,CMS,变更日志,发布说明',
+    'GoWind CMS 版本更新记录与变更日志，包含功能新增、问题修复及兼容性改进。',
+    '版本更新 | GoWind 标签'
+),
+-- ========== 标签4：版本更新 - 英文 ==========
+(
+    NOW() - INTERVAL '50 days', NOW(), 4, 'en-US',
+    'Version Update', 'version-update',
+    'Version update records and changelogs for GoWind CMS, including feature additions, bug fixes, and compatibility improvements.',
+    '/images/tags/version-update-en.jpg',
+    'tag-default', '/en/tags/version-update', 'https://gowind.com/en/tags/version-update',
+    'Version Update,GoWind,CMS,Changelog,Release Notes',
+    'Version update records and changelogs for GoWind CMS, including feature additions, bug fixes, and compatibility improvements.',
+    'Version Update | GoWind Tags'
+),
 -- ========== 标签5：新功能 - 中文 ==========
 (
     NOW() - INTERVAL '50 days', NOW(), 5, 'zh-CN',
@@ -2240,6 +2636,83 @@ INSERT INTO public.tag_translations (
     '新功能,GoWind,CMS,多租户,AI内容生成',
     'GoWind CMS 新增功能模块，包含多租户、AI内容生成、性能优化等核心新特性。',
     '新功能 | GoWind 标签'
+),
+-- ========== 标签5：新功能 - 英文 ==========
+(
+    NOW() - INTERVAL '50 days', NOW(), 5, 'en-US',
+    'New Features', 'new-features',
+    'New feature modules of GoWind CMS, including multi-tenancy, AI content generation, performance optimization and other core new features.',
+    '/images/tags/new-features-en.jpg',
+    'tag-default', '/en/tags/new-features', 'https://gowind.com/en/tags/new-features',
+    'New Features,GoWind,CMS,Multi-tenancy,AI Content Generation',
+    'New feature modules of GoWind CMS, including multi-tenancy, AI content generation, performance optimization and other core new features.',
+    'New Features | GoWind Tags'
+),
+-- ========== 标签6：升级指南 - 中文 ==========
+(
+    NOW() - INTERVAL '45 days', NOW(), 6, 'zh-CN',
+    '升级指南', 'upgrade-guide',
+    'GoWind CMS 逐步升级指南，涵盖版本兼容性检查、数据库迁移、配置更新及回滚流程。',
+    '/images/tags/upgrade-guide-zh.jpg',
+    'tag-default', '/tags/upgrade-guide', 'https://gowind.com/tags/upgrade-guide',
+    '升级指南,GoWind,CMS,迁移,版本兼容',
+    'GoWind CMS 逐步升级指南，涵盖版本兼容性检查、数据库迁移、配置更新及回滚流程。',
+    '升级指南 | GoWind 标签'
+),
+-- ========== 标签6：升级指南 - 英文 ==========
+(
+    NOW() - INTERVAL '45 days', NOW(), 6, 'en-US',
+    'Upgrade Guide', 'upgrade-guide',
+    'Step-by-step upgrade guide for GoWind CMS, covering version compatibility checks, database migration, configuration updates and rollback procedures.',
+    '/images/tags/upgrade-guide-en.jpg',
+    'tag-default', '/en/tags/upgrade-guide', 'https://gowind.com/en/tags/upgrade-guide',
+    'Upgrade Guide,GoWind,CMS,Migration,Version Compatibility',
+    'Step-by-step upgrade guide for GoWind CMS, covering version compatibility checks, database migration, configuration updates and rollback procedures.',
+    'Upgrade Guide | GoWind Tags'
+),
+-- ========== 标签7：Linux - 中文 ==========
+(
+    NOW() - INTERVAL '45 days', NOW(), 7, 'zh-CN',
+    'Linux', 'linux',
+    'GoWind CMS 在 Linux 系统下的部署与运维内容，包含 Ubuntu/CentOS 系统配置、服务管理及性能调优。',
+    '/images/tags/linux-zh.jpg',
+    'tag-default', '/tags/linux', 'https://gowind.com/tags/linux',
+    'Linux,GoWind,CMS,部署,Ubuntu,CentOS',
+    'GoWind CMS 在 Linux 系统下的部署与运维内容，包含 Ubuntu/CentOS 系统配置、服务管理及性能调优。',
+    'Linux | GoWind 标签'
+),
+-- ========== 标签7：Linux - 英文 ==========
+(
+    NOW() - INTERVAL '45 days', NOW(), 7, 'en-US',
+    'Linux', 'linux',
+    'Linux-related content for GoWind CMS deployment and operation, including Ubuntu/CentOS system configuration, service management and performance tuning.',
+    '/images/tags/linux-en.jpg',
+    'tag-default', '/en/tags/linux', 'https://gowind.com/en/tags/linux',
+    'Linux,GoWind,CMS,Deployment,Ubuntu,CentOS',
+    'Linux-related content for GoWind CMS deployment and operation, including Ubuntu/CentOS system configuration, service management and performance tuning.',
+    'Linux | GoWind Tags'
+),
+-- ========== 标签8：部署教程 - 中文 ==========
+(
+    NOW() - INTERVAL '40 days', NOW(), 8, 'zh-CN',
+    '部署教程', 'deployment-tutorial',
+    'GoWind CMS 全平台部署教程，涵盖云服务器、Docker 容器及 Kubernetes 集群等多种部署方式。',
+    '/images/tags/deployment-tutorial-zh.jpg',
+    'tag-default', '/tags/deployment-tutorial', 'https://gowind.com/tags/deployment-tutorial',
+    '部署教程,GoWind,CMS,Docker,Kubernetes,云服务器',
+    'GoWind CMS 全平台部署教程，涵盖云服务器、Docker 容器及 Kubernetes 集群等多种部署方式。',
+    '部署教程 | GoWind 标签'
+),
+-- ========== 标签8：部署教程 - 英文 ==========
+(
+    NOW() - INTERVAL '40 days', NOW(), 8, 'en-US',
+    'Deployment Tutorial', 'deployment-tutorial',
+    'Comprehensive deployment tutorials for GoWind CMS on various platforms, including cloud servers, Docker containers and Kubernetes clusters.',
+    '/images/tags/deployment-tutorial-en.jpg',
+    'tag-default', '/en/tags/deployment-tutorial', 'https://gowind.com/en/tags/deployment-tutorial',
+    'Deployment Tutorial,GoWind,CMS,Docker,Kubernetes,Cloud',
+    'Comprehensive deployment tutorials for GoWind CMS on various platforms, including cloud servers, Docker containers and Kubernetes clusters.',
+    'Deployment Tutorial | GoWind Tags'
 ),
 -- ========== 标签9：行业分析 - 中文 ==========
 (
@@ -2252,16 +2725,148 @@ INSERT INTO public.tag_translations (
     'CMS行业发展趋势、市场规模、技术方向分析，基于IDC、艾瑞等权威机构数据。',
     '行业分析 | GoWind 标签'
 ),
--- ========== 标签19：性能优化 - 中文 ==========
+-- ========== 标签9：行业分析 - 英文 ==========
 (
-    NOW() - INTERVAL '15 days', NOW(), 19, 'zh-CN',
-    '性能优化', 'performance-optimization',
-    'GoWind CMS 性能优化相关内容，涵盖数据库优化、缓存策略、代码层面优化，提升QPS和响应速度。',
-    '/images/tags/performance-zh.jpg',
-    'tag-default', '/tags/performance-optimization', 'https://gowind.com/tags/performance-optimization',
-    '性能优化,QPS,数据库优化,缓存策略,高并发',
-    'GoWind CMS 性能优化相关内容，涵盖数据库优化、缓存策略、代码层面优化，提升QPS和响应速度。',
-    '性能优化 | GoWind 标签'
+    NOW() - INTERVAL '40 days', NOW(), 9, 'en-US',
+    'Industry Analysis', 'industry-analysis',
+    'CMS industry development trends, market size, and technology direction analysis based on authoritative data from IDC, iResearch and other institutions.',
+    '/images/tags/industry-analysis-en.jpg',
+    'tag-default', '/en/tags/industry-analysis', 'https://gowind.com/en/tags/industry-analysis',
+    'Industry Analysis,CMS,2024 Trends,Market Size,Technology Direction',
+    'CMS industry development trends, market size, and technology direction analysis based on authoritative data from IDC, iResearch and other institutions.',
+    'Industry Analysis | GoWind Tags'
+),
+-- ========== 标签10：2024趋势 - 中文 ==========
+(
+    NOW() - INTERVAL '35 days', NOW(), 10, 'zh-CN',
+    '2024趋势', '2024-trends',
+    '2024 年 CMS 行业趋势分析，涵盖轻量化架构、私有化部署、AI 赋能及市场增长预测。',
+    '/images/tags/2024-trends-zh.jpg',
+    'tag-default', '/tags/2024-trends', 'https://gowind.com/tags/2024-trends',
+    '2024趋势,CMS,行业预测,轻量化,AI赋能',
+    '2024 年 CMS 行业趋势分析，涵盖轻量化架构、私有化部署、AI 赋能及市场增长预测。',
+    '2024趋势 | GoWind 标签'
+),
+-- ========== 标签10：2024趋势 - 英文 ==========
+(
+    NOW() - INTERVAL '35 days', NOW(), 10, 'en-US',
+    '2024 Trends', '2024-trends',
+    'Analysis of CMS industry trends in 2024, including lightweight architecture, private deployment, AI empowerment and market growth forecasts.',
+    '/images/tags/2024-trends-en.jpg',
+    'tag-default', '/en/tags/2024-trends', 'https://gowind.com/en/tags/2024-trends',
+    '2024 Trends,CMS,Industry Forecast,Lightweight,AI',
+    'Analysis of CMS industry trends in 2024, including lightweight architecture, private deployment, AI empowerment and market growth forecasts.',
+    '2024 Trends | GoWind Tags'
+),
+-- ========== 标签11：轻量化 - 中文 ==========
+(
+    NOW() - INTERVAL '35 days', NOW(), 11, 'zh-CN',
+    '轻量化', 'lightweight',
+    'GoWind CMS 轻量化架构设计理念，聚焦资源消耗最小化、快速启动及高效运行。',
+    '/images/tags/lightweight-zh.jpg',
+    'tag-default', '/tags/lightweight', 'https://gowind.com/tags/lightweight',
+    '轻量化,GoWind,CMS,架构设计,资源优化',
+    'GoWind CMS 轻量化架构设计理念，聚焦资源消耗最小化、快速启动及高效运行。',
+    '轻量化 | GoWind 标签'
+),
+-- ========== 标签11：轻量化 - 英文 ==========
+(
+    NOW() - INTERVAL '35 days', NOW(), 11, 'en-US',
+    'Lightweight', 'lightweight',
+    'Lightweight architecture design philosophy of GoWind CMS, focusing on minimal resource consumption, fast startup and efficient operation.',
+    '/images/tags/lightweight-en.jpg',
+    'tag-default', '/en/tags/lightweight', 'https://gowind.com/en/tags/lightweight',
+    'Lightweight,GoWind,CMS,Architecture,Minimal Resource',
+    'Lightweight architecture design philosophy of GoWind CMS, focusing on minimal resource consumption, fast startup and efficient operation.',
+    'Lightweight | GoWind Tags'
+),
+-- ========== 标签12：自定义模板 - 中文 ==========
+(
+    NOW() - INTERVAL '30 days', NOW(), 12, 'zh-CN',
+    '自定义模板', 'custom-template',
+    'GoWind CMS 自定义模板开发指南，涵盖模板语法、数据绑定、组件开发及样式定制。',
+    '/images/tags/custom-template-zh.jpg',
+    'tag-default', '/tags/custom-template', 'https://gowind.com/tags/custom-template',
+    '自定义模板,GoWind,CMS,模板引擎,前端开发',
+    'GoWind CMS 自定义模板开发指南，涵盖模板语法、数据绑定、组件开发及样式定制。',
+    '自定义模板 | GoWind 标签'
+),
+-- ========== 标签12：自定义模板 - 英文 ==========
+(
+    NOW() - INTERVAL '30 days', NOW(), 12, 'en-US',
+    'Custom Template', 'custom-template',
+    'Custom template development guide for GoWind CMS, covering template syntax, data binding, component development and style customization.',
+    '/images/tags/custom-template-en.jpg',
+    'tag-default', '/en/tags/custom-template', 'https://gowind.com/en/tags/custom-template',
+    'Custom Template,GoWind,CMS,Template Engine,Frontend Development',
+    'Custom template development guide for GoWind CMS, covering template syntax, data binding, component development and style customization.',
+    'Custom Template | GoWind Tags'
+),
+-- ========== 标签13：开发教程 - 中文 ==========
+(
+    NOW() - INTERVAL '30 days', NOW(), 13, 'zh-CN',
+    '开发教程', 'development-tutorial',
+    'GoWind CMS 扩展与定制开发教程，包含插件开发、API 集成及主题定制。',
+    '/images/tags/development-tutorial-zh.jpg',
+    'tag-default', '/tags/development-tutorial', 'https://gowind.com/tags/development-tutorial',
+    '开发教程,GoWind,CMS,插件开发,API集成',
+    'GoWind CMS 扩展与定制开发教程，包含插件开发、API 集成及主题定制。',
+    '开发教程 | GoWind 标签'
+),
+-- ========== 标签13：开发教程 - 英文 ==========
+(
+    NOW() - INTERVAL '30 days', NOW(), 13, 'en-US',
+    'Development Tutorial', 'development-tutorial',
+    'Development tutorials for GoWind CMS extension and customization, including plugin development, API integration and theme customization.',
+    '/images/tags/development-tutorial-en.jpg',
+    'tag-default', '/en/tags/development-tutorial', 'https://gowind.com/en/tags/development-tutorial',
+    'Development Tutorial,GoWind,CMS,Plugin Development,API Integration',
+    'Development tutorials for GoWind CMS extension and customization, including plugin development, API integration and theme customization.',
+    'Development Tutorial | GoWind Tags'
+),
+-- ========== 标签14：企业版 - 中文 ==========
+(
+    NOW() - INTERVAL '25 days', NOW(), 14, 'zh-CN',
+    '企业版', 'enterprise',
+    'GoWind CMS 企业版，包含多租户、高级权限、数据备份、专属客服等付费专属功能。',
+    '/images/tags/enterprise-zh.jpg',
+    'tag-default', '/tags/enterprise', 'https://gowind.com/tags/enterprise',
+    '企业版,GoWind,CMS,付费功能,多租户',
+    'GoWind CMS 企业版，包含多租户、高级权限、数据备份、专属客服等付费专属功能。',
+    '企业版 | GoWind 标签'
+),
+-- ========== 标签14：企业版 - 英文 ==========
+(
+    NOW() - INTERVAL '25 days', NOW(), 14, 'en-US',
+    'Enterprise Edition', 'enterprise',
+    'GoWind CMS Enterprise Edition, including paid exclusive features such as multi-tenancy, advanced permissions, data backup, and dedicated customer service.',
+    '/images/tags/enterprise-en.jpg',
+    'tag-default', '/en/tags/enterprise', 'https://gowind.com/en/tags/enterprise',
+    'Enterprise Edition,GoWind,CMS,Paid Features,Multi-tenancy',
+    'GoWind CMS Enterprise Edition, including paid exclusive features such as multi-tenancy, advanced permissions, data backup, and dedicated customer service.',
+    'Enterprise Edition | GoWind Tags'
+),
+-- ========== 标签15：付费功能 - 中文 ==========
+(
+    NOW() - INTERVAL '25 days', NOW(), 15, 'zh-CN',
+    '付费功能', 'paid-features',
+    'GoWind CMS 企业版专属付费功能，包含高级分析、自定义域名、优先支持及 SLA 保障。',
+    '/images/tags/paid-features-zh.jpg',
+    'tag-default', '/tags/paid-features', 'https://gowind.com/tags/paid-features',
+    '付费功能,GoWind,CMS,企业版,商业化',
+    'GoWind CMS 企业版专属付费功能，包含高级分析、自定义域名、优先支持及 SLA 保障。',
+    '付费功能 | GoWind 标签'
+),
+-- ========== 标签15：付费功能 - 英文 ==========
+(
+    NOW() - INTERVAL '25 days', NOW(), 15, 'en-US',
+    'Paid Features', 'paid-features',
+    'Exclusive paid features of GoWind CMS Enterprise Edition, including advanced analytics, custom domains, priority support and SLA guarantees.',
+    '/images/tags/paid-features-en.jpg',
+    'tag-default', '/en/tags/paid-features', 'https://gowind.com/en/tags/paid-features',
+    'Paid Features,GoWind,CMS,Enterprise,Monetization',
+    'Exclusive paid features of GoWind CMS Enterprise Edition, including advanced analytics, custom domains, priority support and SLA guarantees.',
+    'Paid Features | GoWind Tags'
 ),
 -- ========== 标签16：FAQ - 中文 ==========
 (
@@ -2274,17 +2879,104 @@ INSERT INTO public.tag_translations (
     'GoWind CMS 常见问题解答，涵盖安装部署、配置使用、性能优化、升级迁移等方向。',
     'FAQ | GoWind 标签'
 ),
--- ========== 标签14：企业版 - 中文 ==========
+-- ========== 标签16：FAQ - 英文 ==========
 (
-    NOW() - INTERVAL '25 days', NOW(), 14, 'zh-CN',
-    '企业版', 'enterprise',
-    'GoWind CMS 企业版，包含多租户、高级权限、数据备份、专属客服等付费专属功能。',
-    '/images/tags/enterprise-zh.jpg',
-    'tag-default', '/tags/enterprise', 'https://gowind.com/tags/enterprise',
-    '企业版,GoWind,CMS,付费功能,多租户',
-    'GoWind CMS 企业版，包含多租户、高级权限、数据备份、专属客服等付费专属功能。',
-    '企业版 | GoWind 标签'
+    NOW() - INTERVAL '20 days', NOW(), 16, 'en-US',
+    'FAQ', 'faq',
+    'Frequently Asked Questions about GoWind CMS, covering installation and deployment, configuration usage, performance optimization, upgrade and migration.',
+    '/images/tags/faq-en.jpg',
+    'tag-default', '/en/tags/faq', 'https://gowind.com/en/tags/faq',
+    'FAQ,Frequently Asked Questions,GoWind,CMS,Problem Solving',
+    'Frequently Asked Questions about GoWind CMS, covering installation and deployment, configuration usage, performance optimization, upgrade and migration.',
+    'FAQ | GoWind Tags'
+),
+-- ========== 标签17：问题解答 - 中文 ==========
+(
+    NOW() - INTERVAL '20 days', NOW(), 17, 'zh-CN',
+    '问题解答', 'problem-solving',
+    'GoWind CMS 使用过程中常见问题的解决方案，提供分步排查指南及配置示例。',
+    '/images/tags/problem-solving-zh.jpg',
+    'tag-default', '/tags/problem-solving', 'https://gowind.com/tags/problem-solving',
+    '问题解答,GoWind,CMS,故障排查,配置',
+    'GoWind CMS 使用过程中常见问题的解决方案，提供分步排查指南及配置示例。',
+    '问题解答 | GoWind 标签'
+),
+-- ========== 标签17：问题解答 - 英文 ==========
+(
+    NOW() - INTERVAL '20 days', NOW(), 17, 'en-US',
+    'Problem Solving', 'problem-solving',
+    'Solutions to common problems encountered when using GoWind CMS, with step-by-step troubleshooting guides and configuration examples.',
+    '/images/tags/problem-solving-en.jpg',
+    'tag-default', '/en/tags/problem-solving', 'https://gowind.com/en/tags/problem-solving',
+    'Problem Solving,GoWind,CMS,Troubleshooting,Configuration',
+    'Solutions to common problems encountered when using GoWind CMS, with step-by-step troubleshooting guides and configuration examples.',
+    'Problem Solving | GoWind Tags'
+),
+-- ========== 标签18：故障排除 - 中文 ==========
+(
+    NOW() - INTERVAL '15 days', NOW(), 18, 'zh-CN',
+    '故障排除', 'troubleshooting',
+    'GoWind CMS 高级故障排除技术，包含日志分析、性能剖析、数据库调试及网络诊断。',
+    '/images/tags/troubleshooting-zh.jpg',
+    'tag-default', '/tags/troubleshooting', 'https://gowind.com/tags/troubleshooting',
+    '故障排除,GoWind,CMS,调试,日志分析',
+    'GoWind CMS 高级故障排除技术，包含日志分析、性能剖析、数据库调试及网络诊断。',
+    '故障排除 | GoWind 标签'
+),
+-- ========== 标签18：故障排除 - 英文 ==========
+(
+    NOW() - INTERVAL '15 days', NOW(), 18, 'en-US',
+    'Troubleshooting', 'troubleshooting',
+    'Advanced troubleshooting techniques for GoWind CMS, including log analysis, performance profiling, database debugging and network diagnostics.',
+    '/images/tags/troubleshooting-en.jpg',
+    'tag-default', '/en/tags/troubleshooting', 'https://gowind.com/en/tags/troubleshooting',
+    'Troubleshooting,GoWind,CMS,Debugging,Log Analysis',
+    'Advanced troubleshooting techniques for GoWind CMS, including log analysis, performance profiling, database debugging and network diagnostics.',
+    'Troubleshooting | GoWind Tags'
+),
+-- ========== 标签19：性能优化 - 中文 ==========
+(
+    NOW() - INTERVAL '15 days', NOW(), 19, 'zh-CN',
+    '性能优化', 'performance-optimization',
+    'GoWind CMS 性能优化相关内容，涵盖数据库优化、缓存策略、代码层面优化，提升QPS和响应速度。',
+    '/images/tags/performance-zh.jpg',
+    'tag-default', '/tags/performance-optimization', 'https://gowind.com/tags/performance-optimization',
+    '性能优化,QPS,数据库优化,缓存策略,高并发',
+    'GoWind CMS 性能优化相关内容，涵盖数据库优化、缓存策略、代码层面优化，提升QPS和响应速度。',
+    '性能优化 | GoWind 标签'
+),
+-- ========== 标签19：性能优化 - 英文 ==========
+(
+    NOW() - INTERVAL '15 days', NOW(), 19, 'en-US',
+    'Performance Optimization', 'performance-optimization',
+    'Performance optimization content for GoWind CMS, covering database optimization, caching strategies, code-level optimization to improve QPS and response speed.',
+    '/images/tags/performance-en.jpg',
+    'tag-default', '/en/tags/performance-optimization', 'https://gowind.com/en/tags/performance-optimization',
+    'Performance Optimization,QPS,Database Optimization,Caching Strategy,High Concurrency',
+    'Performance optimization content for GoWind CMS, covering database optimization, caching strategies, code-level optimization to improve QPS and response speed.',
+    'Performance Optimization | GoWind Tags'
+),
+-- ========== 标签20：高并发 - 中文 ==========
+(
+    NOW() - INTERVAL '10 days', NOW(), 20, 'zh-CN',
+    '高并发', 'high-concurrency',
+    'GoWind CMS 高并发处理能力，包含负载均衡、连接池、请求队列及水平扩展策略。',
+    '/images/tags/high-concurrency-zh.jpg',
+    'tag-default', '/tags/high-concurrency', 'https://gowind.com/tags/high-concurrency',
+    '高并发,GoWind,CMS,负载均衡,扩展性',
+    'GoWind CMS 高并发处理能力，包含负载均衡、连接池、请求队列及水平扩展策略。',
+    '高并发 | GoWind 标签'
+),
+-- ========== 标签20：高并发 - 英文 ==========
+(
+    NOW() - INTERVAL '10 days', NOW(), 20, 'en-US',
+    'High Concurrency', 'high-concurrency',
+    'High concurrency handling capabilities of GoWind CMS, including load balancing, connection pooling, request queuing and horizontal scaling strategies.',
+    '/images/tags/high-concurrency-en.jpg',
+    'tag-default', '/en/tags/high-concurrency', 'https://gowind.com/en/tags/high-concurrency',
+    'High Concurrency,GoWind,CMS,Load Balancing,Scaling',
+    'High concurrency handling capabilities of GoWind CMS, including load balancing, connection pooling, request queuing and horizontal scaling strategies.',
+    'High Concurrency | GoWind Tags'
 );
-
 
 COMMIT;

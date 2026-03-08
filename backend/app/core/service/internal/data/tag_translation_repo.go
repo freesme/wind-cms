@@ -82,13 +82,30 @@ func (r *TagTranslationRepo) CleanTranslations(
 	return nil
 }
 
-func (r *TagTranslationRepo) ListTranslations(ctx context.Context, tagID uint32) ([]*contentV1.TagTranslation, error) {
-	q := r.entClient.Client().TagTranslation.Query().
+func (r *TagTranslationRepo) ListTranslations(ctx context.Context, tagID uint32, locale string, viewMask *fieldmaskpb.FieldMask) ([]*contentV1.TagTranslation, error) {
+	builder := r.entClient.Client().TagTranslation.Query().
 		Where(
 			tagtranslation.TagIDEQ(tagID),
 		)
 
-	entities, err := q.
+	if len(locale) > 0 {
+		builder.Where(
+			tagtranslation.LanguageCodeEQ(locale),
+		)
+	}
+
+	if viewMask != nil {
+		selectSelector, err := r.repository.BuildSelector(viewMask.GetPaths())
+		if err != nil {
+			r.log.Errorf("build post translation selector failed: %s", err.Error())
+			return nil, contentV1.ErrorInternalServerError("build post translation selector failed")
+		}
+		if selectSelector != nil {
+			builder.Modify(selectSelector)
+		}
+	}
+
+	entities, err := builder.
 		All(ctx)
 	if err != nil {
 		r.log.Errorf("query translations by tag id failed: %s", err.Error())

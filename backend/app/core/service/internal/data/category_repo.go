@@ -7,12 +7,13 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/tx7do/go-crud/pagination"
 	"github.com/tx7do/kratos-bootstrap/bootstrap"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 
 	paginationV1 "github.com/tx7do/go-crud/api/gen/go/pagination/v1"
 	entCrud "github.com/tx7do/go-crud/entgo"
+	"github.com/tx7do/go-crud/pagination"
+	paginationFilter "github.com/tx7do/go-crud/pagination/filter"
 
 	"github.com/tx7do/go-utils/copierutil"
 	"github.com/tx7do/go-utils/mapper"
@@ -134,35 +135,38 @@ func FilterViewMask(excludeFields []string, mask *fieldmaskpb.FieldMask) *fieldm
 	return &fieldmaskpb.FieldMask{Paths: paths}
 }
 
-func (r *CategoryRepo) List(ctx context.Context, req *paginationV1.PagingRequest) (*contentV1.ListCategoryResponse, error) {
-	if req == nil {
-		return nil, contentV1.ErrorBadRequest("invalid parameter")
-	}
-
-	builder := r.entClient.Client().Category.Query()
-
-	filterExpr, err := r.repository.ConvertFilterByPagingRequest(req)
+func (r *CategoryRepo) prepareTranslationMaskFields(req *paginationV1.PagingRequest) (
+	excludeConditions []*paginationV1.FilterCondition,
+	translationMaskFields []string,
+	needQueryTranslation bool,
+	treeTravel bool,
+	err error,
+) {
+	var filterExpr *paginationV1.FilterExpr
+	filterExpr, err = paginationFilter.ConvertFilterByPagingRequest(req)
 	if err != nil {
 		r.log.Errorf("convert filter by paging request failed: %s", err.Error())
-		return nil, err
+		return
 	}
 
-	needQueryTranslation := false
-	translationMaskFields := make([]string, 0)
 	excludeFields := []string{"translations", "available_languages"}
 	if req.FieldMask != nil && len(req.FieldMask.Paths) > 0 {
 		for _, path := range req.FieldMask.Paths {
+			path = strings.TrimSpace(path)
+
 			if path == "translations" || strings.HasPrefix(path, "translations.") {
 				needQueryTranslation = true
 			}
 			if strings.HasPrefix(path, "translations.") {
-				path = strings.TrimSpace(path)
 				excludeFields = append(excludeFields, path)
-
 				path = strings.TrimPrefix(path, "translations.")
 				if len(path) > 0 {
 					translationMaskFields = append(translationMaskFields, path)
 				}
+			}
+			if path == "children" {
+				treeTravel = true
+				excludeFields = append(excludeFields, path)
 			}
 		}
 	} else {
@@ -170,13 +174,38 @@ func (r *CategoryRepo) List(ctx context.Context, req *paginationV1.PagingRequest
 	}
 	req.FieldMask = FilterViewMask(excludeFields, req.FieldMask)
 
-	r.log.Debugf("********************************** excludeFields: %v", excludeFields)
-	r.log.Debugf("**********************************%v", req.FieldMask.GetPaths())
-
-	excludeConditions := pagination.FilterFields(filterExpr, []string{
+	excludeConditions = pagination.FilterFields(filterExpr, []string{
 		"locale",
 	})
 	req.FilteringType = &paginationV1.PagingRequest_FilterExpr{FilterExpr: filterExpr}
+
+	return
+}
+
+func (r *CategoryRepo) buildCategoryTree(items []*contentV1.Category, parentId uint32) []*contentV1.Category {
+	var tree []*contentV1.Category
+	for _, item := range items {
+		if item.GetParentId() == parentId {
+			// 递归查找子节点
+			children := r.buildCategoryTree(items, item.GetId())
+			item.Children = children
+			tree = append(tree, item)
+		}
+	}
+	return tree
+}
+
+func (r *CategoryRepo) List(ctx context.Context, req *paginationV1.PagingRequest) (*contentV1.ListCategoryResponse, error) {
+	if req == nil {
+		return nil, contentV1.ErrorBadRequest("invalid parameter")
+	}
+
+	builder := r.entClient.Client().Category.Query()
+
+	excludeConditions, translationMaskFields, needQueryTranslation, treeTravel, err := r.prepareTranslationMaskFields(req)
+	if err != nil {
+		return nil, err
+	}
 
 	ret, err := r.repository.ListWithPaging(ctx, builder, builder.Clone(), req)
 	if err != nil {
@@ -218,6 +247,14 @@ func (r *CategoryRepo) List(ctx context.Context, req *paginationV1.PagingRequest
 			return nil, contentV1.ErrorInternalServerError("query availed languages failed")
 		}
 		item.AvailableLanguages = languages
+	}
+
+	if treeTravel {
+		roots := r.buildCategoryTree(ret.Items, 0) // 假设根节点ParentId为0
+		return &contentV1.ListCategoryResponse{
+			Total: ret.Total,
+			Items: roots,
+		}, nil
 	}
 
 	return &contentV1.ListCategoryResponse{

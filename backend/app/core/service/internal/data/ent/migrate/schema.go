@@ -2663,8 +2663,6 @@ var (
 		{Name: "author_name", Type: field.TypeString, Nullable: true, Comment: "评论作者名称"},
 		{Name: "password_hash", Type: field.TypeString, Nullable: true, Comment: "密码哈希"},
 		{Name: "custom_fields", Type: field.TypeJSON, Nullable: true, Comment: "自定义字段"},
-		{Name: "category_ids", Type: field.TypeJSON, Nullable: true, Comment: "关联的分类ID列表"},
-		{Name: "tag_ids", Type: field.TypeJSON, Nullable: true, Comment: "关联的标签ID列表"},
 		{Name: "publish_time", Type: field.TypeTime, Nullable: true, Comment: "发布时间"},
 	}
 	// PostsTable holds the schema information for the "posts" table.

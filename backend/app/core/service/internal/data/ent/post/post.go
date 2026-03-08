@@ -55,10 +55,6 @@ const (
 	FieldPasswordHash = "password_hash"
 	// FieldCustomFields holds the string denoting the custom_fields field in the database.
 	FieldCustomFields = "custom_fields"
-	// FieldCategoryIds holds the string denoting the category_ids field in the database.
-	FieldCategoryIds = "category_ids"
-	// FieldTagIds holds the string denoting the tag_ids field in the database.
-	FieldTagIds = "tag_ids"
 	// FieldPublishTime holds the string denoting the publish_time field in the database.
 	FieldPublishTime = "publish_time"
 	// Table holds the table name of the post in the database.
@@ -89,8 +85,6 @@ var Columns = []string{
 	FieldAuthorName,
 	FieldPasswordHash,
 	FieldCustomFields,
-	FieldCategoryIds,
-	FieldTagIds,
 	FieldPublishTime,
 }
 

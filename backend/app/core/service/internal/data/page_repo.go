@@ -99,6 +99,19 @@ func (r *PageRepo) IsExist(ctx context.Context, id uint32) (bool, error) {
 	return exist, nil
 }
 
+func (r *PageRepo) buildPageTree(items []*contentV1.Page, parentId uint32) []*contentV1.Page {
+	var tree []*contentV1.Page
+	for _, item := range items {
+		if item.GetParentId() == parentId {
+			// 递归查找子节点
+			children := r.buildPageTree(items, item.GetId())
+			item.Children = children
+			tree = append(tree, item)
+		}
+	}
+	return tree
+}
+
 func (r *PageRepo) List(ctx context.Context, req *paginationV1.PagingRequest) (*contentV1.ListPageResponse, error) {
 	if req == nil {
 		return nil, contentV1.ErrorBadRequest("invalid parameter")

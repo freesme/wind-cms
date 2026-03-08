@@ -1209,8 +1209,6 @@ var schemaGraph = func() *sqlgraph.Schema {
 			post.FieldAuthorName:      {Type: field.TypeString, Column: post.FieldAuthorName},
 			post.FieldPasswordHash:    {Type: field.TypeString, Column: post.FieldPasswordHash},
 			post.FieldCustomFields:    {Type: field.TypeJSON, Column: post.FieldCustomFields},
-			post.FieldCategoryIds:     {Type: field.TypeJSON, Column: post.FieldCategoryIds},
-			post.FieldTagIds:          {Type: field.TypeJSON, Column: post.FieldTagIds},
 			post.FieldPublishTime:     {Type: field.TypeTime, Column: post.FieldPublishTime},
 		},
 	}
@@ -6953,16 +6951,6 @@ func (f *PostFilter) WherePasswordHash(p entql.StringP) {
 // WhereCustomFields applies the entql json.RawMessage predicate on the custom_fields field.
 func (f *PostFilter) WhereCustomFields(p entql.BytesP) {
 	f.Where(p.Field(post.FieldCustomFields))
-}
-
-// WhereCategoryIds applies the entql json.RawMessage predicate on the category_ids field.
-func (f *PostFilter) WhereCategoryIds(p entql.BytesP) {
-	f.Where(p.Field(post.FieldCategoryIds))
-}
-
-// WhereTagIds applies the entql json.RawMessage predicate on the tag_ids field.
-func (f *PostFilter) WhereTagIds(p entql.BytesP) {
-	f.Where(p.Field(post.FieldTagIds))
 }
 
 // WherePublishTime applies the entql time.Time predicate on the publish_time field.

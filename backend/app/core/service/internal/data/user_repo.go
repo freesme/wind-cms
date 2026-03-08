@@ -8,11 +8,12 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/tx7do/go-crud/pagination"
 	"github.com/tx7do/kratos-bootstrap/bootstrap"
 
 	paginationV1 "github.com/tx7do/go-crud/api/gen/go/pagination/v1"
 	entCrud "github.com/tx7do/go-crud/entgo"
+	"github.com/tx7do/go-crud/pagination"
+	paginationFilter "github.com/tx7do/go-crud/pagination/filter"
 
 	"github.com/tx7do/go-utils/copierutil"
 	"github.com/tx7do/go-utils/mapper"
@@ -297,7 +298,7 @@ func (r *userRepo) List(ctx context.Context, req *paginationV1.PagingRequest) (*
 
 	builder := r.entClient.Client().Debug().User.Query()
 
-	filterExpr, err := r.repository.ConvertFilterByPagingRequest(req)
+	filterExpr, err := paginationFilter.ConvertFilterByPagingRequest(req)
 	if err != nil {
 		r.log.Errorf("convert filter by paging request failed: %s", err.Error())
 		return nil, err

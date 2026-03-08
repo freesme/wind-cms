@@ -477,30 +477,6 @@ func (_u *PostUpdate) ClearCustomFields() *PostUpdate {
 	return _u
 }
 
-// SetCategoryIds sets the "category_ids" field.
-func (_u *PostUpdate) SetCategoryIds(v *[]uint32) *PostUpdate {
-	_u.mutation.SetCategoryIds(v)
-	return _u
-}
-
-// ClearCategoryIds clears the value of the "category_ids" field.
-func (_u *PostUpdate) ClearCategoryIds() *PostUpdate {
-	_u.mutation.ClearCategoryIds()
-	return _u
-}
-
-// SetTagIds sets the "tag_ids" field.
-func (_u *PostUpdate) SetTagIds(v *[]uint32) *PostUpdate {
-	_u.mutation.SetTagIds(v)
-	return _u
-}
-
-// ClearTagIds clears the value of the "tag_ids" field.
-func (_u *PostUpdate) ClearTagIds() *PostUpdate {
-	_u.mutation.ClearTagIds()
-	return _u
-}
-
 // SetPublishTime sets the "publish_time" field.
 func (_u *PostUpdate) SetPublishTime(v time.Time) *PostUpdate {
 	_u.mutation.SetPublishTime(v)
@@ -732,18 +708,6 @@ func (_u *PostUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if _u.mutation.CustomFieldsCleared() {
 		_spec.ClearField(post.FieldCustomFields, field.TypeJSON)
-	}
-	if value, ok := _u.mutation.CategoryIds(); ok {
-		_spec.SetField(post.FieldCategoryIds, field.TypeJSON, value)
-	}
-	if _u.mutation.CategoryIdsCleared() {
-		_spec.ClearField(post.FieldCategoryIds, field.TypeJSON)
-	}
-	if value, ok := _u.mutation.TagIds(); ok {
-		_spec.SetField(post.FieldTagIds, field.TypeJSON, value)
-	}
-	if _u.mutation.TagIdsCleared() {
-		_spec.ClearField(post.FieldTagIds, field.TypeJSON)
 	}
 	if value, ok := _u.mutation.PublishTime(); ok {
 		_spec.SetField(post.FieldPublishTime, field.TypeTime, value)
@@ -1221,30 +1185,6 @@ func (_u *PostUpdateOne) ClearCustomFields() *PostUpdateOne {
 	return _u
 }
 
-// SetCategoryIds sets the "category_ids" field.
-func (_u *PostUpdateOne) SetCategoryIds(v *[]uint32) *PostUpdateOne {
-	_u.mutation.SetCategoryIds(v)
-	return _u
-}
-
-// ClearCategoryIds clears the value of the "category_ids" field.
-func (_u *PostUpdateOne) ClearCategoryIds() *PostUpdateOne {
-	_u.mutation.ClearCategoryIds()
-	return _u
-}
-
-// SetTagIds sets the "tag_ids" field.
-func (_u *PostUpdateOne) SetTagIds(v *[]uint32) *PostUpdateOne {
-	_u.mutation.SetTagIds(v)
-	return _u
-}
-
-// ClearTagIds clears the value of the "tag_ids" field.
-func (_u *PostUpdateOne) ClearTagIds() *PostUpdateOne {
-	_u.mutation.ClearTagIds()
-	return _u
-}
-
 // SetPublishTime sets the "publish_time" field.
 func (_u *PostUpdateOne) SetPublishTime(v time.Time) *PostUpdateOne {
 	_u.mutation.SetPublishTime(v)
@@ -1506,18 +1446,6 @@ func (_u *PostUpdateOne) sqlSave(ctx context.Context) (_node *Post, err error) {
 	}
 	if _u.mutation.CustomFieldsCleared() {
 		_spec.ClearField(post.FieldCustomFields, field.TypeJSON)
-	}
-	if value, ok := _u.mutation.CategoryIds(); ok {
-		_spec.SetField(post.FieldCategoryIds, field.TypeJSON, value)
-	}
-	if _u.mutation.CategoryIdsCleared() {
-		_spec.ClearField(post.FieldCategoryIds, field.TypeJSON)
-	}
-	if value, ok := _u.mutation.TagIds(); ok {
-		_spec.SetField(post.FieldTagIds, field.TypeJSON, value)
-	}
-	if _u.mutation.TagIdsCleared() {
-		_spec.ClearField(post.FieldTagIds, field.TypeJSON)
 	}
 	if value, ok := _u.mutation.PublishTime(); ok {
 		_spec.SetField(post.FieldPublishTime, field.TypeTime, value)

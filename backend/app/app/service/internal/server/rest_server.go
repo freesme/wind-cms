@@ -45,6 +45,12 @@ func NewRestMiddleware(
 		appV1.OperationCategoryServiceList,
 		appV1.OperationCommentServiceList,
 		appV1.OperationTagServiceList,
+
+		appV1.OperationPageServiceGet,
+		appV1.OperationPostServiceGet,
+		appV1.OperationCategoryServiceGet,
+		appV1.OperationCommentServiceGet,
+		appV1.OperationTagServiceGet,
 	)
 
 	ms = append(ms, applogging.Server(

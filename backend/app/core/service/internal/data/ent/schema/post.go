@@ -111,13 +111,13 @@ func (Post) Fields() []ent.Field {
 			Comment("自定义字段").
 			Optional(),
 
-		field.JSON("category_ids", &[]uint32{}).
-			Comment("关联的分类ID列表").
-			Optional(),
-
-		field.JSON("tag_ids", &[]uint32{}).
-			Comment("关联的标签ID列表").
-			Optional(),
+		//field.JSON("category_ids", &[]uint32{}).
+		//	Comment("关联的分类ID列表").
+		//	Optional(),
+		//
+		//field.JSON("tag_ids", &[]uint32{}).
+		//	Comment("关联的标签ID列表").
+		//	Optional(),
 
 		field.Time("publish_time").
 			Comment("发布时间").

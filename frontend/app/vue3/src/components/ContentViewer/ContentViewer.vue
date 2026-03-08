@@ -76,11 +76,23 @@ renderer.heading = (heading) => {
   return `<h${heading.depth} class="heading-anchor">${inlineHtml}</h${heading.depth}>`
 }
 
+function splitUrlAndText(content: string): string {
+  // 匹配 URL 后跟中文逗号和描述
+  return content.replace(/(https?:\/\/[^\s，]+)(，[^ \n]+)/g, (match, url, desc) => {
+    return `[${url}](${url})${desc}`
+  })
+}
+
 // Override link rendering
 renderer.link = (link) => {
   const isExternal = link.href.startsWith('http') || link.href.startsWith('//')
-  const inlineHtml = marked.parseInline(link.text)
-  return `<a href="${link.href}" ${isExternal ? 'target="_blank" rel="noopener noreferrer"' : ''} class="markdown-link">${inlineHtml}</a>`
+  // 只渲染链接部分，后续文本不包裹
+  if (link.href === link.text) {
+    return `<a href="${link.href}" ${isExternal ? 'target="_blank" rel="noopener noreferrer"' : ''} class="markdown-link">${escapeHtml(link.text)}</a>`
+  } else {
+    // 链接文本和 href 不一致，分开渲染
+    return `<a href="${link.href}" ${isExternal ? 'target="_blank" rel="noopener noreferrer"' : ''} class="markdown-link">${escapeHtml(link.href)}</a>${escapeHtml(link.text.replace(link.href, ''))}`
+  }
 }
 
 // Override image rendering
@@ -136,7 +148,9 @@ const renderedContent = computed(() => {
     let html = ''
     switch (props.type) {
       case 'markdown':
-        html = marked.parse(props.content) as string
+        let md = props.content
+        md = splitUrlAndText(md)
+        html = marked.parse(md) as string
         // Process math formulas
         html = processMathFormulas(html)
         return sanitizeHtml(html)

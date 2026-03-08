@@ -1074,26 +1074,6 @@ func CustomFieldsNotNil() predicate.Post {
 	return predicate.Post(sql.FieldNotNull(FieldCustomFields))
 }
 
-// CategoryIdsIsNil applies the IsNil predicate on the "category_ids" field.
-func CategoryIdsIsNil() predicate.Post {
-	return predicate.Post(sql.FieldIsNull(FieldCategoryIds))
-}
-
-// CategoryIdsNotNil applies the NotNil predicate on the "category_ids" field.
-func CategoryIdsNotNil() predicate.Post {
-	return predicate.Post(sql.FieldNotNull(FieldCategoryIds))
-}
-
-// TagIdsIsNil applies the IsNil predicate on the "tag_ids" field.
-func TagIdsIsNil() predicate.Post {
-	return predicate.Post(sql.FieldIsNull(FieldTagIds))
-}
-
-// TagIdsNotNil applies the NotNil predicate on the "tag_ids" field.
-func TagIdsNotNil() predicate.Post {
-	return predicate.Post(sql.FieldNotNull(FieldTagIds))
-}
-
 // PublishTimeEQ applies the EQ predicate on the "publish_time" field.
 func PublishTimeEQ(v time.Time) predicate.Post {
 	return predicate.Post(sql.FieldEQ(FieldPublishTime, v))

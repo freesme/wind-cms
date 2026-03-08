@@ -61,10 +61,6 @@ type Post struct {
 	PasswordHash *string `json:"password_hash,omitempty"`
 	// 自定义字段
 	CustomFields *map[string]string `json:"custom_fields,omitempty"`
-	// 关联的分类ID列表
-	CategoryIds *[]uint32 `json:"category_ids,omitempty"`
-	// 关联的标签ID列表
-	TagIds *[]uint32 `json:"tag_ids,omitempty"`
 	// 发布时间
 	PublishTime  *time.Time `json:"publish_time,omitempty"`
 	selectValues sql.SelectValues
@@ -75,7 +71,7 @@ func (*Post) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case post.FieldCustomFields, post.FieldCategoryIds, post.FieldTagIds:
+		case post.FieldCustomFields:
 			values[i] = new([]byte)
 		case post.FieldDisallowComment, post.FieldInProgress, post.FieldAutoSummary, post.FieldIsFeatured:
 			values[i] = new(sql.NullBool)
@@ -254,22 +250,6 @@ func (_m *Post) assignValues(columns []string, values []any) error {
 					return fmt.Errorf("unmarshal field custom_fields: %w", err)
 				}
 			}
-		case post.FieldCategoryIds:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field category_ids", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &_m.CategoryIds); err != nil {
-					return fmt.Errorf("unmarshal field category_ids: %w", err)
-				}
-			}
-		case post.FieldTagIds:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field tag_ids", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &_m.TagIds); err != nil {
-					return fmt.Errorf("unmarshal field tag_ids: %w", err)
-				}
-			}
 		case post.FieldPublishTime:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field publish_time", values[i])
@@ -415,12 +395,6 @@ func (_m *Post) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("custom_fields=")
 	builder.WriteString(fmt.Sprintf("%v", _m.CustomFields))
-	builder.WriteString(", ")
-	builder.WriteString("category_ids=")
-	builder.WriteString(fmt.Sprintf("%v", _m.CategoryIds))
-	builder.WriteString(", ")
-	builder.WriteString("tag_ids=")
-	builder.WriteString(fmt.Sprintf("%v", _m.TagIds))
 	builder.WriteString(", ")
 	if v := _m.PublishTime; v != nil {
 		builder.WriteString("publish_time=")

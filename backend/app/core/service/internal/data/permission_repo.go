@@ -15,6 +15,7 @@ import (
 
 	paginationV1 "github.com/tx7do/go-crud/api/gen/go/pagination/v1"
 	entCrud "github.com/tx7do/go-crud/entgo"
+	paginationFilter "github.com/tx7do/go-crud/pagination/filter"
 
 	"go-wind-cms/app/core/service/internal/data/ent"
 	"go-wind-cms/app/core/service/internal/data/ent/permission"
@@ -127,7 +128,7 @@ func (r *PermissionRepo) List(ctx context.Context, req *paginationV1.PagingReque
 	builder := r.entClient.Client().Permission.Query()
 
 	if len(limitPermissionIDs) > 0 {
-		filterExpr, err := r.repository.ConvertFilterByPagingRequest(req)
+		filterExpr, err := paginationFilter.ConvertFilterByPagingRequest(req)
 		if err != nil {
 			return nil, err
 		}

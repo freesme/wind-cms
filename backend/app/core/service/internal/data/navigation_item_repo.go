@@ -209,6 +209,19 @@ func (r *NavigationItemRepo) Upsert(ctx context.Context, data *siteV1.Navigation
 	return nil
 }
 
+func (r *NavigationItemRepo) buildNavigationItemTree(items []*siteV1.NavigationItem, parentId uint32) []*siteV1.NavigationItem {
+	var tree []*siteV1.NavigationItem
+	for _, item := range items {
+		if item.GetParentId() == parentId {
+			// 递归查找子节点
+			children := r.buildNavigationItemTree(items, item.GetId())
+			item.Children = children
+			tree = append(tree, item)
+		}
+	}
+	return tree
+}
+
 func (r *NavigationItemRepo) ListItems(ctx context.Context, navigationID uint32, treeTravel bool) ([]*siteV1.NavigationItem, error) {
 	q := r.entClient.Client().NavigationItem.Query().
 		Where(

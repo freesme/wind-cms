@@ -23,7 +23,7 @@ export const useCommentStore = defineStore('comment', () => {
     const noPaging =
       paging?.page === undefined && paging?.pageSize === undefined;
     // @ts-ignore proto generated code is error.
-    return await service.ListComment({
+    return await service.List({
       fieldMask,
       orderBy: makeOrderBy(orderBy),
       query: makeQueryString(formValues, userStore.isTenantUser()),

@@ -72,7 +72,9 @@ async function loadLatestPosts() {
   try {
     const res = await postStore.listPost(
       {page: 1, pageSize: 6},
-      {status: 'POST_STATUS_PUBLISHED'}
+      {status: 'POST_STATUS_PUBLISHED'},
+      "id,status,sort_order,is_featured,visits,likes,comment_count,author_name,available_languages,created_at,translations.id,translations.post_id,translations.language_code,translations.title,translations.summary,translations.thumbnail",
+      ['-createdAt']
     )
     latestPosts.value = res.items || []
   } catch (error) {
@@ -85,7 +87,9 @@ async function loadFeaturedPosts() {
   try {
     const res = await postStore.listPost(
       {page: 1, pageSize: 3},
-      {status: 'POST_STATUS_PUBLISHED', isFeatured: true}
+      {status: 'POST_STATUS_PUBLISHED', isFeatured: true},
+      "id,status,sort_order,is_featured,visits,likes,comment_count,author_name,available_languages,created_at,translations.id,translations.post_id,translations.language_code,translations.title,translations.summary,translations.thumbnail",
+      ['-sortOrder']
     )
     featuredPosts.value = res.items || []
   } catch (error) {
@@ -118,7 +122,7 @@ async function loadPopularTags() {
     // 将标签数据转换为显示格式
     popularTags.value = res.items?.map((tag: contentservicev1_Tag, index: number) => ({
       id: tag.id,
-      name: tag.translations?.[0]?.name || tag.name || $t('page.home.tag_default'),
+      name: tag.translations?.[0]?.name || tag.name || $t('page.tags.tag_untitled'),
       color: tag.color || `hsl(${index * 60}, 100%, 50%)`,
       slug: tag.slug,
     })) || []

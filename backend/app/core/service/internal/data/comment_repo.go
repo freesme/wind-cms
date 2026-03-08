@@ -6,7 +6,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/go-kratos/kratos/v2/log"
-	
+
 	"github.com/tx7do/go-utils/copierutil"
 	"github.com/tx7do/go-utils/mapper"
 
@@ -103,6 +103,19 @@ func (r *CommentRepo) IsExist(ctx context.Context, id uint32) (bool, error) {
 		return false, commentV1.ErrorInternalServerError("query comment exist failed")
 	}
 	return exist, nil
+}
+
+func (r *CommentRepo) buildCommentTree(items []*commentV1.Comment, parentId uint32) []*commentV1.Comment {
+	var tree []*commentV1.Comment
+	for _, item := range items {
+		if item.GetParentId() == parentId {
+			// 递归查找子节点
+			children := r.buildCommentTree(items, item.GetId())
+			item.Children = children
+			tree = append(tree, item)
+		}
+	}
+	return tree
 }
 
 func (r *CommentRepo) List(ctx context.Context, req *paginationV1.PagingRequest) (*commentV1.ListCommentResponse, error) {

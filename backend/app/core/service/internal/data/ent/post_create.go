@@ -308,18 +308,6 @@ func (_c *PostCreate) SetCustomFields(v *map[string]string) *PostCreate {
 	return _c
 }
 
-// SetCategoryIds sets the "category_ids" field.
-func (_c *PostCreate) SetCategoryIds(v *[]uint32) *PostCreate {
-	_c.mutation.SetCategoryIds(v)
-	return _c
-}
-
-// SetTagIds sets the "tag_ids" field.
-func (_c *PostCreate) SetTagIds(v *[]uint32) *PostCreate {
-	_c.mutation.SetTagIds(v)
-	return _c
-}
-
 // SetPublishTime sets the "publish_time" field.
 func (_c *PostCreate) SetPublishTime(v time.Time) *PostCreate {
 	_c.mutation.SetPublishTime(v)
@@ -554,14 +542,6 @@ func (_c *PostCreate) createSpec() (*Post, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.CustomFields(); ok {
 		_spec.SetField(post.FieldCustomFields, field.TypeJSON, value)
 		_node.CustomFields = value
-	}
-	if value, ok := _c.mutation.CategoryIds(); ok {
-		_spec.SetField(post.FieldCategoryIds, field.TypeJSON, value)
-		_node.CategoryIds = value
-	}
-	if value, ok := _c.mutation.TagIds(); ok {
-		_spec.SetField(post.FieldTagIds, field.TypeJSON, value)
-		_node.TagIds = value
 	}
 	if value, ok := _c.mutation.PublishTime(); ok {
 		_spec.SetField(post.FieldPublishTime, field.TypeTime, value)
@@ -1024,42 +1004,6 @@ func (u *PostUpsert) UpdateCustomFields() *PostUpsert {
 // ClearCustomFields clears the value of the "custom_fields" field.
 func (u *PostUpsert) ClearCustomFields() *PostUpsert {
 	u.SetNull(post.FieldCustomFields)
-	return u
-}
-
-// SetCategoryIds sets the "category_ids" field.
-func (u *PostUpsert) SetCategoryIds(v *[]uint32) *PostUpsert {
-	u.Set(post.FieldCategoryIds, v)
-	return u
-}
-
-// UpdateCategoryIds sets the "category_ids" field to the value that was provided on create.
-func (u *PostUpsert) UpdateCategoryIds() *PostUpsert {
-	u.SetExcluded(post.FieldCategoryIds)
-	return u
-}
-
-// ClearCategoryIds clears the value of the "category_ids" field.
-func (u *PostUpsert) ClearCategoryIds() *PostUpsert {
-	u.SetNull(post.FieldCategoryIds)
-	return u
-}
-
-// SetTagIds sets the "tag_ids" field.
-func (u *PostUpsert) SetTagIds(v *[]uint32) *PostUpsert {
-	u.Set(post.FieldTagIds, v)
-	return u
-}
-
-// UpdateTagIds sets the "tag_ids" field to the value that was provided on create.
-func (u *PostUpsert) UpdateTagIds() *PostUpsert {
-	u.SetExcluded(post.FieldTagIds)
-	return u
-}
-
-// ClearTagIds clears the value of the "tag_ids" field.
-func (u *PostUpsert) ClearTagIds() *PostUpsert {
-	u.SetNull(post.FieldTagIds)
 	return u
 }
 
@@ -1605,48 +1549,6 @@ func (u *PostUpsertOne) UpdateCustomFields() *PostUpsertOne {
 func (u *PostUpsertOne) ClearCustomFields() *PostUpsertOne {
 	return u.Update(func(s *PostUpsert) {
 		s.ClearCustomFields()
-	})
-}
-
-// SetCategoryIds sets the "category_ids" field.
-func (u *PostUpsertOne) SetCategoryIds(v *[]uint32) *PostUpsertOne {
-	return u.Update(func(s *PostUpsert) {
-		s.SetCategoryIds(v)
-	})
-}
-
-// UpdateCategoryIds sets the "category_ids" field to the value that was provided on create.
-func (u *PostUpsertOne) UpdateCategoryIds() *PostUpsertOne {
-	return u.Update(func(s *PostUpsert) {
-		s.UpdateCategoryIds()
-	})
-}
-
-// ClearCategoryIds clears the value of the "category_ids" field.
-func (u *PostUpsertOne) ClearCategoryIds() *PostUpsertOne {
-	return u.Update(func(s *PostUpsert) {
-		s.ClearCategoryIds()
-	})
-}
-
-// SetTagIds sets the "tag_ids" field.
-func (u *PostUpsertOne) SetTagIds(v *[]uint32) *PostUpsertOne {
-	return u.Update(func(s *PostUpsert) {
-		s.SetTagIds(v)
-	})
-}
-
-// UpdateTagIds sets the "tag_ids" field to the value that was provided on create.
-func (u *PostUpsertOne) UpdateTagIds() *PostUpsertOne {
-	return u.Update(func(s *PostUpsert) {
-		s.UpdateTagIds()
-	})
-}
-
-// ClearTagIds clears the value of the "tag_ids" field.
-func (u *PostUpsertOne) ClearTagIds() *PostUpsertOne {
-	return u.Update(func(s *PostUpsert) {
-		s.ClearTagIds()
 	})
 }
 
@@ -2361,48 +2263,6 @@ func (u *PostUpsertBulk) UpdateCustomFields() *PostUpsertBulk {
 func (u *PostUpsertBulk) ClearCustomFields() *PostUpsertBulk {
 	return u.Update(func(s *PostUpsert) {
 		s.ClearCustomFields()
-	})
-}
-
-// SetCategoryIds sets the "category_ids" field.
-func (u *PostUpsertBulk) SetCategoryIds(v *[]uint32) *PostUpsertBulk {
-	return u.Update(func(s *PostUpsert) {
-		s.SetCategoryIds(v)
-	})
-}
-
-// UpdateCategoryIds sets the "category_ids" field to the value that was provided on create.
-func (u *PostUpsertBulk) UpdateCategoryIds() *PostUpsertBulk {
-	return u.Update(func(s *PostUpsert) {
-		s.UpdateCategoryIds()
-	})
-}
-
-// ClearCategoryIds clears the value of the "category_ids" field.
-func (u *PostUpsertBulk) ClearCategoryIds() *PostUpsertBulk {
-	return u.Update(func(s *PostUpsert) {
-		s.ClearCategoryIds()
-	})
-}
-
-// SetTagIds sets the "tag_ids" field.
-func (u *PostUpsertBulk) SetTagIds(v *[]uint32) *PostUpsertBulk {
-	return u.Update(func(s *PostUpsert) {
-		s.SetTagIds(v)
-	})
-}
-
-// UpdateTagIds sets the "tag_ids" field to the value that was provided on create.
-func (u *PostUpsertBulk) UpdateTagIds() *PostUpsertBulk {
-	return u.Update(func(s *PostUpsert) {
-		s.UpdateTagIds()
-	})
-}
-
-// ClearTagIds clears the value of the "tag_ids" field.
-func (u *PostUpsertBulk) ClearTagIds() *PostUpsertBulk {
-	return u.Update(func(s *PostUpsert) {
-		s.ClearTagIds()
 	})
 }
 

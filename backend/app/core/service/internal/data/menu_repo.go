@@ -87,6 +87,19 @@ func (r *MenuRepo) Count(ctx context.Context, whereCond []func(s *sql.Selector))
 	return count, nil
 }
 
+func (r *MenuRepo) buildMenuTree(items []*resourceV1.Menu, parentId uint32) []*resourceV1.Menu {
+	var tree []*resourceV1.Menu
+	for _, item := range items {
+		if item.GetParentId() == parentId {
+			// 递归查找子节点
+			children := r.buildMenuTree(items, item.GetId())
+			item.Children = children
+			tree = append(tree, item)
+		}
+	}
+	return tree
+}
+
 func (r *MenuRepo) List(ctx context.Context, req *paginationV1.PagingRequest, treeTravel bool) (*resourceV1.ListMenuResponse, error) {
 	if req == nil {
 		return nil, resourceV1.ErrorBadRequest("invalid parameter")

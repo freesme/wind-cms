@@ -63166,8 +63166,6 @@ type PostMutation struct {
 	author_name      *string
 	password_hash    *string
 	custom_fields    **map[string]string
-	category_ids     **[]uint32
-	tag_ids          **[]uint32
 	publish_time     *time.Time
 	clearedFields    map[string]struct{}
 	done             bool
@@ -64476,104 +64474,6 @@ func (m *PostMutation) ResetCustomFields() {
 	delete(m.clearedFields, post.FieldCustomFields)
 }
 
-// SetCategoryIds sets the "category_ids" field.
-func (m *PostMutation) SetCategoryIds(u *[]uint32) {
-	m.category_ids = &u
-}
-
-// CategoryIds returns the value of the "category_ids" field in the mutation.
-func (m *PostMutation) CategoryIds() (r *[]uint32, exists bool) {
-	v := m.category_ids
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCategoryIds returns the old "category_ids" field's value of the Post entity.
-// If the Post object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PostMutation) OldCategoryIds(ctx context.Context) (v *[]uint32, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCategoryIds is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCategoryIds requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCategoryIds: %w", err)
-	}
-	return oldValue.CategoryIds, nil
-}
-
-// ClearCategoryIds clears the value of the "category_ids" field.
-func (m *PostMutation) ClearCategoryIds() {
-	m.category_ids = nil
-	m.clearedFields[post.FieldCategoryIds] = struct{}{}
-}
-
-// CategoryIdsCleared returns if the "category_ids" field was cleared in this mutation.
-func (m *PostMutation) CategoryIdsCleared() bool {
-	_, ok := m.clearedFields[post.FieldCategoryIds]
-	return ok
-}
-
-// ResetCategoryIds resets all changes to the "category_ids" field.
-func (m *PostMutation) ResetCategoryIds() {
-	m.category_ids = nil
-	delete(m.clearedFields, post.FieldCategoryIds)
-}
-
-// SetTagIds sets the "tag_ids" field.
-func (m *PostMutation) SetTagIds(u *[]uint32) {
-	m.tag_ids = &u
-}
-
-// TagIds returns the value of the "tag_ids" field in the mutation.
-func (m *PostMutation) TagIds() (r *[]uint32, exists bool) {
-	v := m.tag_ids
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldTagIds returns the old "tag_ids" field's value of the Post entity.
-// If the Post object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PostMutation) OldTagIds(ctx context.Context) (v *[]uint32, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldTagIds is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldTagIds requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldTagIds: %w", err)
-	}
-	return oldValue.TagIds, nil
-}
-
-// ClearTagIds clears the value of the "tag_ids" field.
-func (m *PostMutation) ClearTagIds() {
-	m.tag_ids = nil
-	m.clearedFields[post.FieldTagIds] = struct{}{}
-}
-
-// TagIdsCleared returns if the "tag_ids" field was cleared in this mutation.
-func (m *PostMutation) TagIdsCleared() bool {
-	_, ok := m.clearedFields[post.FieldTagIds]
-	return ok
-}
-
-// ResetTagIds resets all changes to the "tag_ids" field.
-func (m *PostMutation) ResetTagIds() {
-	m.tag_ids = nil
-	delete(m.clearedFields, post.FieldTagIds)
-}
-
 // SetPublishTime sets the "publish_time" field.
 func (m *PostMutation) SetPublishTime(t time.Time) {
 	m.publish_time = &t
@@ -64657,7 +64557,7 @@ func (m *PostMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PostMutation) Fields() []string {
-	fields := make([]string, 0, 24)
+	fields := make([]string, 0, 22)
 	if m.created_at != nil {
 		fields = append(fields, post.FieldCreatedAt)
 	}
@@ -64721,12 +64621,6 @@ func (m *PostMutation) Fields() []string {
 	if m.custom_fields != nil {
 		fields = append(fields, post.FieldCustomFields)
 	}
-	if m.category_ids != nil {
-		fields = append(fields, post.FieldCategoryIds)
-	}
-	if m.tag_ids != nil {
-		fields = append(fields, post.FieldTagIds)
-	}
 	if m.publish_time != nil {
 		fields = append(fields, post.FieldPublishTime)
 	}
@@ -64780,10 +64674,6 @@ func (m *PostMutation) Field(name string) (ent.Value, bool) {
 		return m.PasswordHash()
 	case post.FieldCustomFields:
 		return m.CustomFields()
-	case post.FieldCategoryIds:
-		return m.CategoryIds()
-	case post.FieldTagIds:
-		return m.TagIds()
 	case post.FieldPublishTime:
 		return m.PublishTime()
 	}
@@ -64837,10 +64727,6 @@ func (m *PostMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldPasswordHash(ctx)
 	case post.FieldCustomFields:
 		return m.OldCustomFields(ctx)
-	case post.FieldCategoryIds:
-		return m.OldCategoryIds(ctx)
-	case post.FieldTagIds:
-		return m.OldTagIds(ctx)
 	case post.FieldPublishTime:
 		return m.OldPublishTime(ctx)
 	}
@@ -64998,20 +64884,6 @@ func (m *PostMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCustomFields(v)
-		return nil
-	case post.FieldCategoryIds:
-		v, ok := value.(*[]uint32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCategoryIds(v)
-		return nil
-	case post.FieldTagIds:
-		v, ok := value.(*[]uint32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetTagIds(v)
 		return nil
 	case post.FieldPublishTime:
 		v, ok := value.(time.Time)
@@ -65212,12 +65084,6 @@ func (m *PostMutation) ClearedFields() []string {
 	if m.FieldCleared(post.FieldCustomFields) {
 		fields = append(fields, post.FieldCustomFields)
 	}
-	if m.FieldCleared(post.FieldCategoryIds) {
-		fields = append(fields, post.FieldCategoryIds)
-	}
-	if m.FieldCleared(post.FieldTagIds) {
-		fields = append(fields, post.FieldTagIds)
-	}
 	if m.FieldCleared(post.FieldPublishTime) {
 		fields = append(fields, post.FieldPublishTime)
 	}
@@ -65298,12 +65164,6 @@ func (m *PostMutation) ClearField(name string) error {
 	case post.FieldCustomFields:
 		m.ClearCustomFields()
 		return nil
-	case post.FieldCategoryIds:
-		m.ClearCategoryIds()
-		return nil
-	case post.FieldTagIds:
-		m.ClearTagIds()
-		return nil
 	case post.FieldPublishTime:
 		m.ClearPublishTime()
 		return nil
@@ -65377,12 +65237,6 @@ func (m *PostMutation) ResetField(name string) error {
 		return nil
 	case post.FieldCustomFields:
 		m.ResetCustomFields()
-		return nil
-	case post.FieldCategoryIds:
-		m.ResetCategoryIds()
-		return nil
-	case post.FieldTagIds:
-		m.ResetTagIds()
 		return nil
 	case post.FieldPublishTime:
 		m.ResetPublishTime()
