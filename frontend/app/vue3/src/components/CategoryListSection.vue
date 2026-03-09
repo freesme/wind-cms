@@ -130,7 +130,8 @@ function handleViewCategory(id: number) {
 }
 
 function handleViewAll() {
-  router.push('/category')
+  // 强制刷新路由，即使路径相同也会重新加载
+  router.push({ path: '/category', query: { t: Date.now() } })
 }
 
 async function loadCategories() {

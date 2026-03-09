@@ -38,7 +38,7 @@ const posts = ref<contentservicev1_Post[]>([]);
 const loading = ref(false);
 
 async function fetchPosts() {
-  console.log('PostList fetching...')
+  // console.log('PostList fetching...')
 
   loading.value = true;
   try {

@@ -163,9 +163,8 @@ function handleViewPost() {
 
     .post-meta {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
+      flex-wrap: wrap;
+      gap: 16px;
       font-size: 13px;
       color: var(--color-text-secondary);
       padding-top: 12px;
