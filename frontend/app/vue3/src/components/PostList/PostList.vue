@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import {ref, watch, defineProps, defineExpose} from 'vue';
-import { isEqual } from 'lodash-es';
+import {ref, defineProps, defineExpose} from 'vue';
 
 import {usePostStore} from '@/stores';
 import {$t} from '@/locales';
@@ -29,6 +28,8 @@ const props = withDefaults(defineProps<Props>(), {
   from: 'post-list',
   categoryId: undefined
 });
+
+defineExpose({reload});
 
 const postStore = usePostStore();
 const posts = ref<contentservicev1_Post[]>([]);
@@ -59,39 +60,11 @@ function reload() {
   fetchPosts();
 }
 
-defineExpose({ reload });
-
-let lastParams = {
-  queryParams: undefined,
-  fieldMask: undefined,
-  orderBy: undefined,
-  page: undefined,
-  pageSize: undefined,
-};
-
-watch(
-  () => ({
-    queryParams: props.queryParams,
-    fieldMask: props.fieldMask,
-    orderBy: props.orderBy,
-    page: props.page,
-    pageSize: props.pageSize,
-  }),
-  (newVal) => {
-    if (!isEqual(newVal, lastParams)) {
-      lastParams = JSON.parse(JSON.stringify(newVal));
-      fetchPosts();
-    }
-  },
-  { immediate: true }
-);
-
 useLanguageChangeEffect(() => {
-  console.log('PostList useLanguageChangeEffect...')
-  fetchPosts();
+  // 父页面负责调用 reload
 }, {
-  immediate: false,      // 是否立即执行一次
-  autoCleanup: true,    // 是否自动清理
+  immediate: false,
+  autoCleanup: true,
 });
 </script>
 

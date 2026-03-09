@@ -27,6 +27,9 @@ const categories = ref<contentservicev1_Category[]>([])
 const popularTags = ref<contentservicev1_Tag[]>([])
 const loading = ref(false)
 
+const featuredPostList = ref();
+const latestPostList = ref();
+
 const displayTags = computed(() => {
   return popularTags.value.map((tag: contentservicev1_Tag, index: number) => ({
     id: tag.id,
@@ -156,12 +159,23 @@ const features = computed(() => {
   ]
 })
 
+// 用于Featured Posts的props，确保对象引用稳定，避免重复API调用
+const featuredQueryParams = ref({
+  status: 'POST_STATUS_PUBLISHED',
+  isFeatured: true
+})
+const featuredOrderBy = ref(['-sortOrder'])
+const featuredFieldMask = ref('id,status,sort_order,is_featured,visits,likes,comment_count,author_name,available_languages,created_at,translations.id,translations.post_id,translations.language_code,translations.title,translations.summary,translations.thumbnail')
+
 onMounted(async () => {
   loading.value = true
   await Promise.all([
     loadCategories(),
     loadPopularTags(),
+    featuredPostList.value?.reload(),
+    latestPostList.value?.reload(),
   ])
+
   loading.value = false
 
   // 数据加载完成后初始化滚动动画
@@ -276,34 +290,19 @@ onUnmounted(() => {
           {{ $t('page.home.view_all') }} →
         </n-button>
       </div>
-      <!-- Loading Skeleton -->
-      <div v-if="loading" class="featured-grid">
-        <div v-for="i in 3" :key="i" class="featured-card">
-          <n-skeleton height="220px"/>
-          <div class="featured-content" style="padding: 24px;">
-            <n-skeleton :width="'80%'" size="medium" style="margin-bottom: 12px;"/>
-            <n-skeleton :width="'90%'" size="small" style="margin-bottom: 16px;"/>
-            <div class="featured-meta" style="display: flex; gap: 12px;">
-              <n-skeleton :width="60" size="small"/>
-              <n-skeleton :width="60" size="small"/>
-              <n-skeleton :width="60" size="small"/>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Loaded Content -->
-      <div v-else class="featured-grid">
+      <!-- 直接渲染 PostList，由 PostList 控制 skeleton -->
+      <div class="featured-grid">
         <PostList
-          :query-params="{status: 'POST_STATUS_PUBLISHED', isFeatured: true}"
-          :field-mask="'id,status,sort_order,is_featured,visits,likes,comment_count,author_name,available_languages,created_at,translations.id,translations.post_id,translations.language_code,translations.title,translations.summary,translations.thumbnail'"
-          :order-by="['-sortOrder']"
+          ref="featuredPostList"
+          :query-params="featuredQueryParams"
+          :field-mask="featuredFieldMask"
+          :order-by="featuredOrderBy"
           :page="1"
           :page-size="3"
-          :show-skeleton="false"
+          :show-skeleton="true"
           from="home"
         ></PostList>
       </div>
-
       <!-- Scroll Indicator -->
       <div class="scroll-indicator">
         <div class="scroll-indicator-content">
@@ -451,6 +450,7 @@ onUnmounted(() => {
         </n-button>
       </div>
       <PostList
+        ref="latestPostList"
         :query-params="{status: 'POST_STATUS_PUBLISHED'}"
         :field-mask="'id,status,sort_order,is_featured,visits,likes,comment_count,author_name,available_languages,created_at,translations.id,translations.post_id,translations.language_code,translations.title,translations.summary,translations.thumbnail'"
         :order-by="['-createdAt']"
@@ -2575,7 +2575,7 @@ onUnmounted(() => {
   padding: 3rem 0;
   background: var(--color-surface);
 
-  // ✅ 新增：覆盖 PostList 组件的 posts-grid 样式
+  // 覆盖 PostList 组件的 posts-grid 样式
   :deep(.posts-grid) {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));

@@ -48,6 +48,8 @@ const post = ref<contentservicev1_Post | null>(null)
 const tableOfContents = ref<TocItem[]>([])
 const activeHeading = ref<string>('')
 
+const relatedPostList = ref(null)
+
 const loading = ref(false)
 const showBackToTop = ref(false)
 const isLiked = ref(false)
@@ -238,6 +240,8 @@ onMounted(async () => {
   }, 500)
 
   window.addEventListener('scroll', throttledScroll)
+
+  relatedPostList.value?.reload();
 })
 
 onBeforeUnmount(() => {
@@ -471,6 +475,7 @@ useLanguageChangeEffect(loadPost, {
           </h2>
         </div>
         <PostList
+          ref="relatedPostList"
           :query-params="{status: 'POST_STATUS_PUBLISHED', id__not: postId, category_ids__in: post?.categoryIds}"
           :field-mask="'id,status,sort_order,is_featured,visits,likes,comment_count,author_name,available_languages,created_at,translations.id,translations.post_id,translations.language_code,translations.title,translations.summary,translations.thumbnail'"
           :order-by="['-sortOrder']"
