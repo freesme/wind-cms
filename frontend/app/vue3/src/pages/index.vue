@@ -121,6 +121,11 @@ const featuredQueryParams = ref({
 const featuredOrderBy = ref(['-sortOrder'])
 const featuredFieldMask = ref('id,status,sort_order,is_featured,visits,likes,comment_count,author_name,available_languages,created_at,translations.id,translations.post_id,translations.language_code,translations.title,translations.summary,translations.thumbnail')
 
+function handleEnterCategoryPage() {
+  // 强制刷新路由，即使路径相同也会重新加载
+  router.push({path: '/category', query: {t: Date.now()}})
+}
+
 onMounted(async () => {
   loading.value = true
   await Promise.all([
@@ -260,9 +265,17 @@ onUnmounted(() => {
 
     <!-- Categories Section -->
     <section class="categories-section-wrapper scroll-reveal">
+      <div class="section-header">
+        <h2 class="section-title">
+          <XIcon name="carbon:folder-details" :size="28"
+                 style="color: #6366f1; margin-right: 8px;"/>
+          {{ $t('page.home.categories') }}
+        </h2>
+        <n-button text @click="handleEnterCategoryPage()">
+          {{ $t('page.home.view_all') }} →
+        </n-button>
+      </div>
       <CategoryListSection
-        :title="$t('page.home.categories')"
-        :showViewAll="true"
         :showCarousel="true"
         :pageSize="8"
       >
@@ -401,6 +414,18 @@ onUnmounted(() => {
   margin-left: auto;
   margin-right: auto;
   padding: 0 2rem;
+
+  :deep(.n-button) {
+    color: #6366f1 !important;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+      color: #4f46e5 !important;
+      background: rgba(99, 102, 241, 0.08);
+    }
+  }
 }
 
 .section-title {
@@ -999,18 +1024,27 @@ onUnmounted(() => {
 }
 
 html.dark {
-  .categories-section {
-    background: #181a20;
-    padding: 3rem 0;
+  .section-header {
+    :deep(.n-button) {
+      color: #a5b4fc !important;
 
-    .section-header {
-      max-width: 1200px;
-      margin-left: auto;
-      margin-right: auto;
-      padding: 0 2rem;
-      margin-bottom: 2rem;
+      &:hover {
+        color: #c7d2fe !important;
+        background: rgba(165, 180, 252, 0.08);
+      }
     }
+  }
 
+  .section-title {
+    background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 8px #23263a44;
+    color: #e0e7ef;
+  }
+
+  .categories-section {
     .categories-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
