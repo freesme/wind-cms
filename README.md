@@ -6,11 +6,13 @@
 
 ## 演示地址
 
-> 后端管理前端地址：<https://admin.cms.gowind.cloud>
->
+> 后端管理前端地址：<https://admin.cms.gowind.cloud>  
 > 后端API Swagger地址：<https://api.admin.cms.gowind.cloud/docs/>
 >
 > 默认账号密码: `admin` / `admin`
+>
+> Vue前端地址：<https://cms.gowind.cloud>  
+> 前端API Swagger地址：<https://api.cms.gowind.cloud/docs/>
 
 ## 风行·核心技术栈
 
