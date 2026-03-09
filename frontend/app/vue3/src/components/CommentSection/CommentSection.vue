@@ -240,7 +240,7 @@ onMounted(() => {
             <n-input
               v-model:value="newComment.authorEmail"
               :placeholder="$t('comment.email') + ' *'"
-              type="email"
+              type="text"
               size="large"
               :disabled="submitting"
               clearable

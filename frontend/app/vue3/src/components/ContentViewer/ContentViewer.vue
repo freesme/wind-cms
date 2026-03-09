@@ -78,7 +78,7 @@ renderer.heading = (heading) => {
 
 function splitUrlAndText(content: string): string {
   // 匹配 URL 后跟中文逗号和描述
-  return content.replace(/(https?:\/\/[^\s，]+)(，[^ \n]+)/g, (match, url, desc) => {
+  return content.replace(/(https?:\/\/[^\s，]+)(，[^ \n]+)/g, (_match, url, desc) => {
     return `[${url}](${url})${desc}`
   })
 }

@@ -117,8 +117,8 @@ importers:
         specifier: ^1.11.19
         version: 1.11.19
       dompurify:
-        specifier: ^3.3.1
-        version: 3.3.1
+        specifier: ^3.3.2
+        version: 3.3.2
       highlight.js:
         specifier: ^11.11.1
         version: 11.11.1
@@ -271,8 +271,8 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0
       naive-ui:
-        specifier: ^2.43.2
-        version: 2.43.2(vue@3.5.29(typescript@5.9.3))
+        specifier: ^2.44.1
+        version: 2.44.1(vue@3.5.29(typescript@5.9.3))
       rollup:
         specifier: ^4.59.0
         version: 4.59.0
@@ -2356,9 +2356,6 @@ packages:
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
-  '@types/katex@0.16.8':
-    resolution: {integrity: sha512-trgaNyfU+Xh2Tc+ABIb44a5AYUpicB3uwirOioeOkNPPbmgRNtcWyDeeFRzjPZENO9Vq8gvVqfhaaXWLlevVwg==}
-
   '@types/linkify-it@5.0.0':
     resolution: {integrity: sha512-sVDA58zAw4eWAffKOaQH5/5j3XeayukzDk+ewSsnv3p4yJEZHCCzMDiZM8e0OUrRvmpGZ85jf4yDHkHsgBNr9Q==}
 
@@ -3500,14 +3497,15 @@ packages:
     resolution: {integrity: sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==}
     engines: {node: '>=6.0.0'}
 
-  dompurify@2.5.8:
-    resolution: {integrity: sha512-o1vSNgrmYMQObbSSvF/1brBYEQPHhV1+gsmrusO7/GXtp1T9rCS8cXFqVxK/9crT1jA6Ccv+5MTSjBNqr7Sovw==}
+  dompurify@2.5.9:
+    resolution: {integrity: sha512-i6mvVmWN4xo9LrhCOZrDgSs9noW6nOahbrmzjRbPF36YPyj5Ue5lgok0MHDWkG7xzpWFO2OYttXdzM7rJxHvNA==}
 
   dompurify@3.2.7:
     resolution: {integrity: sha512-WhL/YuveyGXJaerVlMYGWhvQswa7myDG17P7Vu65EWC05o8vfeNbvNf4d/BOvH99+ZW+LlQsc1GDKMa1vNK6dw==}
 
-  dompurify@3.3.1:
-    resolution: {integrity: sha512-qkdCKzLNtrgPFP1Vo+98FRzJnBRGe4ffyCea9IwHB1fyxPOeNTHpLKYGd4Uk9xvNoH0ZoOjwZxNptyMwqrId1Q==}
+  dompurify@3.3.2:
+    resolution: {integrity: sha512-6obghkliLdmKa56xdbLOpUZ43pAR6xFy1uOrxBaIDjT+yaRuuybLjGS9eVBoSR/UPU5fq3OXClEHLJNGvbxKpQ==}
+    engines: {node: '>=20'}
 
   dotenv@16.6.1:
     resolution: {integrity: sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==}
@@ -4855,8 +4853,9 @@ packages:
   mutation-observer@1.0.3:
     resolution: {integrity: sha512-M/O/4rF2h776hV7qGMZUH3utZLO/jK7p8rnNgGkjKUw8zCGjRQPxB8z6+5l8+VjRUQ3dNYu4vjqXYLr+U8ZVNA==}
 
-  naive-ui@2.43.2:
-    resolution: {integrity: sha512-YlLMnGrwGTOc+zMj90sG3ubaH5/7czsgLgGcjTLA981IUaz8r6t4WIujNt8r9PNr+dqv6XNEr0vxkARgPPjfBQ==}
+  naive-ui@2.44.1:
+    resolution: {integrity: sha512-reo8Esw0p58liZwbUutC7meW24Xbn3EwNv91zReWKm2W4JPu+zfgJRn/F7aO0BFmvN+h2brA2M5lRvYqLq4kuA==}
+    engines: {node: '>=20'}
     peerDependencies:
       vue: ^3.0.0
 
@@ -8371,7 +8370,7 @@ snapshots:
 
   '@toast-ui/editor@3.2.2':
     dependencies:
-      dompurify: 2.5.8
+      dompurify: 2.5.9
       prosemirror-commands: 1.7.1
       prosemirror-history: 1.5.0
       prosemirror-inputrules: 1.5.1
@@ -8520,8 +8519,6 @@ snapshots:
       '@types/unist': 2.0.11
 
   '@types/json-schema@7.0.15': {}
-
-  '@types/katex@0.16.8': {}
 
   '@types/linkify-it@5.0.0': {}
 
@@ -9899,13 +9896,13 @@ snapshots:
     dependencies:
       esutils: 2.0.3
 
-  dompurify@2.5.8: {}
+  dompurify@2.5.9: {}
 
   dompurify@3.2.7:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
-  dompurify@3.3.1:
+  dompurify@3.3.2:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
@@ -11346,7 +11343,7 @@ snapshots:
       d3-sankey: 0.12.3
       dagre-d3-es: 7.0.13
       dayjs: 1.11.19
-      dompurify: 3.3.1
+      dompurify: 3.3.2
       katex: 0.16.33
       khroma: 2.1.0
       lodash-es: 4.17.23
@@ -11442,11 +11439,10 @@ snapshots:
 
   mutation-observer@1.0.3: {}
 
-  naive-ui@2.43.2(vue@3.5.29(typescript@5.9.3)):
+  naive-ui@2.44.1(vue@3.5.29(typescript@5.9.3)):
     dependencies:
       '@css-render/plugin-bem': 0.15.14(css-render@0.15.14)
       '@css-render/vue3-ssr': 0.15.14(vue@3.5.29(typescript@5.9.3))
-      '@types/katex': 0.16.8
       '@types/lodash': 4.17.24
       '@types/lodash-es': 4.17.12
       async-validator: 4.2.5

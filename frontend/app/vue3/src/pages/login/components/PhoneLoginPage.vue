@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {onBeforeUnmount, ref} from 'vue';
 import {$t} from '@/locales';
-import {useAuthStore} from "@/stores";
+// import {useAuthStore} from "@/stores";
 
-const authStore = useAuthStore();
+// const authStore = useAuthStore();
 
 const phone = ref('');
 const verificationCode = ref('');
