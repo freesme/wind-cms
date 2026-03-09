@@ -98,13 +98,6 @@ async function loadPost() {
   }
 }
 
-// 加载所有数据
-async function loadAllData() {
-  await Promise.all([
-    loadPost(),
-  ]);
-}
-
 function handleBack() {
   const from = route.query.from as string
   const categoryId = route.query.categoryId as string
@@ -258,7 +251,7 @@ watch(() => displayContent.value, () => {
 watch(
   () => route.params.id,
   async () => {
-    await loadAllData()
+    await loadPost()
     // 重新生成目录
     setTimeout(() => {
       generateTableOfContents()
@@ -273,7 +266,7 @@ watch(
 )
 
 // 监听语言切换，自动重新加载数据
-useLanguageChangeEffect(loadAllData, {
+useLanguageChangeEffect(loadPost, {
   immediate: false,    // 已经在 onMounted 中加载，不需要立即执行
   autoCleanup: true,   // 组件卸载时自动取消订阅
 });
@@ -478,7 +471,7 @@ useLanguageChangeEffect(loadAllData, {
           </h2>
         </div>
         <PostList
-          :query-params="{status: 'POST_STATUS_PUBLISHED', category_ids__in: post?.categoryIds}"
+          :query-params="{status: 'POST_STATUS_PUBLISHED', id__not: postId, category_ids__in: post?.categoryIds}"
           :field-mask="'id,status,sort_order,is_featured,visits,likes,comment_count,author_name,available_languages,created_at,translations.id,translations.post_id,translations.language_code,translations.title,translations.summary,translations.thumbnail'"
           :order-by="['-sortOrder']"
           :page="1"

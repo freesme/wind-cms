@@ -12,13 +12,17 @@ TRUNCATE TABLE public.sys_org_units,
                public.internal_message_categories
 RESTART IDENTITY CASCADE;
 
--- 测试租户
+-- ----------------------------
+-- 插入 sys_tenants 租户
+-- ----------------------------
 INSERT INTO public.sys_tenants(id, name, code, type, audit_status, status, admin_user_id, created_at)
 VALUES (1, '测试租户', 'super', 'PAID', 'APPROVED', 'ON', 2, now())
 ;
 SELECT setval('sys_tenants_id_seq', (SELECT MAX(id) FROM sys_tenants));
 
--- 插入租户管理员用户
+-- ----------------------------
+-- 插入 sys_users 租户管理员用户
+-- ----------------------------
 INSERT INTO public.sys_users (id, tenant_id, username, nickname, realname, email, gender, created_at)
 VALUES
     -- 2. 租户管理员（TENANT_ADMIN）
@@ -26,7 +30,9 @@ VALUES
 ;
 SELECT setval('sys_users_id_seq', (SELECT MAX(id) FROM sys_users));
 
--- 插入4个用户的凭证（密码统一为admin，哈希值与原admin一致，方便测试）
+-- ----------------------------
+-- 插入 sys_user_credentials 用户凭证（密码统一为admin，哈希值与原admin一致，方便测试）
+-- ----------------------------
 INSERT INTO public.sys_user_credentials (user_id, identity_type, identifier, credential_type, credential, status,
                                          is_primary, created_at)
 VALUES
@@ -36,7 +42,9 @@ VALUES
 ;
 SELECT setval('sys_user_credentials_id_seq', (SELECT MAX(id) FROM sys_user_credentials));
 
--- 组织架构单元
+-- ----------------------------
+-- 插入 sys_org_units 组织架构单元
+-- ----------------------------
 INSERT INTO public.sys_org_units (id, tenant_id, parent_id, type, name, code, description, path, sort_order, leader_id, status, created_at)
 VALUES
     (1, 1, NULL, 'COMPANY', 'XX集团总部', 'HEADQUARTERS', '集团核心管理机构，统筹全集团战略规划、业务管控及资源调配', '/1', 1, 1, 'ON', now()),
@@ -56,7 +64,9 @@ VALUES
     (15, 1, 14, 'TEAM', '客服一组', 'CS-1', '承接华南区域客户服务、售后问题处理及客户关系维护', '/1/14/15', 1, 20, 'ON', now())
 ;
 
--- 岗位数据
+-- ----------------------------
+-- 插入 sys_positions 岗位数据
+-- ----------------------------
 INSERT INTO public.sys_positions (id, tenant_id, type, name, code, org_unit_id, reports_to_position_id, description, job_family, job_grade, level, headcount, is_key_position, status, sort_order, created_at)
 VALUES
     (1, 1, 'LEADER', '技术总监', 'TECH-DIRECTOR-001', 2, NULL, '负责公司整体技术战略规划、团队管理及核心技术决策', 'TECH', 1, 1, 1, true, 'ON', 1, now()),
@@ -82,30 +92,18 @@ VALUES
 ;
 SELECT setval('sys_positions_id_seq', (SELECT COALESCE(MAX(id), 1) FROM sys_positions));
 
--- 用户-租户关联关系
-INSERT INTO public.sys_memberships (id, tenant_id, user_id, org_unit_id, position_id, role_id, is_primary, status)
-VALUES
-    -- 租户管理员（TENANT_ADMIN）
-    (2, 1, 2, null, null, 2, true, 'ACTIVE')
-;
-SELECT setval('sys_memberships_id_seq', (SELECT MAX(id) FROM sys_memberships));
-
--- 租户成员-角色关联关系
-INSERT INTO sys_membership_roles (id, membership_id, tenant_id, role_id, is_primary, status)
-VALUES
-    -- 租户管理员（TENANT_ADMIN）
-    (2, 2, 1, 2, true, 'ACTIVE')
-;
-SELECT setval('sys_membership_roles_id_seq', (SELECT MAX(id) FROM sys_membership_roles));
-
--- 调度任务
+-- ----------------------------
+-- 插入 sys_tasks 调度任务
+-- ----------------------------
 INSERT INTO public.sys_tasks(type, type_name, task_payload, cron_spec, enable, created_at)
 VALUES
     ('PERIODIC', 'backup', '{ "name": "test"}', '0 * * * *', true, now())
 ;
 SELECT setval('sys_tasks_id_seq', (SELECT MAX(id) FROM sys_tasks));
 
--- 登录策略
+-- ----------------------------
+-- 插入 sys_login_policies 登录策略
+-- ----------------------------
 INSERT INTO public.sys_login_policies(id, target_id, type, method, value, reason, created_at)
 VALUES
     (1, 1, 'BLACKLIST', 'IP', '127.0.0.1', '无理由', now()),
@@ -113,7 +111,9 @@ VALUES
 ;
 SELECT setval('sys_login_policies_id_seq', (SELECT MAX(id) FROM sys_login_policies));
 
--- 插入字典类型
+-- ----------------------------
+-- 插入 sys_dict_types 字典类型
+-- ----------------------------
 INSERT INTO public.sys_dict_types (
     id, type_code, sort_order, is_enabled, created_at, updated_at
 ) VALUES
@@ -125,7 +125,9 @@ INSERT INTO public.sys_dict_types (
 ;
 SELECT setval('sys_dict_types_id_seq', (SELECT MAX(id) FROM sys_dict_types));
 
--- 插入字典类型国际化（zh-CN）
+-- ----------------------------
+-- 插入 sys_dict_type_i18n 字典类型国际化
+-- ----------------------------
 INSERT INTO public.sys_dict_type_i18n (
     type_id, language_code, type_name, description, tenant_id, created_at, updated_at
 ) VALUES
@@ -143,7 +145,9 @@ INSERT INTO public.sys_dict_type_i18n (
 ;
 SELECT setval('sys_dict_type_i18n_id_seq', (SELECT MAX(id) FROM sys_dict_type_i18n));
 
--- 插入字典条目
+-- ----------------------------
+-- 插入 sys_dict_entries 字典条目
+-- ----------------------------
 INSERT INTO public.sys_dict_entries (
     id, type_id, entry_value, numeric_value, sort_order, is_enabled, created_at, updated_at, tenant_id
 ) VALUES
@@ -173,7 +177,9 @@ INSERT INTO public.sys_dict_entries (
 ;
 SELECT setval('sys_dict_entries_id_seq', (SELECT MAX(id) FROM sys_dict_entries));
 
--- 插入字典条目国际化（zh-CN）
+-- ----------------------------
+-- 插入 sys_dict_entry_i18n 字典条目国际化
+-- ----------------------------
 INSERT INTO public.sys_dict_entry_i18n (
     entry_id, language_code, entry_label, description, sort_order, tenant_id, created_at, updated_at
 ) VALUES
@@ -231,7 +237,9 @@ INSERT INTO public.sys_dict_entry_i18n (
 ;
 SELECT setval('sys_dict_entry_i18n_id_seq', (SELECT MAX(id) FROM sys_dict_entry_i18n));
 
--- 站内信分类
+-- ----------------------------
+-- 插入 internal_message_categories 站内信分类
+-- ----------------------------
 INSERT INTO public.internal_message_categories (id, code, name, remark, sort_order, is_enabled, created_at)
 VALUES
     -- 订单相关分类（原主分类+子分类平级展示）
@@ -261,6 +269,9 @@ VALUES
 ;
 SELECT setval('internal_message_categories_id_seq', (SELECT MAX(id) FROM internal_message_categories));
 
+-- ----------------------------
+-- 插入 comments 表的测试数据，包含不同类型的评论（管理员、普通用户、访客、版主、垃圾评论等），以及不同状态（已审核、待审核、拒绝）的评论，覆盖根评论和回复评论两种场景。
+-- ----------------------------
 INSERT INTO public.comments (
     created_at, updated_at, deleted_at, created_by, updated_by, deleted_by,
     content_type, object_id, content, author_id, author_name, author_email,
@@ -357,6 +368,9 @@ INSERT INTO public.comments (
     'en-US', false, false, NULL, NULL
 );
 
+-- ----------------------------
+-- 插入 media_assets 媒体资源数据
+-- ----------------------------
 INSERT INTO public.media_assets (
     created_at, updated_at, deleted_at, created_by, updated_by, deleted_by,
     filename, type, mime_type, size, storage_path, url,
@@ -450,6 +464,9 @@ INSERT INTO public.media_assets (
     0, false
 );
 
+-- ----------------------------
+-- 插入 site_settings 站点设置数据
+-- ----------------------------
 INSERT INTO public.site_settings (
     created_at, updated_at, deleted_at, created_by, updated_by, deleted_by,
     site_id, locale, "group", key, value, type,
@@ -492,7 +509,6 @@ INSERT INTO public.site_settings (
     '站点LOGO', '上传的LOGO图片ID（关联media_assets表）', '上传LOGO图片',
     '{}'::jsonb, true, ''
 ),
-
 -- ===================== 全局配置（site_id=0）- SEO分组 =====================
 -- 6. 网站域名（URL）
 (
@@ -516,7 +532,6 @@ INSERT INTO public.site_settings (
     '{"index":"允许索引", "noindex":"禁止索引"}'::jsonb,
     true, ''
 ),
-
 -- ===================== 全局配置（site_id=0）- 社交分组 =====================
 -- 9. 社交媒体链接（JSON）
 (
@@ -526,7 +541,6 @@ INSERT INTO public.site_settings (
     '社交媒体链接', '站点底部显示的社交平台链接（JSON格式）', '输入JSON格式的社交链接数组',
     '{}'::jsonb, false, ''
 ),
-
 -- ===================== 站点1配置（site_id=1）- 英文版本 =====================
 -- 10. 站点标题（英文）
 (
@@ -542,7 +556,6 @@ INSERT INTO public.site_settings (
     'Posts Per Page', 'Number of articles displayed per page', 'Enter number (1-50)',
     '{}'::jsonb, true, '^[1-9][0-9]?$|^50$'
 ),
-
 -- ===================== 特殊场景配置 =====================
 -- 12. 软删除的配置项
 (
@@ -561,6 +574,9 @@ INSERT INTO public.site_settings (
     true, ''
 );
 
+-- ----------------------------
+-- 插入 sites 表测试数据
+-- ----------------------------
 INSERT INTO public.sites (
     created_at, updated_at, deleted_at, created_by, updated_by, deleted_by,
     tenant_id, name, slug, domain, alternate_domains, is_default,
@@ -766,7 +782,9 @@ INSERT INTO public.site_settings (
 );
 
 
--- ==================== 导航组（navigations）====================
+-- ----------------------------
+-- 插入 navigations 表（导航组）
+-- ----------------------------
 -- 中文导航组
 INSERT INTO public.navigations (
     id, created_at, updated_at, name, location, locale, is_active, created_by, updated_by
@@ -777,13 +795,14 @@ INSERT INTO public.navigations (
 (102, NOW(), NOW(), '页脚导航', 'FOOTER', 'zh-CN', true, 1, 1),
 -- Sidebar Navigation (SIDEBAR)
 (103, NOW(), NOW(), '侧边栏导航', 'SIDEBAR', 'zh-CN', true, 1, 1),
-
 -- 英文导航组（对应中文组）
 (201, NOW(), NOW(), 'Main Navigation', 'HEADER', 'en-US', true, 1, 1),
 (202, NOW(), NOW(), 'Footer Navigation', 'FOOTER', 'en-US', true, 1, 1),
 (203, NOW(), NOW(), 'Sidebar Navigation', 'SIDEBAR', 'en-US', true, 1, 1);
 
--- ==================== 导航项（navigation_items）====================
+-- ----------------------------
+-- 插入 navigation_items 表（导航项）
+-- ----------------------------
 -- 注意：按 parentId 顺序插入（先父后子），确保外键约束有效
 INSERT INTO public.navigation_items (
     id, created_at, updated_at, sort_order, link_type, navigation_id,
@@ -801,22 +820,18 @@ INSERT INTO public.navigation_items (
 (1004, NOW(), NOW(), 4, 'LINK_TYPE_CUSTOM', 101, '标签', '/tag', 0, 'tag', '浏览所有标签', false, false, 'nav-item header-nav', '', NULL, 1, 1),
 -- 关于（顶级）
 (1005, NOW(), NOW(), 5, 'LINK_TYPE_PAGE', 101, '关于', '/about', 1, 'information', '关于我们', false, false, 'nav-item header-nav', '', NULL, 1, 1),
-
 -- 分类子菜单：技术分享（parentId = 1003）
 (1006, NOW(), NOW(), 1, 'LINK_TYPE_CATEGORY', 101, '技术分享', '/category/1', 1, 'code', '技术文章分类', false, false, 'nav-item child-nav', '', 1003, 1, 1),
 -- 分类子菜单：生活随笔（parentId = 1003）
 (1007, NOW(), NOW(), 2, 'LINK_TYPE_CATEGORY', 101, '生活随笔', '/category/2', 2, 'blog', '生活文章分类', false, false, 'nav-item child-nav', '', 1003, 1, 1),
-
 -- ========== 导航组 102（zh-CN 页脚导航） ==========
 (1008, NOW(), NOW(), 1, 'LINK_TYPE_PAGE', 102, '联系我们', '/contact', 2, 'email', '联系我们', false, false, 'nav-item footer-nav', '', NULL, 1, 1),
 (1009, NOW(), NOW(), 2, 'LINK_TYPE_PAGE', 102, '隐私政策', '/privacy', 3, 'shield-checkmark', '隐私政策', false, false, 'nav-item footer-nav', '', NULL, 1, 1),
 (1010, NOW(), NOW(), 3, 'LINK_TYPE_PAGE', 102, '服务条款', '/terms', 4, 'document', '服务条款', false, false, 'nav-item footer-nav', '', NULL, 1, 1),
 (1011, NOW(), NOW(), 4, 'LINK_TYPE_EXTERNAL', 102, 'GitHub', 'https://github.com', 0, 'logo-github', '访问我们的GitHub', true, false, 'nav-item footer-nav', '', NULL, 1, 1),
-
 -- ========== 导航组 103（zh-CN 侧边栏导航） ==========
 (1012, NOW(), NOW(), 1, 'LINK_TYPE_CUSTOM', 103, '热门标签', '/tag', 0, 'pricetag', '浏览热门标签', false, false, 'nav-item sidebar-nav', '', NULL, 1, 1),
 (1013, NOW(), NOW(), 2, 'LINK_TYPE_CUSTOM', 103, '归档', '/archive', 0, 'archive', '文章归档', false, false, 'nav-item sidebar-nav', '', NULL, 1, 1),
-
 -- ========== 导航组 201（en-US Main Navigation） ==========
 (2001, NOW(), NOW(), 1, 'LINK_TYPE_CUSTOM', 201, 'Home', '/', 0, 'home', 'Back to homepage', false, false, 'nav-item header-nav', '', NULL, 1, 1),
 (2002, NOW(), NOW(), 2, 'LINK_TYPE_CUSTOM', 201, 'Posts', '/post', 0, 'document', 'Browse all posts', false, false, 'nav-item header-nav', '', NULL, 1, 1),
@@ -826,13 +841,11 @@ INSERT INTO public.navigation_items (
 -- Categories 子菜单
 (2006, NOW(), NOW(), 1, 'LINK_TYPE_CATEGORY', 201, 'Tech Sharing', '/category/1', 1, 'code', 'Tech article category', false, false, 'nav-item child-nav', '', 2003, 1, 1),
 (2007, NOW(), NOW(), 2, 'LINK_TYPE_CATEGORY', 201, 'Life Notes', '/category/2', 2, 'blog', 'Life article category', false, false, 'nav-item child-nav', '', 2003, 1, 1),
-
 -- ========== 导航组 202（en-US Footer Navigation） ==========
 (2008, NOW(), NOW(), 1, 'LINK_TYPE_PAGE', 202, 'Contact', '/contact', 2, 'email', 'Contact us', false, false, 'nav-item footer-nav', '', NULL, 1, 1),
 (2009, NOW(), NOW(), 2, 'LINK_TYPE_PAGE', 202, 'Privacy Policy', '/privacy', 3, 'shield-checkmark', 'Privacy policy', false, false, 'nav-item footer-nav', '', NULL, 1, 1),
 (2010, NOW(), NOW(), 3, 'LINK_TYPE_PAGE', 202, 'Terms of Service', '/terms', 4, 'document', 'Terms of service', false, false, 'nav-item footer-nav', '', NULL, 1, 1),
 (2011, NOW(), NOW(), 4, 'LINK_TYPE_EXTERNAL', 202, 'GitHub', 'https://github.com', 0, 'logo-github', 'Visit our GitHub', true, false, 'nav-item footer-nav', '', NULL, 1, 1),
-
 -- ========== 导航组 203（en-US Sidebar Navigation） ==========
 (2012, NOW(), NOW(), 1, 'LINK_TYPE_CUSTOM', 203, 'Popular Tags', '/tag', 0, 'pricetag', 'Browse popular tags', false, false, 'nav-item sidebar-nav', '', NULL, 1, 1),
 (2013, NOW(), NOW(), 2, 'LINK_TYPE_CUSTOM', 203, 'Archive', '/archive', 0, 'archive', 'Post archive', false, false, 'nav-item sidebar-nav', '', NULL, 1, 1);
@@ -945,7 +958,6 @@ INSERT INTO public.comments (
     false, false,
     NULL, NULL
 ),
-
 -- ========== 场景2：父评论1的子回复（多级嵌套） ==========
 -- 回复1-1：回复管理员的置顶评论（子评论）
 (
@@ -987,7 +999,6 @@ INSERT INTO public.comments (
     6, -- 回复的是ID=6的评论
     6  -- 父评论ID=6
 ),
-
 -- ========== 场景3：父评论2的子回复 ==========
 -- 回复2-1：回复张三的评论（访客）
 (
@@ -1029,7 +1040,6 @@ INSERT INTO public.comments (
     8, -- 回复的是ID=8的评论
     8  -- 父评论ID=8
 ),
-
 -- ========== 场景4：父评论3的子回复 ==========
 -- 回复3-1：管理员回复小李的问题
 (
@@ -1051,7 +1061,6 @@ INSERT INTO public.comments (
     3, -- 回复的是ID=3的评论
     3  -- 父评论ID=3
 ),
-
 -- ========== 场景5：父评论5的子回复（英文） ==========
 -- 回复5-1：回复John Doe的英文评论
 (
@@ -1073,7 +1082,6 @@ INSERT INTO public.comments (
     5, -- 回复的是ID=5的评论
     5  -- 父评论ID=5
 ),
-
 -- ========== 场景6：页面（object_id=201）的评论 ==========
 -- 父评论6：页面的访客评论（已拒绝）
 (
@@ -1445,7 +1453,9 @@ Sorry, the page you are looking for does not exist or has been deleted.
 );
 
 
--- ==================== categories 表（分类主表）====================
+-- ----------------------------
+-- 插入 categories 表（分类主表）测试数据
+-- ----------------------------
 -- 注意：按 parentId 顺序插入（先父后子），确保外键约束有效
 INSERT INTO public.categories (
     id, created_at, updated_at, sort_order, path, status,
@@ -1461,7 +1471,6 @@ INSERT INTO public.categories (
 (3, NOW() - INTERVAL '20 days', NOW() - INTERVAL '10 days', 3, '/design', 'CATEGORY_STATUS_ACTIVE', 0, true, 'carbon:chart-line', 25, 8, '{}'::jsonb, NULL, 1, 1),
 -- 创业思考
 (4, NOW() - INTERVAL '15 days', NOW() - INTERVAL '8 days', 4, '/startup', 'CATEGORY_STATUS_ACTIVE', 0, true, 'carbon:idea', 18, 10, '{}'::jsonb, NULL, 1, 1),
-
 -- ========== 二级分类（父ID=1：技术分享） ==========
 -- 前端开发
 (11, NOW() - INTERVAL '25 days', NOW() - INTERVAL '10 days', 1, '/tech/frontend', 'CATEGORY_STATUS_ACTIVE', 1, false, 'carbon:code', 20, 20, '{}'::jsonb, 1, 1, 1),
@@ -1469,27 +1478,25 @@ INSERT INTO public.categories (
 (12, NOW() - INTERVAL '24 days', NOW() - INTERVAL '9 days', 2, '/tech/backend', 'CATEGORY_STATUS_ACTIVE', 1, false, 'carbon:cloud', 15, 15, '{}'::jsonb, 1, 1, 1),
 -- 移动开发
 (13, NOW() - INTERVAL '23 days', NOW() - INTERVAL '8 days', 3, '/tech/mobile', 'CATEGORY_STATUS_ACTIVE', 1, false, 'carbon:mobile', 10, 10, '{}'::jsonb, 1, 1, 1),
-
 -- ========== 二级分类（父ID=2：生活随笔） ==========
 -- 旅行游记
 (21, NOW() - INTERVAL '20 days', NOW() - INTERVAL '7 days', 1, '/life/travel', 'CATEGORY_STATUS_ACTIVE', 1, false, 'carbon:map', 10, 10, '{}'::jsonb, 2, 1, 1),
 -- 美食探店
 (22, NOW() - INTERVAL '19 days', NOW() - INTERVAL '6 days', 2, '/life/food', 'CATEGORY_STATUS_ACTIVE', 1, false, 'carbon:favorite', 8, 8, '{}'::jsonb, 2, 1, 1),
-
 -- ========== 二级分类（父ID=3：产品设计） ==========
 -- UI 设计
 (31, NOW() - INTERVAL '18 days', NOW() - INTERVAL '5 days', 1, '/design/ui-design', 'CATEGORY_STATUS_ACTIVE', 1, false, 'carbon:color-switch', 10, 10, '{}'::jsonb, 3, 1, 1),
 -- UX 设计
 (32, NOW() - INTERVAL '17 days', NOW() - INTERVAL '4 days', 2, '/design/ux-design', 'CATEGORY_STATUS_ACTIVE', 1, false, 'carbon:user-profile', 7, 7, '{}'::jsonb, 3, 1, 1),
-
 -- ========== 二级分类（父ID=4：创业思考） ==========
 -- 团队管理
 (41, NOW() - INTERVAL '14 days', NOW() - INTERVAL '3 days', 1, '/startup/team-management', 'CATEGORY_STATUS_ACTIVE', 1, false, 'carbon:group', 5, 5, '{}'::jsonb, 4, 1, 1),
 -- 产品思考
 (42, NOW() - INTERVAL '13 days', NOW() - INTERVAL '2 days', 2, '/startup/product-thinking', 'CATEGORY_STATUS_ACTIVE', 1, false, 'carbon:product', 3, 3, '{}'::jsonb, 4, 1, 1);
 
--- ==================== category_translations 表（分类翻译）====================
--- 注意：按 category_id 顺序插入，确保外键约束有效
+-- ----------------------------
+-- 插入 category_translations 表（分类翻译）
+-- ----------------------------
 INSERT INTO public.category_translations (
     id, created_at, updated_at, category_id, language_code,
     name, slug, description, thumbnail, cover_image,
@@ -1500,62 +1507,50 @@ INSERT INTO public.category_translations (
 (1, NOW() - INTERVAL '30 days', NOW() - INTERVAL '15 days', 1, 'zh-CN', '技术分享', 'tech', '分享最新的技术文章和教程', 'https://picsum.photos/400/300?random=1', 'https://picsum.photos/1200/400?random=1', NULL, '/tech', '技术分享,教程,开发', '分享最新的技术文章和教程', '技术分享 | GoWind CMS', 1, 1),
 -- ========== 分类1（技术分享）- 英文 ==========
 (101, NOW() - INTERVAL '30 days', NOW() - INTERVAL '15 days', 1, 'en-US', 'Tech Sharing', 'tech', 'Share the latest technical articles and tutorials', 'https://picsum.photos/400/300?random=1', 'https://picsum.photos/1200/400?random=1', NULL, '/en/tech', 'Tech Sharing,Tutorials,Development', 'Share the latest technical articles and tutorials', 'Tech Sharing | GoWind CMS', 1, 1),
-
 -- ========== 分类2（生活随笔）- 中文 ==========
 (2, NOW() - INTERVAL '25 days', NOW() - INTERVAL '12 days', 2, 'zh-CN', '生活随笔', 'life', '记录生活中的点点滴滴', 'https://picsum.photos/400/300?random=2', 'https://picsum.photos/1200/400?random=2', NULL, '/life', '生活随笔,记录,日常', '记录生活中的点点滴滴', '生活随笔 | GoWind CMS', 1, 1),
 -- ========== 分类2（生活随笔）- 英文 ==========
 (102, NOW() - INTERVAL '25 days', NOW() - INTERVAL '12 days', 2, 'en-US', 'Life Notes', 'life', 'Record moments and thoughts from daily life', 'https://picsum.photos/400/300?random=2', 'https://picsum.photos/1200/400?random=2', NULL, '/en/life', 'Life Notes,Records,Daily', 'Record moments and thoughts from daily life', 'Life Notes | GoWind CMS', 1, 1),
-
 -- ========== 分类3（产品设计）- 中文 ==========
 (3, NOW() - INTERVAL '20 days', NOW() - INTERVAL '10 days', 3, 'zh-CN', '产品设计', 'design', '产品设计理念与实践', 'https://picsum.photos/400/300?random=3', 'https://picsum.photos/1200/400?random=3', NULL, '/design', '产品设计,理念,实践', '产品设计理念与实践', '产品设计 | GoWind CMS', 1, 1),
 -- ========== 分类3（产品设计）- 英文 ==========
 (103, NOW() - INTERVAL '20 days', NOW() - INTERVAL '10 days', 3, 'en-US', 'Product Design', 'design', 'Product design concepts and practices', 'https://picsum.photos/400/300?random=3', 'https://picsum.photos/1200/400?random=3', NULL, '/en/design', 'Product Design,Concepts,Practices', 'Product design concepts and practices', 'Product Design | GoWind CMS', 1, 1),
-
 -- ========== 分类4（创业思考）- 中文 ==========
 (4, NOW() - INTERVAL '15 days', NOW() - INTERVAL '8 days', 4, 'zh-CN', '创业思考', 'startup', '创业路上的思考与总结', 'https://picsum.photos/400/300?random=4', 'https://picsum.photos/1200/400?random=4', NULL, '/startup', '创业思考,总结,经验', '创业路上的思考与总结', '创业思考 | GoWind CMS', 1, 1),
 -- ========== 分类4（创业思考）- 英文 ==========
 (104, NOW() - INTERVAL '15 days', NOW() - INTERVAL '8 days', 4, 'en-US', 'Startup Insights', 'startup', 'Reflections and summaries from startup journey', 'https://picsum.photos/400/300?random=4', 'https://picsum.photos/1200/400?random=4', NULL, '/en/startup', 'Startup Insights,Reflections,Journey', 'Reflections and summaries from startup journey', 'Startup Insights | GoWind CMS', 1, 1),
-
 -- ========== 分类11（前端开发）- 中文 ==========
 (11, NOW() - INTERVAL '25 days', NOW() - INTERVAL '10 days', 11, 'zh-CN', '前端开发', 'frontend', '前端开发技术和框架', 'https://picsum.photos/400/300?random=11', 'https://picsum.photos/1200/400?random=11', NULL, '/tech/frontend', '前端开发,框架,技术', '前端开发技术和框架', '前端开发 | 技术分享', 1, 1),
 -- ========== 分类11（前端开发）- 英文 ==========
 (111, NOW() - INTERVAL '25 days', NOW() - INTERVAL '10 days', 11, 'en-US', 'Frontend Development', 'frontend', 'Frontend development technologies and frameworks', 'https://picsum.photos/400/300?random=11', 'https://picsum.photos/1200/400?random=11', NULL, '/en/tech/frontend', 'Frontend Development,Frameworks,Technologies', 'Frontend development technologies and frameworks', 'Frontend Development | Tech Sharing', 1, 1),
-
 -- ========== 分类12（后端开发）- 中文 ==========
 (12, NOW() - INTERVAL '24 days', NOW() - INTERVAL '9 days', 12, 'zh-CN', '后端开发', 'backend', '后端开发技术和架构', 'https://picsum.photos/400/300?random=12', 'https://picsum.photos/1200/400?random=12', NULL, '/tech/backend', '后端开发,架构,技术', '后端开发技术和架构', '后端开发 | 技术分享', 1, 1),
 -- ========== 分类12（后端开发）- 英文 ==========
 (112, NOW() - INTERVAL '24 days', NOW() - INTERVAL '9 days', 12, 'en-US', 'Backend Development', 'backend', 'Backend development technologies and architecture', 'https://picsum.photos/400/300?random=12', 'https://picsum.photos/1200/400?random=12', NULL, '/en/tech/backend', 'Backend Development,Architecture,Technologies', 'Backend development technologies and architecture', 'Backend Development | Tech Sharing', 1, 1),
-
 -- ========== 分类13（移动开发）- 中文 ==========
 (13, NOW() - INTERVAL '23 days', NOW() - INTERVAL '8 days', 13, 'zh-CN', '移动开发', 'mobile', '移动端开发技术', 'https://picsum.photos/400/300?random=13', 'https://picsum.photos/1200/400?random=13', NULL, '/tech/mobile', '移动开发,技术,移动端', '移动端开发技术', '移动开发 | 技术分享', 1, 1),
 -- ========== 分类13（移动开发）- 英文 ==========
 (113, NOW() - INTERVAL '23 days', NOW() - INTERVAL '8 days', 13, 'en-US', 'Mobile Development', 'mobile', 'Mobile development technologies', 'https://picsum.photos/400/300?random=13', 'https://picsum.photos/1200/400?random=13', NULL, '/en/tech/mobile', 'Mobile Development,Technologies', 'Mobile development technologies', 'Mobile Development | Tech Sharing', 1, 1),
-
 -- ========== 分类21（旅行游记）- 中文 ==========
 (21, NOW() - INTERVAL '20 days', NOW() - INTERVAL '7 days', 21, 'zh-CN', '旅行游记', 'travel', '旅行见闻和游记', 'https://picsum.photos/400/300?random=21', 'https://picsum.photos/1200/400?random=21', NULL, '/life/travel', '旅行游记,见闻,游记', '旅行见闻和游记', '旅行游记 | 生活随笔', 1, 1),
 -- ========== 分类21（旅行游记）- 英文 ==========
 (121, NOW() - INTERVAL '20 days', NOW() - INTERVAL '7 days', 21, 'en-US', 'Travel', 'travel', 'Travel experiences and journals', 'https://picsum.photos/400/300?random=21', 'https://picsum.photos/1200/400?random=21', NULL, '/en/life/travel', 'Travel,Experiences,Journals', 'Travel experiences and journals', 'Travel | Life Notes', 1, 1),
-
 -- ========== 分类22（美食探店）- 中文 ==========
 (22, NOW() - INTERVAL '19 days', NOW() - INTERVAL '6 days', 22, 'zh-CN', '美食探店', 'food', '探索城市美食', 'https://picsum.photos/400/300?random=22', 'https://picsum.photos/1200/400?random=22', NULL, '/life/food', '美食探店,城市美食,探索', '探索城市美食', '美食探店 | 生活随笔', 1, 1),
 -- ========== 分类22（美食探店）- 英文 ==========
 (122, NOW() - INTERVAL '19 days', NOW() - INTERVAL '6 days', 22, 'en-US', 'Food Exploration', 'food', 'Explore city delicacies', 'https://picsum.photos/400/300?random=22', 'https://picsum.photos/1200/400?random=22', NULL, '/en/life/food', 'Food Exploration,Delicacies,City', 'Explore city delicacies', 'Food Exploration | Life Notes', 1, 1),
-
 -- ========== 分类31（UI 设计）- 中文 ==========
 (31, NOW() - INTERVAL '18 days', NOW() - INTERVAL '5 days', 31, 'zh-CN', 'UI 设计', 'ui-design', '用户界面设计', 'https://picsum.photos/400/300?random=31', 'https://picsum.photos/1200/400?random=31', NULL, '/design/ui-design', 'UI设计,用户界面,设计', '用户界面设计', 'UI 设计 | 产品设计', 1, 1),
 -- ========== 分类31（UI 设计）- 英文 ==========
 (131, NOW() - INTERVAL '18 days', NOW() - INTERVAL '5 days', 31, 'en-US', 'UI Design', 'ui-design', 'User Interface Design', 'https://picsum.photos/400/300?random=31', 'https://picsum.photos/1200/400?random=31', NULL, '/en/design/ui-design', 'UI Design,User Interface', 'User Interface Design', 'UI Design | Product Design', 1, 1),
-
 -- ========== 分类32（UX 设计）- 中文 ==========
 (32, NOW() - INTERVAL '17 days', NOW() - INTERVAL '4 days', 32, 'zh-CN', 'UX 设计', 'ux-design', '用户体验设计', 'https://picsum.photos/400/300?random=32', 'https://picsum.photos/1200/400?random=32', NULL, '/design/ux-design', 'UX设计,用户体验,设计', '用户体验设计', 'UX 设计 | 产品设计', 1, 1),
 -- ========== 分类32（UX 设计）- 英文 ==========
 (132, NOW() - INTERVAL '17 days', NOW() - INTERVAL '4 days', 32, 'en-US', 'UX Design', 'ux-design', 'User Experience Design', 'https://picsum.photos/400/300?random=32', 'https://picsum.photos/1200/400?random=32', NULL, '/en/design/ux-design', 'UX Design,User Experience', 'User Experience Design', 'UX Design | Product Design', 1, 1),
-
 -- ========== 分类41（团队管理）- 中文 ==========
 (41, NOW() - INTERVAL '14 days', NOW() - INTERVAL '3 days', 41, 'zh-CN', '团队管理', 'team-management', '团队建设和管理经验', 'https://picsum.photos/400/300?random=41', 'https://picsum.photos/1200/400?random=41', NULL, '/startup/team-management', '团队管理,建设,经验', '团队建设和管理经验', '团队管理 | 创业思考', 1, 1),
 -- ========== 分类41（团队管理）- 英文 ==========
 (141, NOW() - INTERVAL '14 days', NOW() - INTERVAL '3 days', 41, 'en-US', 'Team Management', 'team-management', 'Team building and management experience', 'https://picsum.photos/400/300?random=41', 'https://picsum.photos/1200/400?random=41', NULL, '/en/startup/team-management', 'Team Management,Building,Experience', 'Team building and management experience', 'Team Management | Startup Insights', 1, 1),
-
 -- ========== 分类42（产品思考）- 中文 ==========
 (42, NOW() - INTERVAL '13 days', NOW() - INTERVAL '2 days', 42, 'zh-CN', '产品思考', 'product-thinking', '产品规划和思考', 'https://picsum.photos/400/300?random=42', 'https://picsum.photos/1200/400?random=42', NULL, '/startup/product-thinking', '产品思考,规划,产品', '产品规划和思考', '产品思考 | 创业思考', 1, 1),
 -- ========== 分类42（产品思考）- 英文 ==========
@@ -2980,7 +2975,9 @@ v1.9 version had only 50K QPS with 200ms response time, unable to meet high-conc
     'GoWind CMS Performance Optimization Guide: Practical Experience from 50K to 100K QPS | GoWind Technical Blog'
 );
 
--- ==================== post_categories 表（文章-分类关联）====================
+-- ----------------------------
+-- 插入 post_categories 表（文章-分类关联）
+-- ----------------------------
 INSERT INTO public.post_categories (post_id, category_id, created_at)
 VALUES
 -- 文章1: [2,4] → 技术文档 + 安装部署
@@ -3009,7 +3006,9 @@ VALUES
 (8, 2, NOW() - INTERVAL '8 days')
 ;
 
--- ==================== post_tags 表（文章-标签关联）====================
+-- ----------------------------
+-- 插入 post_tags 表（文章-标签关联）
+-- ----------------------------
 INSERT INTO public.post_tags (post_id, tag_id, created_at)
 VALUES
 -- 文章1: [1,2,3] → Go语言 + CMS + 快速上手
