@@ -153,6 +153,19 @@ function handleButtonRegister() {
   font-weight: 600;
   height: 44px;
   margin-top: 0.5rem;
+  background: linear-gradient(135deg, var(--color-brand) 0%, #a855f7 100%);
+  border: none;
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
 
   &:disabled {
     cursor: not-allowed;

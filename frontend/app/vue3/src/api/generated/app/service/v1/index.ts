@@ -184,9 +184,11 @@ export type authenticationservicev1_LoginRequest = {
   client_secret?: string;
   scope?: string;
   redirect_uri?: string;
-  username?: string;
-  password?: string;
   user_id?: number;
+  username?: string;
+  email?: string;
+  mobile?: string;
+  password?: string;
   refresh_token?: string;
   code?: string;
   client_type?: authenticationservicev1_ClientType;

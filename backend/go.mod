@@ -27,6 +27,7 @@ require (
 	github.com/redis/go-redis/v9 v9.18.0
 	github.com/stretchr/testify v1.11.1
 	github.com/tx7do/go-crud/api v0.0.7
+	github.com/tx7do/go-crud/elasticsearch v0.0.4
 	github.com/tx7do/go-crud/entgo v0.0.47
 	github.com/tx7do/go-crud/pagination v0.0.13
 	github.com/tx7do/go-crud/viewer v0.0.6
@@ -49,6 +50,7 @@ require (
 	github.com/tx7do/kratos-bootstrap/api v0.0.35
 	github.com/tx7do/kratos-bootstrap/bootstrap v0.1.16
 	github.com/tx7do/kratos-bootstrap/cache/redis v0.1.1
+	github.com/tx7do/kratos-bootstrap/database/elasticsearch v0.1.3
 	github.com/tx7do/kratos-bootstrap/database/ent v0.1.4
 	github.com/tx7do/kratos-bootstrap/oss/minio v0.1.1
 	github.com/tx7do/kratos-bootstrap/registry v0.2.2
@@ -212,9 +214,7 @@ require (
 	github.com/tklauser/go-sysconf v0.3.16 // indirect
 	github.com/tklauser/numcpus v0.11.0 // indirect
 	github.com/tx7do/go-crud/audit v0.0.2 // indirect
-	github.com/tx7do/go-crud/elasticsearch v0.0.4 // indirect
 	github.com/tx7do/kratos-bootstrap/config v0.2.2 // indirect
-	github.com/tx7do/kratos-bootstrap/database/elasticsearch v0.1.3 // indirect
 	github.com/tx7do/kratos-bootstrap/logger v0.1.2 // indirect
 	github.com/tx7do/kratos-transport/tracing v1.1.1 // indirect
 	github.com/tx7do/kratos-transport/transport v1.3.3 // indirect

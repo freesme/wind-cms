@@ -122,6 +122,25 @@ onBeforeUnmount(() => {
   }
 }
 
+.login-button {
+  font-weight: 600;
+  height: 44px;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, var(--color-brand) 0%, #a855f7 100%);
+  border: none;
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
 .code-input-row {
   display: flex;
   gap: 0.75rem;
@@ -137,12 +156,20 @@ onBeforeUnmount(() => {
     height: 40px;
     font-size: 0.9rem;
     white-space: nowrap;
-  }
-}
+    background: linear-gradient(135deg, var(--color-brand) 0%, #a855f7 100%);
+    border: none;
+    box-shadow: 0 2px 8px rgba(168, 85, 247, 0.25);
+    color: #fff;
 
-.login-button {
-  font-weight: 600;
-  height: 44px;
-  margin-bottom: 1.5rem;
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(168, 85, 247, 0.35);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
 }
 </style>

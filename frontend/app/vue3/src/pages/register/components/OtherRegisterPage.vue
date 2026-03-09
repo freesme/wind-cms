@@ -52,17 +52,18 @@ function handleButtonGithubRegister() {
 }
 
 .social-button {
-  font-weight: 500;
+  font-weight: 600;
   height: 44px;
   background: var(--auth-card-bg);
   color: var(--auth-text-primary);
   border: 1px solid var(--auth-border);
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   font-size: 0.95rem;
+  border-radius: 12px;
 
   :deep(.n-icon) {
     font-size: 18px;
@@ -70,9 +71,10 @@ function handleButtonGithubRegister() {
 
   &:hover {
     border-color: var(--color-brand);
-    color: var(--color-brand);
-    background: var(--auth-tab-bg);
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.12);
+    color: #fff;
+    background: linear-gradient(135deg, var(--color-brand) 0%, #a855f7 100%);
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+    transform: translateY(-2px);
   }
 
   &:focus-visible {
@@ -80,7 +82,7 @@ function handleButtonGithubRegister() {
   }
 
   &:active {
-    transform: scale(0.98);
+    transform: translateY(0);
   }
 }
 </style>

@@ -7,6 +7,7 @@
     "login": "登录",
     "search_placeholder": "请输入关键字搜索",
     "dark_mode": "暗黑",
-    "light_mode": "亮色"
+    "light_mode": "亮色",
+    "language": "语言"
   }
 }
