@@ -56,8 +56,8 @@ onMounted(async () => {
 useLanguageChangeEffect(async () => {
   await loadTag();
 }, {
-  immediate: false,
-  autoCleanup: true,
+  immediate: false,      // 是否立即执行一次
+  autoCleanup: true,    // 是否自动清理
 });
 
 // 监听路由参数变化（id 变化时重新加载）

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import {ref, watch, defineProps, defineExpose} from 'vue';
+import { isEqual } from 'lodash-es';
+
 import {usePostStore} from '@/stores';
 import {$t} from '@/locales';
 import PostCard from '@/components/PostCard';
@@ -33,6 +35,8 @@ const posts = ref<contentservicev1_Post[]>([]);
 const loading = ref(false);
 
 async function fetchPosts() {
+  console.log('PostList fetching...')
+
   loading.value = true;
   try {
     const res = await postStore.listPost(
@@ -51,21 +55,43 @@ async function fetchPosts() {
 }
 
 function reload() {
+  console.log('PostList reload...')
   fetchPosts();
 }
 
 defineExpose({ reload });
 
+let lastParams = {
+  queryParams: undefined,
+  fieldMask: undefined,
+  orderBy: undefined,
+  page: undefined,
+  pageSize: undefined,
+};
+
 watch(
-  () => [props.queryParams, props.fieldMask, props.orderBy, props.page, props.pageSize],
-  () => {
-    fetchPosts();
+  () => ({
+    queryParams: props.queryParams,
+    fieldMask: props.fieldMask,
+    orderBy: props.orderBy,
+    page: props.page,
+    pageSize: props.pageSize,
+  }),
+  (newVal) => {
+    if (!isEqual(newVal, lastParams)) {
+      lastParams = JSON.parse(JSON.stringify(newVal));
+      fetchPosts();
+    }
   },
-  { deep: true, immediate: true }
+  { immediate: true }
 );
 
 useLanguageChangeEffect(() => {
+  console.log('PostList useLanguageChangeEffect...')
   fetchPosts();
+}, {
+  immediate: false,      // 是否立即执行一次
+  autoCleanup: true,    // 是否自动清理
 });
 </script>
 

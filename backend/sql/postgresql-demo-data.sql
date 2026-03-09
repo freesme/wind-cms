@@ -270,103 +270,225 @@ VALUES
 SELECT setval('internal_message_categories_id_seq', (SELECT MAX(id) FROM internal_message_categories));
 
 -- ----------------------------
--- 插入 comments 表的测试数据，包含不同类型的评论（管理员、普通用户、访客、版主、垃圾评论等），以及不同状态（已审核、待审核、拒绝）的评论，覆盖根评论和回复评论两种场景。
+-- 插入 comments 表的测试数据，（评论数据）
+-- 注意：按父子顺序插入（先顶级评论，再子评论），避免外键约束失败
 -- ----------------------------
 INSERT INTO public.comments (
-    created_at, updated_at, deleted_at, created_by, updated_by, deleted_by,
+    id, created_at, updated_at, deleted_at, created_by, updated_by, deleted_by,
     content_type, object_id, content, author_id, author_name, author_email,
     author_url, author_type, status, like_count, dislike_count, reply_count,
     ip_address, location, user_agent, detected_language, is_spam, is_sticky,
     reply_to_id, parent_id
 ) VALUES
--- 1. 管理员发布的置顶评论（根评论）
-(
-    '2026-02-01 10:00:00+08', '2026-02-01 10:00:00+08', NULL, 1, 1, NULL,
-    'CONTENT_TYPE_POST', 1001,
-    '感谢大家的积极反馈，我们会尽快处理大家提出的问题和建议！',
-    999, '管理员小明', 'admin@example.com', 'https://example.com/admin',
-    'AUTHOR_TYPE_ADMIN', 'STATUS_APPROVED', 58, 2, 12,
-    '192.168.1.100', '北京市',
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'zh-CN', false, true, NULL, NULL
-),
--- 2. 普通用户评论（根评论）
-(
-    '2026-02-01 10:15:00+08', '2026-02-01 10:15:00+08', NULL, 2, 2, NULL,
-    'CONTENT_TYPE_POST', 1001,
-    '这篇文章内容很有价值，解决了我一直以来的疑惑，非常感谢作者的分享！',
-    1001, '用户小李', 'user1001@example.com', 'https://example.com/user/1001',
-    'AUTHOR_TYPE_USER', 'STATUS_APPROVED', 32, 1, 5,
-    '192.168.1.101', '上海市',
-    'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15',
-    'zh-CN', false, false, NULL, NULL
-),
--- 3. 访客评论（根评论）
-(
-    '2026-02-01 10:30:00+08', '2026-02-01 10:30:00+08', NULL, 0, 0, NULL,
-    'CONTENT_TYPE_POST', 1001,
-    '请问这个功能在移动端是否也能正常使用？希望能补充相关说明。',
-    0, '访客小张', 'guest_2026@example.com', 'https://guest-example.com',
-    'AUTHOR_TYPE_GUEST', 'STATUS_PENDING', 8, 0, 3,
-    '192.168.1.102', '广州市',
-    'Mozilla/5.0 (Linux; Android 14; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36',
-    'zh-CN', false, false, NULL, NULL
-),
--- 4. 版主评论（回复评论2）
-(
-    '2026-02-01 11:00:00+08', '2026-02-01 11:00:00+08', NULL, 3, 3, NULL,
-    'CONTENT_TYPE_POST', 1001,
-    '感谢认可！我们后续会持续更新相关内容，敬请关注。',
-    888, '版主小王', 'moderator@example.com', 'https://example.com/moderator',
-    'AUTHOR_TYPE_MODERATOR', 'STATUS_APPROVED', 15, 0, 1,
-    '192.168.1.103', '深圳市',
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Firefox/121.0',
-    'zh-CN', false, false, 2, 2
-),
--- 5. 垃圾评论（待审核拒绝）
-(
-    '2026-02-01 12:00:00+08', '2026-02-01 12:00:00+08', NULL, 0, 0, NULL,
-    'CONTENT_TYPE_POST', 1001,
-    '高仿奢侈品代购，全网最低价，加微信XXX-XXXX-XXXX',
-    0, '匿名用户', 'spam_2026@example.com', '',
-    'AUTHOR_TYPE_GUEST', 'STATUS_REJECTED', 0, 5, 0,
-    '192.168.1.104', '未知位置',
-    'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36',
-    'zh-CN', true, false, NULL, NULL
-),
--- 6. 回复访客的评论（回复评论3）
-(
-    '2026-02-01 13:00:00+08', '2026-02-01 13:00:00+08', NULL, 1001, 1001, NULL,
-    'CONTENT_TYPE_POST', 1001,
-    '您好，该功能已适配移动端，iOS和Android均可正常使用，具体操作可参考文章末尾的附录。',
-    1001, '用户小李', 'user1001@example.com', 'https://example.com/user/1001',
-    'AUTHOR_TYPE_USER', 'STATUS_APPROVED', 10, 0, 0,
-    '192.168.1.101', '上海市',
-    'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15',
-    'zh-CN', false, false, 3, 3
-),
--- 7. 已删除的评论（软删除）
-(
-    '2026-02-01 09:00:00+08', '2026-02-01 14:00:00+08', '2026-02-01 14:00:00+08', 0, 0, 1,
-    'CONTENT_TYPE_POST', 1001,
-    '这个内容完全没有用，浪费时间',
-    0, '匿名用户', 'deleted_user@example.com', '',
-    'AUTHOR_TYPE_GUEST', 'STATUS_REJECTED', 2, 10, 0,
-    '192.168.1.105', '成都市',
-    'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
-    'zh-CN', false, false, NULL, NULL
-),
--- 8. 多语言评论（英文）
-(
-    '2026-02-01 15:00:00+08', '2026-02-01 15:00:00+08', NULL, 4, 4, NULL,
-    'CONTENT_TYPE_PAGE', 2001,
-    'This article is very helpful for my project, thank you so much for sharing your experience!',
-    2001, 'John Doe', 'john.doe@example.com', 'https://john-doe-example.com',
-    'AUTHOR_TYPE_USER', 'STATUS_APPROVED', 7, 0, 2,
-    '192.168.1.106', 'New York, USA',
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0',
-    'en-US', false, false, NULL, NULL
-);
+-- ========== 文章 ID=1 的顶级评论 ==========
+-- 评论1：王五（顶级）
+(1,
+ NOW() - INTERVAL '2 days', NOW() - INTERVAL '2 days', NULL,
+ 0, 0, NULL,
+ 'CONTENT_TYPE_POST', 1,
+ '非常好的文章，学到了很多！',
+ 0, '王五', 'wangwu@example.com',
+ '', 'AUTHOR_TYPE_GUEST', 'STATUS_APPROVED',
+ 5, 0, 2,
+ '192.168.1.1', '北京', '', 'zh-CN', false, false,
+ NULL, NULL),
+-- 评论2：赵六（顶级）
+(2,
+ NOW() - INTERVAL '2 days', NOW() - INTERVAL '2 days', NULL,
+ 0, 0, NULL,
+ 'CONTENT_TYPE_POST', 1,
+ 'Composition API 确实很强大，感谢分享！',
+ 0, '赵六', 'zhaoliu@example.com',
+ '', 'AUTHOR_TYPE_GUEST', 'STATUS_APPROVED',
+ 3, 0, 1,
+ '192.168.1.2', '上海', '', 'zh-CN', false, false,
+ NULL, NULL),
+-- 评论3：孙七（顶级）
+(3,
+ NOW() - INTERVAL '1 day', NOW() - INTERVAL '1 day', NULL,
+ 0, 0, NULL,
+ 'CONTENT_TYPE_POST', 1,
+ '期待更多关于 Vue 3 的文章',
+ 0, '孙七', 'sunqi@example.com',
+ '', 'AUTHOR_TYPE_GUEST', 'STATUS_APPROVED',
+ 2, 0, 0,
+ '192.168.1.3', '深圳', '', 'zh-CN', false, false,
+ NULL, NULL),
+-- ========== 文章 ID=2 的顶级评论 ==========
+-- 评论4：周八（顶级）
+(4,
+ NOW() - INTERVAL '5 days', NOW() - INTERVAL '5 days', NULL,
+ 0, 0, NULL,
+ 'CONTENT_TYPE_POST', 2,
+ 'TypeScript 的类型系统真的很强大',
+ 0, '周八', 'zhouba@example.com',
+ '', 'AUTHOR_TYPE_GUEST', 'STATUS_APPROVED',
+ 8, 0, 2,
+ '192.168.1.4', '杭州', '', 'zh-CN', false, false,
+ NULL, NULL),
+-- 评论5：冯十一（顶级）
+(5,
+ NOW() - INTERVAL '4 days', NOW() - INTERVAL '4 days', NULL,
+ 0, 0, NULL,
+ 'CONTENT_TYPE_POST', 2,
+ '推倒类型这个概念很有意思',
+ 0, '冯十一', 'fengshiyi@example.com',
+ '', 'AUTHOR_TYPE_GUEST', 'STATUS_APPROVED',
+ 3, 0, 0,
+ '192.168.1.11', '重庆', '', 'zh-CN', false, false,
+ NULL, NULL),
+-- ========== 文章 ID=3 的顶级评论 ==========
+-- 评论6：郑十（顶级）
+(6,
+ NOW() - INTERVAL '7 days', NOW() - INTERVAL '7 days', NULL,
+ 0, 0, NULL,
+ 'CONTENT_TYPE_POST', 3,
+ 'Headless CMS 是未来的趋势',
+ 0, '郑十', 'zhengshi@example.com',
+ '', 'AUTHOR_TYPE_GUEST', 'STATUS_APPROVED',
+ 6, 0, 3,
+ '192.168.1.6', '西安', '', 'zh-CN', false, false,
+ NULL, NULL),
+
+-- ========== 文章 ID=1 的二级评论（父评论1） ==========
+-- 评论7：张三 回复 评论1
+(7,
+ NOW() - INTERVAL '2 days', NOW() - INTERVAL '2 days', NULL,
+ 0, 0, NULL,
+ 'CONTENT_TYPE_POST', 1,
+ '确实很不错，尤其是关于 Composition API 的部分',
+ 0, '张三', 'zhangsan@example.com',
+ '', 'AUTHOR_TYPE_GUEST', 'STATUS_APPROVED',
+ 2, 0, 0,
+ '192.168.1.7', '广州', '', 'zh-CN', false, false,
+ 1, 1),  -- reply_to_id=1, parent_id=1
+
+-- 评论8：李四 回复 评论1
+(8,
+ NOW() - INTERVAL '2 days', NOW() - INTERVAL '2 days', NULL,
+ 0, 0, NULL,
+ 'CONTENT_TYPE_POST', 1,
+ '@王五 同意！博主写得很用心',
+ 0, '李四', 'lisi@example.com',
+ '', 'AUTHOR_TYPE_GUEST', 'STATUS_APPROVED',
+ 1, 0, 1,
+ '192.168.1.8', '武汉', '', 'zh-CN', false, false,
+ 1, 1),  -- reply_to_id=1, parent_id=1
+
+-- ========== 文章 ID=1 的三级评论（父评论8） ==========
+-- 评论11：博主 回复 评论8
+(11,
+ NOW() - INTERVAL '1 day', NOW() - INTERVAL '1 day', NULL,
+ 1, 1, NULL,
+ 'CONTENT_TYPE_POST', 1,
+ '@李四 谢谢支持！会继续努力的',
+ 1, '博主', 'admin@example.com',
+ 'https://example.com', 'AUTHOR_TYPE_ADMIN', 'STATUS_APPROVED',
+ 3, 0, 0,
+ '192.168.1.100', '北京', '', 'zh-CN', false, false,
+ 8, 8),  -- reply_to_id=8, parent_id=8
+
+-- ========== 文章 ID=1 的二级评论（父评论2） ==========
+-- 评论9：孙七 回复 评论2
+(9,
+ NOW() - INTERVAL '1 day', NOW() - INTERVAL '1 day', NULL,
+ 0, 0, NULL,
+ 'CONTENT_TYPE_POST', 1,
+ '@赵六 对，比 Options API 灵活多了',
+ 0, '孙七', 'sunqi@example.com',
+ '', 'AUTHOR_TYPE_GUEST', 'STATUS_APPROVED',
+ 1, 0, 0,
+ '192.168.1.9', '南京', '', 'zh-CN', false, false,
+ 2, 2),  -- reply_to_id=2, parent_id=2
+
+-- ========== 文章 ID=2 的二级评论（父评论4） ==========
+-- 评论10：吴九 回复 评论4
+(10,
+ NOW() - INTERVAL '4 days', NOW() - INTERVAL '4 days', NULL,
+ 0, 0, NULL,
+ 'CONTENT_TYPE_POST', 2,
+ '条件类型的部分能再详细讲讲吗？',
+ 0, '吴九', 'wujiu@example.com',
+ '', 'AUTHOR_TYPE_GUEST', 'STATUS_APPROVED',
+ 1, 0, 1,
+ '192.168.1.5', '成都', '', 'zh-CN', false, false,
+ 4, 4),  -- reply_to_id=4, parent_id=4
+
+-- 评论13：郑十 回复 评论4
+(13,
+ NOW() - INTERVAL '3 days', NOW() - INTERVAL '3 days', NULL,
+ 0, 0, NULL,
+ 'CONTENT_TYPE_POST', 2,
+ '泛型约束也很有用',
+ 0, '郑十', 'zhengshi@example.com',
+ '', 'AUTHOR_TYPE_GUEST', 'STATUS_APPROVED',
+ 2, 0, 0,
+ '192.168.1.10', '西安', '', 'zh-CN', false, false,
+ 4, 4),  -- reply_to_id=4, parent_id=4
+
+-- ========== 文章 ID=2 的三级评论（父评论10） ==========
+-- 评论12：博主 回复 评论10
+(12,
+ NOW() - INTERVAL '3 days', NOW() - INTERVAL '3 days', NULL,
+ 1, 1, NULL,
+ 'CONTENT_TYPE_POST', 2,
+ '@吴九 好的，下期专门讲讲条件类型和分布式条件类型',
+ 1, '博主', 'admin@example.com',
+ 'https://example.com', 'AUTHOR_TYPE_ADMIN', 'STATUS_APPROVED',
+ 4, 0, 0,
+ '192.168.1.100', '北京', '', 'zh-CN', false, false,
+ 10, 10),  -- reply_to_id=10, parent_id=10
+
+-- ========== 文章 ID=3 的二级评论（父评论6） ==========
+-- 评论14：钱十二 回复 评论6
+(14,
+ NOW() - INTERVAL '6 days', NOW() - INTERVAL '6 days', NULL,
+ 0, 0, NULL,
+ 'CONTENT_TYPE_POST', 3,
+ '确实，前后端分离更灵活',
+ 0, '钱十二', 'qianshier@example.com',
+ '', 'AUTHOR_TYPE_GUEST', 'STATUS_APPROVED',
+ 2, 0, 0,
+ '192.168.1.12', '苏州', '', 'zh-CN', false, false,
+ 6, 6),  -- reply_to_id=6, parent_id=6
+
+-- 评论15：孔十三 回复 评论6
+(15,
+ NOW() - INTERVAL '6 days', NOW() - INTERVAL '6 days', NULL,
+ 0, 0, NULL,
+ 'CONTENT_TYPE_POST', 3,
+ 'Strapi 和 Contentful 哪个更好用？',
+ 0, '孔十三', 'kongshisan@example.com',
+ '', 'AUTHOR_TYPE_GUEST', 'STATUS_APPROVED',
+ 1, 0, 1,
+ '192.168.1.13', '长沙', '', 'zh-CN', false, false,
+ 6, 6),  -- reply_to_id=6, parent_id=6
+
+-- 评论17：白十四 回复 评论6
+(17,
+ NOW() - INTERVAL '5 days', NOW() - INTERVAL '5 days', NULL,
+ 0, 0, NULL,
+ 'CONTENT_TYPE_POST', 3,
+ 'GoWind CMS 也很不错',
+ 0, '白十四', 'baisishi@example.com',
+ '', 'AUTHOR_TYPE_GUEST', 'STATUS_APPROVED',
+ 4, 0, 0,
+ '192.168.1.14', '郑州', '', 'zh-CN', false, false,
+ 6, 6),  -- reply_to_id=6, parent_id=6
+
+-- ========== 文章 ID=3 的三级评论（父评论15） ==========
+-- 评论16：博主 回复 评论15
+(16,
+ NOW() - INTERVAL '6 days', NOW() - INTERVAL '6 days', NULL,
+ 1, 1, NULL,
+ 'CONTENT_TYPE_POST', 3,
+ '@孔十三 看需求，Strapi 开源免费，Contentful 功能更强大',
+ 1, '博主', 'admin@example.com',
+ 'https://example.com', 'AUTHOR_TYPE_ADMIN', 'STATUS_APPROVED',
+ 5, 0, 0,
+ '192.168.1.100', '北京', '', 'zh-CN', false, false,
+ 15, 15)
+;
 
 -- ----------------------------
 -- 插入 media_assets 媒体资源数据

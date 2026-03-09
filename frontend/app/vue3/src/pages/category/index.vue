@@ -44,8 +44,8 @@ onMounted(() => {
 
 // 监听语言切换，自动重新加载数据
 useLanguageChangeEffect(loadCategories, {
-  immediate: false,    // 已经在 onMounted 中加载，不需要立即执行
-  autoCleanup: true,   // 组件卸载时自动取消订阅
+  immediate: false,      // 是否立即执行一次
+  autoCleanup: true,    // 是否自动清理
 });
 </script>
 

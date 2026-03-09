@@ -61,7 +61,7 @@ async function loadCategories() {
 
 // 监听语言切换，自动重新加载数据
 useLanguageChangeEffect(loadCategories, {
-  immediate: true,      // 是否立即执行一次
+  immediate: false,      // 是否立即执行一次
   autoCleanup: true,    // 是否自动清理
 });
 

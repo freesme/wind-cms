@@ -184,8 +184,8 @@ useLanguageChangeEffect(async () => {
     activeTab.value === 'posts' ? loadUserPosts() : Promise.resolve(),
   ]);
 }, {
-  immediate: false,    // 已经在 onMounted 中加载，不需要立即执行
-  autoCleanup: true,   // 组件卸载时自动取消订阅
+  immediate: false,      // 是否立即执行一次
+  autoCleanup: true,    // 是否自动清理
 });
 </script>
 

@@ -28,7 +28,7 @@ func NewCommentService(ctx *bootstrap.Context, uc *data.CommentRepo) *CommentSer
 }
 
 func (s *CommentService) List(ctx context.Context, req *paginationV1.PagingRequest) (*commentV1.ListCommentResponse, error) {
-	return s.commentRepo.List(ctx, req)
+	return s.commentRepo.List(ctx, req, true)
 }
 
 func (s *CommentService) Get(ctx context.Context, req *commentV1.GetCommentRequest) (*commentV1.Comment, error) {

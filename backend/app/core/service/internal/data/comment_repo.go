@@ -118,7 +118,7 @@ func (r *CommentRepo) buildCommentTree(items []*commentV1.Comment, parentId uint
 	return tree
 }
 
-func (r *CommentRepo) List(ctx context.Context, req *paginationV1.PagingRequest) (*commentV1.ListCommentResponse, error) {
+func (r *CommentRepo) List(ctx context.Context, req *paginationV1.PagingRequest, treeTravel bool) (*commentV1.ListCommentResponse, error) {
 	if req == nil {
 		return nil, commentV1.ErrorBadRequest("invalid parameter")
 	}
@@ -131,6 +131,14 @@ func (r *CommentRepo) List(ctx context.Context, req *paginationV1.PagingRequest)
 	}
 	if ret == nil {
 		return &commentV1.ListCommentResponse{Total: 0, Items: nil}, nil
+	}
+
+	if treeTravel {
+		roots := r.buildCommentTree(ret.Items, 0) // 假设根节点ParentId为0
+		return &commentV1.ListCommentResponse{
+			Total: ret.Total,
+			Items: roots,
+		}, nil
 	}
 
 	return &commentV1.ListCommentResponse{

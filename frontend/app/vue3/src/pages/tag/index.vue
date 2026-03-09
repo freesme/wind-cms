@@ -69,8 +69,8 @@ onMounted(async () => {
 useLanguageChangeEffect(async () => {
   await loadTags();
 }, {
-  immediate: false,
-  autoCleanup: true,
+  immediate: false,      // 是否立即执行一次
+  autoCleanup: true,    // 是否自动清理
 });
 </script>
 
