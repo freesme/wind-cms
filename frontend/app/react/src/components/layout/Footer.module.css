@@ -1,0 +1,118 @@
+.footerOuter {
+    width: 100%;
+    background: #23262e;
+    display: flex;
+    justify-content: center;
+}
+
+.footerContainer {
+    min-height: 72px;
+    padding: 16px 0;
+    color: rgba(255, 255, 255, 0.65);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    max-width: 1200px;
+    width: 100%;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.footerLinks {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.footerMeta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.footerLink :global(.ant-btn) {
+    color: rgba(255, 255, 255, 0.65);
+    padding: 0 4px;
+    transition: all 0.2s;
+}
+
+.footerLink :global(.ant-btn:hover) {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.footerLink a {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.footerLink a:hover {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.socialList {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.socialBtn :global(.ant-btn) {
+    font-size: 24px;
+    color: rgba(255, 255, 255, 0.65);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.socialBtn :global(.ant-btn:hover) {
+    color: #6366f1;
+    transform: translateY(-1px);
+}
+
+/* Iconify 图标样式 */
+.socialBtn svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Iconify 图标样式 */
+.socialBtn svg {
+    width: 24px;
+    height: 24px;
+}
+
+.copyright {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.metaDivider :global(.ant-divider-vertical) {
+    background-color: rgba(255, 255, 255, 0.1);
+    height: 14px;
+    margin: 0 8px;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+    .footerContainer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px 24px 20px;
+    }
+
+    .footerMeta {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .metaDivider {
+        display: none;
+    }
+}
