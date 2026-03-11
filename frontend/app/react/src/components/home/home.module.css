@@ -604,11 +604,7 @@ html.dark .scrollIndicatorText {
 /* ========== Features Section ========== */
 .featuresSection {
     padding: 4rem 2rem;
-    background: #f8fafc;
-}
-
-html.dark .featuresSection {
-    background: #0f172a;
+    background: var(--color-bg);
 }
 
 .featuresSection .sectionHeader {
@@ -625,9 +621,23 @@ html.dark .featuresSection {
     letter-spacing: -1px;
     margin: 0 0 2rem 0;
     line-height: 1.1;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 8px rgba(99, 102, 241, 0.08), 0 1px 2px rgba(0, 0, 0, 0.08);
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+html.dark .featuresSection .sectionTitle {
+    background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 8px rgba(35, 38, 58, 0.44);
+    color: #e0e7ef;
 }
 
 .featuresGrid {
@@ -641,19 +651,13 @@ html.dark .featuresSection {
 .featureCard {
     padding: 2.5rem 2rem;
     border-radius: 12px;
-    border: 1px solid #e2e8f0;
-    background: white;
+    border: 1px solid var(--color-card-border, var(--color-border));
+    background: var(--color-surface);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     text-align: center;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
-html.dark .featureCard {
-    background: #1e293b;
-    border-color: #334155;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 8px var(--color-card-shadow, rgba(0, 0, 0, 0.06));
 }
 
 .featureCard::before {
@@ -670,8 +674,8 @@ html.dark .featureCard {
 
 .featureCard:hover {
     transform: translateY(-8px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
-    border-color: #6366f1;
+    box-shadow: 0 12px 32px var(--color-hover-shadow, rgba(0, 0, 0, 0.12));
+    border-color: var(--color-brand);
 }
 
 .featureCard:hover::before {
@@ -680,7 +684,7 @@ html.dark .featureCard {
 
 .featureIcon {
     font-size: 3rem;
-    color: #6366f1;
+    color: var(--color-brand);
     margin-bottom: 1.5rem;
     width: 80px;
     height: 80px;
@@ -697,31 +701,23 @@ html.dark .featureCard {
 .featureCard:hover .featureIcon {
     transform: scale(1.15) rotate(-10deg);
     color: #fff;
-    background: linear-gradient(135deg, #6366f1 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--color-brand) 0%, #764ba2 100%);
 }
 
 .featureTitle {
     font-size: 1.25rem;
     margin-bottom: 0.75rem;
-    color: #1f2937;
+    color: var(--color-text-primary);
     font-weight: 700;
     transition: color 0.3s;
 }
 
-html.dark .featureTitle {
-    color: #e0e7ef;
-}
-
 .featureCard:hover .featureTitle {
-    color: #6366f1;
+    color: var(--color-brand);
 }
 
 .featureDescription {
-    color: #6b7280;
+    color: var(--color-text-secondary);
     font-size: 0.95rem;
     line-height: 1.7;
-}
-
-html.dark .featureDescription {
-    color: #9ca3af;
 }
