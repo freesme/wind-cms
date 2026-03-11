@@ -13,3 +13,9 @@
     opacity: 1;
     transform: translateY(0);
 }
+
+/* Categories Section Wrapper */
+.categoriesSectionWrapper {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}

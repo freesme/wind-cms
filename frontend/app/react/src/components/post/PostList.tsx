@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {Pagination, Empty, Skeleton} from 'antd';
 import {useTranslations} from 'next-intl';
 
@@ -45,7 +45,7 @@ const PostList: React.FC<PostListProps> = ({
     const [currentPage, setCurrentPage] = useState(page);
     const [currentPageSize, setCurrentPageSize] = useState(pageSize);
 
-    async function fetchPosts() {
+    const fetchPosts = useCallback(async () => {
         setLoading(true);
         try {
             const res = await postStore.listPost({
@@ -60,12 +60,12 @@ const PostList: React.FC<PostListProps> = ({
         } finally {
             setLoading(false);
         }
-    }
+    }, [currentPage, currentPageSize, queryParams, fieldMask, orderBy]);
 
     // 监听页面变化
     useEffect(() => {
         fetchPosts();
-    }, [currentPage, currentPageSize, queryParams, fieldMask, orderBy, fetchPosts]);
+    }, [fetchPosts]);
 
     // 监听外部 page 变化
     useEffect(() => {

@@ -1,6 +1,9 @@
 'use client';
 
 import React, {useEffect} from "react";
+import {Button} from 'antd';
+import {XIcon} from '@/plugins/xicon';
+import {useTranslations} from 'next-intl';
 
 import '../globals.css';
 import styles from './page.module.css';
@@ -13,6 +16,8 @@ import LatestPostsSection from '../../components/home/LatestPostsSection';
 import FeaturesSection from '../../components/home/FeaturesSection';
 
 export default function Home() {
+    const t = useTranslations('page.home');
+
     // Intersection Observer for scroll reveal
     useEffect(() => {
         const observer = new window.IntersectionObserver(

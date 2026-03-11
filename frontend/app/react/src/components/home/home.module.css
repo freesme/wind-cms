@@ -757,7 +757,7 @@ html.dark .featuresSection .sectionTitle {
 
 .tagLabel {
     font-size: 1.05rem;
-    color: var(--tag-color, #6366f1);
+    color: inherit;
     font-weight: 700;
     letter-spacing: 0.1px;
     transition: color 0.3s;
@@ -821,8 +821,12 @@ html.dark .tagItem:hover .tagLabel {
 
 /* ========== Categories Section ========== */
 .categoriesSection {
-    padding: 4rem 2rem;
-    background: var(--color-bg);
+    padding: 3rem 0;
+    background: transparent;
+}
+
+.categoriesSection .sectionHeader {
+    margin-bottom: 2rem;
 }
 
 .categoriesGrid {
@@ -838,21 +842,56 @@ html.dark .tagItem:hover .tagLabel {
     display: none;
 }
 
+.carouselContainer {
+    width: 100%;
+    padding: 1.5rem 0;
+}
+
+.carouselItem {
+    padding: 0.75rem 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.carouselCard {
+    min-width: 280px;
+    max-width: 320px;
+    margin: 0 auto;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+}
+
 .categoryCard {
     display: flex;
     flex-direction: column;
-    padding: 2rem 1.75rem;
-    background: #fff;
-    border: 1.5px solid #e0e7ef;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    color: #3730a3;
+    padding: 1.5rem;
+    background: #1e293b;
+    border: 1px solid rgba(99, 102, 241, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    color: #e0e7ef;
     border-radius: 16px;
     cursor: pointer;
     position: relative;
-    min-height: 220px;
+    min-height: 200px;
     height: 100%;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s;
     overflow: visible;
+}
+
+.categoryCard::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 20px;
+    background: #6366f1;
+    border-radius: 0 3px 3px 0;
+    opacity: 0;
+    transition: opacity 0.3s;
 }
 
 .categoryCardBg {
@@ -883,17 +922,16 @@ html.dark .tagItem:hover .tagLabel {
 
 .categoryIcon {
     font-size: 2.5rem;
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #e0e7ff;
+    background: rgba(99, 102, 241, 0.1);
     color: #6366f1;
-    border-radius: 16px;
-    margin-bottom: 1.25rem;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 14px;
+    margin-bottom: 1rem;
+    transition: all 0.3s;
 }
 
 .categoryInfo {
@@ -914,135 +952,68 @@ html.dark .tagItem:hover .tagLabel {
 
 .postCount {
     font-size: 0.95rem;
-    color: #6366f1;
+    color: #a5b4fc;
     font-weight: 600;
-    letter-spacing: 0.2px;
     display: inline-block;
-    padding: 0.35rem 0.875rem;
-    background: rgba(99, 102, 241, 0.08);
+    padding: 0.35rem 0.75rem;
+    background: rgba(99, 102, 241, 0.1);
     border-radius: 8px;
-    border: 1px solid rgba(99, 102, 241, 0.15);
     transition: all 0.3s;
     margin-bottom: 0.75rem;
 }
 
 .categoryBadge {
     margin-top: auto;
-    padding: 0.625rem 1rem;
-    background: #e0e7ff;
-    color: #6366f1;
-    border-radius: 10px;
-    font-size: 0.825rem;
+    padding: 0.5rem 0.875rem;
+    background: rgba(99, 102, 241, 0.1);
+    color: #a5b4fc;
+    border-radius: 8px;
+    font-size: 0.8rem;
     font-weight: 600;
     width: fit-content;
-    white-space: nowrap;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    box-shadow: 0 2px 6px rgba(99, 102, 241, 0.12);
     transition: all 0.3s;
-    border: 1px solid rgba(99, 102, 241, 0.12);
+    position: relative;
 }
 
 .categoryCard:hover {
-    transform: translateY(-8px);
-    background: #fff;
-    border-color: #6366f1;
-    box-shadow: 0 12px 28px rgba(99, 102, 241, 0.2);
+    background: #23263a;
+    border-color: rgba(99, 102, 241, 0.3);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
 }
 
-.categoryCard:hover .categoryCardBg {
+.categoryCard:hover::before {
     opacity: 1;
 }
 
-.categoryCard:hover .categoryIcon {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-    color: #fff;
-    transform: scale(1.12) rotate(-8deg);
-    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+.categoryCard:hover .categoryCardBg {
+    opacity: 0;
 }
 
-.categoryCard:hover .categoryInfo h3 {
-    color: #4338ca;
+.categoryCard:hover .categoryIcon {
+    background: #6366f1;
+    color: #fff;
 }
 
 .categoryCard:hover .postCount {
-    color: #4338ca;
-    background: rgba(67, 56, 202, 0.1);
-    border-color: rgba(67, 56, 202, 0.2);
+    background: rgba(99, 102, 241, 0.2);
+    color: #c7d2fe;
 }
 
 .categoryCard:hover .categoryBadge {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-    color: #fff;
-    border-left-color: #4338ca;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-    border-color: rgba(99, 102, 241, 0.2);
+    background: rgba(99, 102, 241, 0.2);
+    color: #c7d2fe;
 }
 
-/* Dark Mode */
+/* Dark Mode overrides */
 html.dark .categoriesSection {
-    background: #0f172a;
+    background: transparent;
 }
 
 html.dark .categoryCard {
     background: #1e293b;
-    border: 1px solid rgba(51, 65, 85, 0.6);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    color: #e0e7ef;
-}
-
-html.dark .categoryIcon {
-    background: rgba(99, 102, 241, 0.15);
-    color: #a5b4fc;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-html.dark .categoryInfo h3 {
-    color: #e2e8f0;
-}
-
-html.dark .postCount {
-    color: #a5b4fc;
-    background: rgba(165, 180, 252, 0.08);
-    border: 1px solid rgba(165, 180, 252, 0.1);
-}
-
-html.dark .categoryBadge {
-    background: #1e293b;
-    color: #a5b4fc;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(51, 65, 85, 0.5);
-}
-
-html.dark .categoryCard:hover {
-    transform: translateY(-8px);
-    background: #1e293b;
-    border-color: rgba(99, 102, 241, 0.6);
-    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2);
-}
-
-html.dark .categoryCard:hover .categoryIcon {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-    color: #fff;
-    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35);
-}
-
-html.dark .categoryCard:hover .categoryInfo h3 {
-    color: #f1f5f9;
-}
-
-html.dark .categoryCard:hover .postCount {
-    color: #c7d2fe;
-    background: rgba(199, 210, 254, 0.12);
-    border-color: rgba(199, 210, 254, 0.18);
-}
-
-html.dark .categoryCard:hover .categoryBadge {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-    color: #fff;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-    border-color: rgba(99, 102, 241, 0.5);
 }
 
 /* Mobile Responsive */

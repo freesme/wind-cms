@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback, useRef, useMemo} from 'react';
-import {Skeleton} from 'antd';
+import {Skeleton, Carousel, Button} from 'antd';
 import {useTranslations} from 'next-intl';
 import {useCategoryStore} from '@/store/slices/category/hooks';
 import {contentservicev1_Category} from '@/api/generated/app/service/v1';
@@ -10,18 +10,22 @@ interface CategoryListSectionProps {
     skeletonCount?: number;
     showCarousel?: boolean;
     pageSize?: number;
+    page?: number;
     filter?: Record<string, unknown>;
     orderBy?: string[];
     fieldMask?: string;
+    showHeader?: boolean;
 }
 
 export default function CategoryListSection({
     skeletonCount = 8,
     showCarousel = false,
     pageSize = 8,
+    page = 1,
     filter = {status: 'CATEGORY_STATUS_ACTIVE'} as Record<string, unknown>,
     orderBy = ['-sortOrder', '-postCount'],
-    fieldMask = 'id,status,sortOrder,icon,code,postCount,directPostCount,parent_id,createdAt,translations.id,translations.categoryId,translations.name,translations.languageCode,translations.description'
+    fieldMask = 'id,status,sortOrder,icon,code,postCount,directPostCount,parent_id,createdAt,translations.id,translations.categoryId,translations.name,translations.languageCode,translations.description',
+    showHeader = true
 }: CategoryListSectionProps) {
     const t = useTranslations('page.home');
     const categoryStore = useCategoryStore();
@@ -48,13 +52,13 @@ export default function CategoryListSection({
         
         setLoading(true);
         try {
-            const res = await categoryStore.listCategory(
-                {page: 1, pageSize},
-                filter,
+            const res = await categoryStore.listCategory({
+                paging: {page, pageSize},
+                formValues: stableFilter,
                 fieldMask,
-                orderBy,
-                signal
-            );
+                orderBy: stableOrderBy,
+                signal,
+            });
             
             if (signal.aborted) return;
             
@@ -68,7 +72,7 @@ export default function CategoryListSection({
                 setLoading(false);
             }
         }
-    }, [pageSize, stableFilter, fieldMask, stableOrderBy]);
+    }, [page, pageSize, stableFilter, fieldMask, stableOrderBy]);
 
     useEffect(() => {
         loadCategories();
@@ -91,10 +95,23 @@ export default function CategoryListSection({
     };
 
     return (
-        <section className={styles.categoriesSection}>
+        <section className={`${styles.categoriesSection} scroll-reveal`}>
+            {/* Section Header */}
+            {showHeader && (
+                <div className={styles.sectionHeader}>
+                    <h2 className={styles.sectionTitle}>
+                        <XIcon name="carbon:folder-details" size={28} style={{color: '#6366f1', marginRight: '8px'}} />
+                        {t('categories')}
+                    </h2>
+                    <Button text onClick={() => window.location.href = '/category'}>
+                        {t('view_all')} →
+                    </Button>
+                </div>
+            )}
+            
             {/* Loading Skeleton */}
             {loading ? (
-                <div className={styles.categoriesGrid}>
+                <div className={`${styles.categoriesGrid} desktop-grid`}>
                     {Array.from({length: skeletonCount}).map((_, i) => (
                         <div key={i} className={styles.categoryCard}>
                             <Skeleton.Button style={{width: '100%', height: '140px'}} />
@@ -103,50 +120,84 @@ export default function CategoryListSection({
                 </div>
             ) : (
                 <>
-                    {/* Desktop Grid */}
-                    {!showCarousel && (
-                        <div className={styles.categoriesGrid}>
+                    {/* Desktop Grid - 始终渲染，由 CSS 控制显示 */}
+                    <div className={`${styles.categoriesGrid} desktop-grid`}>
+                        {categories.map((category) => (
+                            <div
+                                key={category.id}
+                                className={`${styles.categoryCard} scroll-reveal-item`}
+                                onClick={() => handleViewCategory(category.id)}
+                            >
+                                <div className={styles.categoryCardBg} />
+                                <div className={styles.categoryCardContent}>
+                                    <div className={styles.categoryCardHeader}>
+                                        <div className={styles.categoryIcon}>
+                                            <XIcon
+                                                name={getIconName(category.icon)}
+                                                size={48}
+                                            />
+                                        </div>
+                                        <div className={styles.categoryInfo}>
+                                            <h3>{categoryStore.getCategoryName(category)}</h3>
+                                            <span className={styles.postCount}>
+                                                {t('article_count', {count: category.postCount || 0})}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className={styles.categoryBadge}>
+                                        <XIcon name="carbon:time" size={14} />
+                                        <span>{t('updated_days_ago', {days: 3})}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Mobile Carousel - 始终渲染，由 CSS 控制显示 */}
+                    <div className={`${styles.categoriesCarousel} mobile-carousel`}>
+                        <Carousel
+                            autoplay
+                            autoplaySpeed={5000}
+                            arrows={false}
+                            draggable
+                            slidesToShow={1.5}
+                            centerMode
+                            dots={false}
+                            className={styles.carouselContainer}
+                        >
                             {categories.map((category) => (
                                 <div
                                     key={category.id}
-                                    className={styles.categoryCard}
+                                    className={styles.carouselItem}
                                     onClick={() => handleViewCategory(category.id)}
                                 >
-                                    <div className={styles.categoryCardBg} />
-                                    <div className={styles.categoryCardContent}>
-                                        <div className={styles.categoryCardHeader}>
-                                            <div className={styles.categoryIcon}>
-                                                <XIcon
-                                                    name={getIconName(category.icon)}
-                                                    size={48}
-                                                />
+                                    <div className={`${styles.categoryCard} ${styles.carouselCard}`}>
+                                        <div className={styles.categoryCardBg} />
+                                        <div className={styles.categoryCardContent}>
+                                            <div className={styles.categoryCardHeader}>
+                                                <div className={styles.categoryIcon}>
+                                                    <XIcon
+                                                        name={getIconName(category.icon)}
+                                                        size={48}
+                                                    />
+                                                </div>
+                                                <div className={styles.categoryInfo}>
+                                                    <h3>{categoryStore.getCategoryName(category)}</h3>
+                                                    <span className={styles.postCount}>
+                                                        {t('article_count', {count: category.postCount || 0})}
+                                                    </span>
+                                                </div>
                                             </div>
-                                            <div className={styles.categoryInfo}>
-                                                <h3>{categoryStore.getCategoryName(category)}</h3>
-                                                <span className={styles.postCount}>
-                                                    {t('article_count', {count: category.postCount || 0})}
-                                                </span>
+                                            <div className={styles.categoryBadge}>
+                                                <XIcon name="carbon:time" size={14} />
+                                                <span>{t('updated_days_ago', {days: 3})}</span>
                                             </div>
-                                        </div>
-                                        <div className={styles.categoryBadge}>
-                                            <XIcon name="carbon:time" size={14} />
-                                            <span>{t('updated_days_ago', {days: 3})}</span>
                                         </div>
                                     </div>
                                 </div>
                             ))}
-                        </div>
-                    )}
-
-                    {/* Mobile Carousel */}
-                    {showCarousel && (
-                        <div className={styles.categoriesCarousel}>
-                            {/* TODO: 移动端轮播需要引入 antd Carousel 组件 */}
-                            <p style={{textAlign: 'center', color: '#999'}}>
-                                移动端轮播功能待实现（请使用 Ant Design Carousel）
-                            </p>
-                        </div>
-                    )}
+                        </Carousel>
+                    </div>
                 </>
             )}
         </section>

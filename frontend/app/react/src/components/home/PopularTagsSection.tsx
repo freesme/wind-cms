@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useCallback, useRef} from 'react';
-import {Skeleton} from 'antd';
+import {Skeleton, Button} from 'antd';
 import {useTranslations} from 'next-intl';
+import {XIcon} from '@/plugins/xicon';
 
 import {useTagStore} from '@/store/slices/tag/hooks';
 import {contentservicev1_Tag} from '@/api/generated/app/service/v1';
@@ -85,7 +86,13 @@ export default function PopularTagsSection() {
     return (
         <section className={styles.popularSection}>
             <div className={styles.sectionHeader}>
-                <h2 className={styles.sectionTitle}>{t('popular_tags')}</h2>
+                <h2 className={styles.sectionTitle}>
+                    <XIcon name="carbon:fire" size={28} style={{color: '#6366f1', marginRight: '8px'}} />
+                    {t('popular_tags')}
+                </h2>
+                <Button text type="primary" onClick={() => window.location.href = '/tag'}>
+                    {t('view_all')} →
+                </Button>
             </div>
             <div className={styles.tagsContent}>
                 {loading ? (

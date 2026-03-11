@@ -67,7 +67,8 @@
     "total_tags": "个标签",
     "no_tags": "暂无标签",
     "tag_untitled": "未命名标签",
-    "popular_tags": "热门标签"
+    "popular_tags": "热门标签",
+    "view_all": "查看全部"
   },
   "post_detail": {
     "untitled": "未命名",
