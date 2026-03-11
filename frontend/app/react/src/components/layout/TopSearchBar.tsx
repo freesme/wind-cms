@@ -111,15 +111,8 @@ export default function TopSearchBar({brandTitle, logoSrc = '/logo.png', onLogoC
     };
 
     const toggleDarkMode = () => {
-        // 支持三种模式切换
-        let newMode: 'dark' | 'light' | 'system';
-        if (themeStore.theme.mode === 'dark') {
-            newMode = 'light';
-        } else if (themeStore.theme.mode === 'light') {
-            newMode = 'system';
-        } else {
-            newMode = 'dark';
-        }
+        // 只在暗黑和亮色之间切换
+        const newMode: 'dark' | 'light' = themeStore.theme.mode === 'dark' ? 'light' : 'dark';
         themeStore.setMode(newMode);
         if (typeof window !== 'undefined') {
             localStorage.setItem('themeMode', newMode);
@@ -219,11 +212,10 @@ export default function TopSearchBar({brandTitle, logoSrc = '/logo.png', onLogoC
                         className={styles.themeBtn}
                         aria-label="Toggle theme"
                         onClick={toggleDarkMode}
-                        icon={themeStore.theme.mode === 'dark' ? <SunOutlined/> : themeStore.theme.mode === 'light' ?
-                            <MoonOutlined/> : <GlobalOutlined/>}
+                        icon={themeStore.theme.mode === 'dark' ? <MoonOutlined/> : <SunOutlined/>}
                     >
                       <span className={styles.themeText}>
-                       {themeStore.theme.mode === 'dark' ? t('light_mode') : themeStore.theme.mode === 'light' ? t('system_mode') : t('dark_mode')}
+                       {themeStore.theme.mode === 'dark' ? t('dark_mode') : t('light_mode')}
                       </span>
                     </Button>
                 </Space>
