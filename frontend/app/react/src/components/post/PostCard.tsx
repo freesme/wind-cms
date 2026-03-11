@@ -1,10 +1,11 @@
 'use client';
 
 import React from 'react';
-import {useRouter} from 'next/navigation';
 
 import {XIcon} from '@/plugins/xicon';
 import {usePostStore} from '@/store/slices/post/hooks';
+import {useI18nRouter} from '@/i18n/helpers/useI18nRouter';
+
 import type {contentservicev1_Post} from '@/api/generated/app/service/v1';
 
 import styles from './PostCard.module.css';
@@ -20,7 +21,7 @@ const PostCard: React.FC<PostCardProps> = ({
                                                from = 'post-list',
                                                categoryId
                                            }) => {
-    const router = useRouter();
+    const router = useI18nRouter();
     const postStore = usePostStore();
 
     const handleViewPost = () => {

@@ -5,6 +5,9 @@ import {useTranslations} from 'next-intl';
 import {useCategoryStore} from '@/store/slices/category/hooks';
 import {contentservicev1_Category} from '@/api/generated/app/service/v1';
 import {XIcon} from '@/plugins/xicon';
+import {useI18nRouter} from '@/i18n/helpers/useI18nRouter';
+
+
 import HomeCategoryCard from './HomeCategoryCard';
 
 import styles from './home.module.css';
@@ -32,6 +35,7 @@ export default function CategoryListSection({
                                             }: CategoryListSectionProps) {
     const t = useTranslations('page.home');
     const categoryStore = useCategoryStore();
+    const router = useI18nRouter();
 
     // 使用 useMemo 稳定对象引用
     const stableFilter = useMemo(() => filter, [JSON.stringify(filter)]);
@@ -88,8 +92,12 @@ export default function CategoryListSection({
         };
     }, [loadCategories]);
 
-    const handleViewCategory = (id: number) => {
-        window.location.href = `/category/${id}`;
+    const handleViewCategoryDetail = (id: number) => {
+        router.push(`/category/${id}`);
+    };
+
+    const handleViewCategory = () => {
+        router.push(`/category`);
     };
 
     const getIconName = (icon?: string): string => {
@@ -106,7 +114,7 @@ export default function CategoryListSection({
                         <XIcon name="carbon:folder-details" size={28} style={{color: '#6366f1', marginRight: '8px'}}/>
                         {t('categories')}
                     </h2>
-                    <Button type="text" onClick={() => window.location.href = '/category'}>
+                    <Button type="text" onClick={handleViewCategory}>
                         {t('view_all')} →
                     </Button>
                 </div>
@@ -129,7 +137,7 @@ export default function CategoryListSection({
                             <HomeCategoryCard
                                 key={category.id}
                                 category={category}
-                                onClick={handleViewCategory}
+                                onClick={handleViewCategoryDetail}
                             />
                         ))}
                     </div>
@@ -150,11 +158,11 @@ export default function CategoryListSection({
                                 <div
                                     key={category.id}
                                     className={styles.carouselItem}
-                                    onClick={() => handleViewCategory(category.id)}
+                                    onClick={() => handleViewCategoryDetail(category.id)}
                                 >
                                     <HomeCategoryCard
                                         category={category}
-                                        onClick={handleViewCategory}
+                                        onClick={handleViewCategoryDetail}
                                     />
                                 </div>
                             ))}

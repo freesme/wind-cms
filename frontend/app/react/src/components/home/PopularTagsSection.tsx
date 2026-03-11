@@ -4,6 +4,7 @@ import {useTranslations} from 'next-intl';
 
 import {XIcon} from '@/plugins/xicon';
 import {useTagStore} from '@/store/slices/tag/hooks';
+import {useI18nRouter} from '@/i18n/helpers/useI18nRouter';
 import {contentservicev1_Tag} from '@/api/generated/app/service/v1';
 
 import styles from './home.module.css';
@@ -17,6 +18,7 @@ interface TagItem {
 export default function PopularTagsSection() {
     const t = useTranslations('page.tags');
     const tagStore = useTagStore();
+    const router = useI18nRouter();
 
     const [tags, setTags] = useState<contentservicev1_Tag[]>([]);
     const [loading, setLoading] = useState(false);
@@ -82,7 +84,7 @@ export default function PopularTagsSection() {
     }, [loadPopularTags]);
 
     const handleViewTag = (tag: TagItem) => {
-        window.location.href = `/tag/${tag.id}`;
+        router.push(`/tag/${tag.id}`);
     };
 
     return (
@@ -92,7 +94,7 @@ export default function PopularTagsSection() {
                     <XIcon name="carbon:fire" size={28} style={{color: '#6366f1', marginRight: '8px'}}/>
                     {t('popular_tags')}
                 </h2>
-                <Button type="text" onClick={() => window.location.href = '/tag'}>
+                <Button type="text" onClick={() => router.push('/tag')}>
                     {t('view_all')} →
                 </Button>
             </div>

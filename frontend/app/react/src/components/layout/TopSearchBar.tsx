@@ -11,7 +11,7 @@ import {
     LogoutOutlined
 } from '@ant-design/icons';
 import {useTranslations} from 'next-intl';
-import {useRouter} from 'next/navigation';
+import {useI18nRouter} from '@/i18n/helpers/useI18nRouter';
 
 import styles from './TopSearchBar.module.css';
 
@@ -34,7 +34,7 @@ export default function TopSearchBar({brandTitle, logoSrc = '/logo.png', onLogoC
     const themeStore = useThemeStore();
     const languageStore = useLanguageStore();
     const {changeLocale} = useI18n();
-    const router = useRouter();
+    const router = useI18nRouter();
 
     // 模拟登录状态（实际应该从 store 获取）
     const isLogin = false; // TODO: 从 accessStore 获取

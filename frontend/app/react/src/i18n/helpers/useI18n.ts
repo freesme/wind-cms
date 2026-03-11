@@ -1,9 +1,9 @@
 'use client';
 
 import {useTranslations, useLocale} from 'next-intl';
-import {useRouter} from 'next/navigation';
 
 import {useLanguageStore} from '@/store/core/language/hooks';
+import {useI18nRouter} from './useI18nRouter';
 
 /**
  * useI18n hook - 增强的多语言支持
@@ -12,7 +12,7 @@ import {useLanguageStore} from '@/store/core/language/hooks';
 export function useI18n(namespace: string = 'common') {
     const t = useTranslations(namespace);
     const locale = useLocale();
-    const router = useRouter();
+    const router = useI18nRouter();
     const languageStore = useLanguageStore();
 
     // 同步 locale 到 Redux store

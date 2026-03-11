@@ -4,6 +4,7 @@ import React, {useState, useEffect} from 'react';
 import {Menu, Tabs} from 'antd';
 
 import {XIcon} from '@/plugins/xicon';
+import {useI18nRouter} from '@/i18n/helpers/useI18nRouter';
 
 import type {siteservicev1_Navigation, siteservicev1_NavigationItem} from '@/api/generated/app/service/v1';
 import {useNavigationStore} from '@/store/slices/navigation/hooks';
@@ -33,6 +34,7 @@ const rightTabList: TopNavBarTabItem[] = [];
 export default function TopNavbar({onClick}: TopNavbarProps) {
     const navigationStore = useNavigationStore();
     const languageStore = useLanguageStore();
+    const router = useI18nRouter();
     const [navigationItems, setNavigationItems] = useState<siteservicev1_NavigationItem[]>([]);
     const [activeOverlay, setActiveOverlay] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -128,8 +130,7 @@ export default function TopNavbar({onClick}: TopNavbarProps) {
             window.open(item.url, '_blank');
         } else {
             if (item.url != null) {
-                // TODO: 使用 router.push 时保留 history state
-                window.location.href = item.url;
+                router.push(item.url);
             }
         }
     };

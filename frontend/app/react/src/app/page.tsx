@@ -1,7 +1,7 @@
 "use client";
 
 import React, {useEffect} from 'react';
-import {useRouter} from 'next/navigation';
+import {useI18nRouter} from '@/i18n/helpers/useI18nRouter';
 import {Spin} from 'antd';
 
 import {env} from "@/config";
@@ -12,7 +12,7 @@ const getDefaultLocale = () => {
 };
 
 const HomePage: React.FC = () => {
-    const router = useRouter();
+    const router = useI18nRouter();
 
     useEffect(() => {
         const locale = getDefaultLocale();

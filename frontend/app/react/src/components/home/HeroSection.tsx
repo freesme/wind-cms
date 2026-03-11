@@ -2,11 +2,14 @@ import React from 'react';
 import {Button} from 'antd';
 import {useTranslations} from 'next-intl';
 
+import {useI18nRouter} from '@/i18n/helpers/useI18nRouter';
+
 import styles from './home.module.css';
 
 export default function HeroSection() {
     const t = useTranslations('page.home');
     const brandT = useTranslations('authentication.login');
+    const router = useI18nRouter();
 
     return (
         <section className={styles.hero}>
@@ -70,11 +73,11 @@ export default function HeroSection() {
                 <p className={styles.heroDescription}>{t('hero_description')}</p>
                 <div className={styles.heroActions}>
                     <Button type="primary" size="large" className={styles.btnPrimary}
-                            onClick={() => window.location.href = '/post'}>
+                            onClick={() => router.push('/post')}>
                         {t('browse_posts')}
                     </Button>
                     <Button size="large" className={styles.btnSecondary}
-                            onClick={() => window.location.href = '/about'}>
+                            onClick={() => router.push('/about')}>
                         {t('learn_more')}
                     </Button>
                 </div>

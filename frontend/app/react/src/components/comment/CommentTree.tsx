@@ -75,8 +75,9 @@ const CommentTree: React.FC<CommentTreeProps> = ({
     }
 
     function handleShare(comment: commentservicev1_Comment) {
-        const url = window.location.href.split('#')[0];
-        const commentUrl = `${url}#comment-${comment.id}`;
+        // 获取当前 URL（不包含 hash）
+        const baseUrl = typeof window !== 'undefined' ? window.location.href.split('#')[0] : '';
+        const commentUrl = `${baseUrl}#comment-${comment.id}`;
 
         navigator.clipboard.writeText(commentUrl).then(() => {
             // message.success(t('link_copied'));

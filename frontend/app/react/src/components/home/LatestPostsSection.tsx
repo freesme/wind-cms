@@ -3,6 +3,7 @@ import {Button} from 'antd';
 import {useTranslations} from 'next-intl';
 
 import {XIcon} from '@/plugins/xicon';
+import {useI18nRouter} from '@/i18n/helpers/useI18nRouter';
 
 import PostList from '@/components/post/PostList';
 
@@ -10,6 +11,7 @@ import styles from './home.module.css';
 
 export default function LatestPostsSection() {
     const t = useTranslations('page.home');
+    const router = useI18nRouter();
     return (
         <section className={`${styles.latestSection} scroll-reveal`}>
             <div className={styles.sectionHeader}>
@@ -17,7 +19,7 @@ export default function LatestPostsSection() {
                     <XIcon name="carbon:document" size={28} style={{color: '#6366f1', marginRight: '8px'}}/>
                     {t('latest_posts')}
                 </h2>
-                <Button type="text" onClick={() => window.location.href = '/post'}>
+                <Button type="text" onClick={() => router.push('/post')}>
                     {t('view_all')} →
                 </Button>
             </div>
