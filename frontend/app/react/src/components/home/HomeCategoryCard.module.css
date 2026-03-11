@@ -106,13 +106,6 @@
     box-shadow: 0 8px 24px rgba(99, 102, 241, 0.12);
 }
 
-/* Override hover in dark mode */
-html.dark .homeCategoryCard:hover {
-    background: #23263a !important;
-    border-color: rgba(99, 102, 241, 0.3) !important;
-    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.25) !important;
-}
-
 .homeCategoryCard:hover .homeCategoryCardBg {
     opacity: 0;
 }
@@ -129,49 +122,49 @@ html.dark .homeCategoryCard:hover {
 }
 
 /* ========== Dark Mode - PC Desktop ========== */
-html.dark .homeCategoryCard {
+:global(html.dark) .homeCategoryCard {
     background: #1e293b !important;
     border: 1px solid rgba(99, 102, 241, 0.15) !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
     color: #e0e7ef !important;
 }
 
-html.dark .homeCategoryCardBg {
+:global(html.dark) .homeCategoryCardBg {
     background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, transparent 100%) !important;
 }
 
-html.dark .homeCategoryCard .homeCategoryIcon {
+:global(html.dark) .homeCategoryCard .homeCategoryIcon {
     background: rgba(99, 102, 241, 0.12) !important;
     color: #a5b4fc !important;
 }
 
-html.dark .homeCategoryCard .homeCategoryInfo h3 {
+:global(html.dark) .homeCategoryCard .homeCategoryInfo h3 {
     color: #e0e7ef !important;
 }
 
-html.dark .homeCategoryCard .homePostCount {
+:global(html.dark) .homeCategoryCard .homePostCount {
     color: #a5b4fc !important;
     background: rgba(99, 102, 241, 0.12) !important;
 }
 
-html.dark .homeCategoryCard .homeCategoryBadge {
+:global(html.dark) .homeCategoryCard .homeCategoryBadge {
     color: #a5b4fc !important;
     background: rgba(99, 102, 241, 0.12) !important;
 }
 
-html.dark .homeCategoryCard:hover {
+:global(html.dark) .homeCategoryCard:hover {
     background: #23263a !important;
     border-color: rgba(99, 102, 241, 0.3) !important;
     box-shadow: 0 8px 24px rgba(99, 102, 241, 0.25) !important;
 }
 
-html.dark .homeCategoryCard:hover .homeCategoryIcon {
+:global(html.dark) .homeCategoryCard:hover .homeCategoryIcon {
     background: #6366f1 !important;
     color: #fff !important;
 }
 
-html.dark .homeCategoryCard:hover .homePostCount,
-html.dark .homeCategoryCard:hover .homeCategoryBadge {
+:global(html.dark) .homeCategoryCard:hover .homePostCount,
+:global(html.dark) .homeCategoryCard:hover .homeCategoryBadge {
     background: rgba(99, 102, 241, 0.2) !important;
     color: #c7d2fe !important;
 }
