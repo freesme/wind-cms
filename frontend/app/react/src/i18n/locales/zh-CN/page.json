@@ -46,7 +46,8 @@
     "no_results": "暂无结果",
     "author": "作者",
     "date": "日期",
-    "views_count": "{count} 阅读"
+    "views_count": "{count} 阅读",
+    "total_articles": "共 {total} 篇文章"
   },
   "categories": {
     "categories": "内容分类",

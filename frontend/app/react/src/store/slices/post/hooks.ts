@@ -8,6 +8,11 @@ import {
     deletePost,
     clearPostDetail,
     resetPost,
+    getTranslation,
+    getPostTitle,
+    getPostSummary,
+    getPostThumbnail,
+    getPostContent,
 } from './slice';
 import {createAbortableCalls} from "@/store/async-thunk";
 
@@ -45,5 +50,10 @@ export function usePostStore() {
         deletePost: cancellableDeletePost,
         clearPostDetail: () => dispatch(clearPostDetail()),
         resetPost: () => dispatch(resetPost()),
+        getTranslation,
+        getPostTitle,
+        getPostSummary,
+        getPostThumbnail,
+        getPostContent,
     };
 }

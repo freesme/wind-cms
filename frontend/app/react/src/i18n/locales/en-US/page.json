@@ -46,7 +46,8 @@
     "no_results": "No results",
     "author": "Author",
     "date": "Date",
-    "views_count": "{count} views"
+    "views_count": "{count} views",
+    "total_articles": "{total} articles in total"
   },
   "categories": {
     "categories": "Categories",

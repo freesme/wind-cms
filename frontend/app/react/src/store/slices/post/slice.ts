@@ -3,7 +3,9 @@ import {createPostServiceClient} from "@/api/generated/app/service/v1";
 import {requestClientRequestHandler} from "@/transport/rest";
 import {
     contentservicev1_Post,
+    contentservicev1_PostTranslation,
 } from '@/api/generated/app/service/v1';
+import {currentLocaleLanguageCode} from "@/i18n";
 
 const postService = createPostServiceClient(requestClientRequestHandler);
 
@@ -170,4 +172,50 @@ const postSlice = createSlice({
 });
 
 export const {clearPostDetail, resetPost} = postSlice.actions;
+
+/**
+ * 获取帖子的翻译
+ */
+export function getTranslation(post: contentservicev1_Post): contentservicev1_PostTranslation | null {
+    if (!post?.translations || post.translations.length === 0) return null;
+
+    const locale = currentLocaleLanguageCode();
+    // 优先查找当前语言的翻译
+    const translation = post.translations?.find((t: contentservicev1_PostTranslation) => t.languageCode === locale);
+    // 如果找不到，回退到第一个翻译
+    return translation || post.translations?.[0];
+}
+
+/**
+ * 获取帖子标题
+ */
+export function getPostTitle(post: contentservicev1_Post): string {
+    const translation = getTranslation(post);
+    return translation?.title || '';
+}
+
+/**
+ * 获取帖子摘要
+ */
+export function getPostSummary(post: contentservicev1_Post): string {
+    const translation = getTranslation(post);
+    return translation?.summary || '';
+}
+
+/**
+ * 获取帖子缩略图
+ */
+export function getPostThumbnail(post: contentservicev1_Post): string {
+    const translation = getTranslation(post);
+    return translation?.thumbnail || '/placeholder.jpg';
+}
+
+/**
+ * 获取帖子内容
+ */
+export function getPostContent(post: contentservicev1_Post): string {
+    const translation = getTranslation(post);
+    return translation?.content || '';
+}
+
 export default postSlice.reducer;
