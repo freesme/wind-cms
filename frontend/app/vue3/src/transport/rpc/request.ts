@@ -47,7 +47,11 @@ function createRequestClient(baseURL: string) {
     fulfilled: async (config) => {
       const accessStore = useAccessStore();
 
-      config.headers.Authorization = formatToken(accessStore.accessToken);
+      // 修正accessToken类型，保证Authorization头格式正确
+      const accessToken = typeof accessStore.accessToken === 'string'
+        ? accessStore.accessToken
+        : accessStore.accessToken?.value ?? null;
+      config.headers.Authorization = formatToken(accessToken);
       config.headers['Accept-Language'] = preferences.app.locale;
       return config;
     },

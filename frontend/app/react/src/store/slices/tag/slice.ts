@@ -1,0 +1,165 @@
+import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+import {createTagServiceClient} from '@/api/generated/app/service/v1';
+import {requestClientRequestHandler} from '@/transport/rest';
+import {
+    contentservicev1_Tag,
+} from '@/api/generated/app/service/v1';
+
+const tagService = createTagServiceClient(requestClientRequestHandler);
+
+export interface TagState {
+    list: contentservicev1_Tag[];
+    detail: contentservicev1_Tag | null;
+    loading: boolean;
+    total: number;
+}
+
+const initialState: TagState = {
+    list: [],
+    detail: null,
+    loading: false,
+    total: 0,
+};
+
+export const listTag = createAsyncThunk(
+    'tag/listTag',
+    async (
+        params: { page?: number; pageSize?: number; query?: string },
+        {rejectWithValue}
+    ) => {
+        try {
+            return await tagService.List({
+                query: params.query,
+                page: params.page,
+                pageSize: params.pageSize,
+                sorting: undefined,
+            });
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+);
+
+export const getTag = createAsyncThunk(
+    'tag/getTag',
+    async (
+        params: { id: number },
+        {rejectWithValue}
+    ) => {
+        try {
+            return await tagService.Get({id: params.id});
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+);
+
+export const createTag = createAsyncThunk(
+    'tag/createTag',
+    async (values: Partial<contentservicev1_Tag>, {rejectWithValue}) => {
+        try {
+            return await tagService.Create({data: values as contentservicev1_Tag});
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+);
+
+export const updateTag = createAsyncThunk(
+    'tag/updateTag',
+    async (
+        params: { id: number; values: Partial<contentservicev1_Tag> },
+        {rejectWithValue}
+    ) => {
+        try {
+            return await tagService.Update({
+                id: params.id,
+                data: params.values as contentservicev1_Tag,
+                updateMask: Object.keys(params.values ?? []).join(','),
+            });
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+);
+
+export const deleteTag = createAsyncThunk(
+    'tag/deleteTag',
+    async (id: number, {rejectWithValue}) => {
+        try {
+            return await tagService.Delete({id});
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+);
+
+const tagSlice = createSlice({
+    name: 'tag',
+    initialState,
+    reducers: {
+        clearTagDetail: (state) => {
+            state.detail = null;
+        },
+        resetTag: (state) => {
+            state.list = [];
+            state.detail = null;
+            state.loading = false;
+            state.total = 0;
+        },
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(listTag.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(listTag.fulfilled, (state, action) => {
+                state.loading = false;
+                state.list = action.payload.items || [];
+                state.total = action.payload.total || 0;
+            })
+            .addCase(listTag.rejected, (state) => {
+                state.loading = false;
+            })
+            .addCase(getTag.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(getTag.fulfilled, (state, action) => {
+                state.loading = false;
+                state.detail = action.payload || null;
+            })
+            .addCase(getTag.rejected, (state) => {
+                state.loading = false;
+            })
+            .addCase(createTag.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(createTag.fulfilled, (state) => {
+                state.loading = false;
+            })
+            .addCase(createTag.rejected, (state) => {
+                state.loading = false;
+            })
+            .addCase(updateTag.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(updateTag.fulfilled, (state) => {
+                state.loading = false;
+            })
+            .addCase(updateTag.rejected, (state) => {
+                state.loading = false;
+            })
+            .addCase(deleteTag.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(deleteTag.fulfilled, (state) => {
+                state.loading = false;
+            })
+            .addCase(deleteTag.rejected, (state) => {
+                state.loading = false;
+            });
+    },
+});
+
+export const {clearTagDetail, resetTag} = tagSlice.actions;
+export default tagSlice.reducer;

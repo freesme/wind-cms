@@ -17,12 +17,14 @@
     "crypto-js": "^4.2.0",
     "defu": "^6.1.4",
     "fs": "0.0.1-security",
+    "i18next": "^25.8.17",
     "js-cookie": "^3.0.5",
     "next": "16.1.6",
     "next-intl": "^4.8.3",
     "nprogress": "^0.2.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-i18next": "^16.5.6",
     "react-redux": "^9.2.0"
   },
   "devDependencies": {

@@ -1,81 +1,90 @@
-import type { RouteRecordRaw } from 'vue-router'
+import {acceptHMRUpdate, defineStore} from 'pinia'
 
-import { acceptHMRUpdate, defineStore } from 'pinia'
-import type { MenuRecordRaw } from '@/typings'
-
-type AccessToken = null | string
+/**
+ * 令牌载荷
+ */
+interface TokenPayload {
+  /**
+   * 令牌值
+   */
+  value: string;
+  /**
+   * 令牌过期时间
+   */
+  expiresAt?: number;
+}
 
 interface AccessState {
   /**
    * 权限码
    */
-  accessCodes: string[]
+  accessCodes: string[];
   /**
-   * 可访问的菜单列表
+   * 权限菜单
    */
-  accessMenus: MenuRecordRaw[]
+  accessMenus?: string[];
   /**
-   * 可访问的路由列表
+   * 权限路由
    */
-  accessRoutes: RouteRecordRaw[]
+  accessRoutes?: string[];
   /**
    * 登录 accessToken
    */
-  accessToken: AccessToken
+  accessToken: TokenPayload | null;
+  /**
+   * 登录 refreshToken
+   */
+  refreshToken: TokenPayload | null;
   /**
    * 是否已经检查过权限
    */
-  isAccessChecked: boolean
+  isAccessChecked: boolean;
   /**
    * 登录是否过期
    */
-  loginExpired: boolean
-  /**
-   * 登录 accessToken
-   */
-  refreshToken: AccessToken
+  loginExpired: boolean;
 }
 
 /**
  * @zh_CN 访问权限相关
  */
 export const useAccessStore = defineStore('access', {
-  actions: {
-    setAccessCodes(codes: string[]) {
-      this.accessCodes = codes
-    },
-    setAccessMenus(menus: MenuRecordRaw[]) {
-      this.accessMenus = menus
-    },
-    setAccessRoutes(routes: RouteRecordRaw[]) {
-      this.accessRoutes = routes
-    },
-    setAccessToken(token: AccessToken) {
-      this.accessToken = token
-    },
-    setIsAccessChecked(isAccessChecked: boolean) {
-      this.isAccessChecked = isAccessChecked
-    },
-    setLoginExpired(loginExpired: boolean) {
-      this.loginExpired = loginExpired
-    },
-    setRefreshToken(token: AccessToken) {
-      this.refreshToken = token
-    },
-  },
-  persist: {
-    // 持久化
-    paths: ['accessToken', 'refreshToken', 'accessCodes'],
-  },
   state: (): AccessState => ({
     accessCodes: [],
     accessMenus: [],
     accessRoutes: [],
     accessToken: null,
+    refreshToken: null,
     isAccessChecked: false,
     loginExpired: false,
-    refreshToken: null,
   }),
+  actions: {
+    setAccessCodes(codes: string[]) {
+      this.accessCodes = codes
+    },
+    setAccessMenus(menus: string[]) {
+      this.accessMenus = menus
+    },
+    setAccessRoutes(routes: string[]) {
+      this.accessRoutes = routes
+    },
+    setAccessToken(token: string, expiresAt?: number) {
+      this.accessToken = {value: token, expiresAt}
+    },
+    setRefreshToken(token: string, expiresAt?: number) {
+      this.refreshToken = {value: token, expiresAt}
+    },
+    setLoginExpired(loginExpired: boolean) {
+      this.loginExpired = loginExpired
+    },
+    setIsAccessChecked(isChecked: boolean) {
+      this.isAccessChecked = isChecked
+    },
+  },
+  persist: {
+    // 持久化
+    paths: ['accessToken', 'refreshToken', 'accessCodes', 'accessMenus', 'accessRoutes'],
+  },
 })
 
 // 解决热更新问题

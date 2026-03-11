@@ -1,6 +1,6 @@
 export interface TopNavBarTabItem {
-   key: string;
+    key: string;
     label: string;
     icon?: string;
-   component: React.ComponentType<any>;
+    component: React.ComponentType<never>;
 }

@@ -130,9 +130,12 @@ export const useAuthStore = defineStore('auth', () => {
    * 刷新访问令牌
    */
   async function refreshToken() {
+    const refreshTokenValue = typeof accessStore.refreshToken === 'string'
+      ? accessStore.refreshToken
+      : accessStore.refreshToken?.value ?? '';
     const resp = await authnService.RefreshToken({
       grant_type: 'password',
-      refresh_token: accessStore.refreshToken ?? '',
+      refresh_token: refreshTokenValue,
     })
     const newToken = resp.access_token
 

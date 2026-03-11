@@ -1,0 +1,165 @@
+import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+import {createPageServiceClient} from '@/api/generated/app/service/v1';
+import {requestClientRequestHandler} from '@/transport/rest';
+import {
+    contentservicev1_Page,
+} from '@/api/generated/app/service/v1';
+
+const pageService = createPageServiceClient(requestClientRequestHandler);
+
+export interface PageState {
+    list: contentservicev1_Page[];
+    detail: contentservicev1_Page | null;
+    loading: boolean;
+    total: number;
+}
+
+const initialState: PageState = {
+    list: [],
+    detail: null,
+    loading: false,
+    total: 0,
+};
+
+export const listPage = createAsyncThunk(
+    'page/listPage',
+    async (
+        params: { page?: number; pageSize?: number; query?: string },
+        {rejectWithValue}
+    ) => {
+        try {
+            return await pageService.List({
+                query: params.query,
+                page: params.page,
+                pageSize: params.pageSize,
+                sorting: undefined,
+            });
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+);
+
+export const getPage = createAsyncThunk(
+    'page/getPage',
+    async (
+        params: { id: number },
+        {rejectWithValue}
+    ) => {
+        try {
+            return await pageService.Get({id: params.id});
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+);
+
+export const createPage = createAsyncThunk(
+    'page/createPage',
+    async (values: Partial<contentservicev1_Page>, {rejectWithValue}) => {
+        try {
+            return await pageService.Create({data: values as contentservicev1_Page});
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+);
+
+export const updatePage = createAsyncThunk(
+    'page/updatePage',
+    async (
+        params: { id: number; values: Partial<contentservicev1_Page> },
+        {rejectWithValue}
+    ) => {
+        try {
+            return await pageService.Update({
+                id: params.id,
+                data: params.values as contentservicev1_Page,
+                updateMask: Object.keys(params.values ?? []).join(','),
+            });
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+);
+
+export const deletePage = createAsyncThunk(
+    'page/deletePage',
+    async (id: number, {rejectWithValue}) => {
+        try {
+            return await pageService.Delete({id});
+        } catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+);
+
+const pageSlice = createSlice({
+    name: 'page',
+    initialState,
+    reducers: {
+        clearPageDetail: (state) => {
+            state.detail = null;
+        },
+        resetPage: (state) => {
+            state.list = [];
+            state.detail = null;
+            state.loading = false;
+            state.total = 0;
+        },
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(listPage.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(listPage.fulfilled, (state, action) => {
+                state.loading = false;
+                state.list = action.payload.items || [];
+                state.total = action.payload.total || 0;
+            })
+            .addCase(listPage.rejected, (state) => {
+                state.loading = false;
+            })
+            .addCase(getPage.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(getPage.fulfilled, (state, action) => {
+                state.loading = false;
+                state.detail = action.payload || null;
+            })
+            .addCase(getPage.rejected, (state) => {
+                state.loading = false;
+            })
+            .addCase(createPage.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(createPage.fulfilled, (state) => {
+                state.loading = false;
+            })
+            .addCase(createPage.rejected, (state) => {
+                state.loading = false;
+            })
+            .addCase(updatePage.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(updatePage.fulfilled, (state) => {
+                state.loading = false;
+            })
+            .addCase(updatePage.rejected, (state) => {
+                state.loading = false;
+            })
+            .addCase(deletePage.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(deletePage.fulfilled, (state) => {
+                state.loading = false;
+            })
+            .addCase(deletePage.rejected, (state) => {
+                state.loading = false;
+            });
+    },
+});
+
+export const {clearPageDetail, resetPage} = pageSlice.actions;
+export default pageSlice.reducer;
