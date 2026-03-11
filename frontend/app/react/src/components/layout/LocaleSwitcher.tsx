@@ -1,6 +1,8 @@
 import React from 'react';
 import {useI18n} from '@/i18n';
-import {Select} from 'antd';
+import {Select, Dropdown, Button} from 'antd';
+import {GlobalOutlined} from '@ant-design/icons';
+import styles from './LocaleSwitcher.module.css';
 
 /**
  * 语言切换选择器组件
@@ -27,14 +29,27 @@ export const LocaleSwitcher: React.FC = () => {
         {value: 'en-US', label: 'English'},
     ];
 
+    const handleLanguageChange = ({key}: {key: string}) => {
+        changeLocale(key);
+    };
+
     return (
-        <Select
-            value={locale}
-            onChange={changeLocale}
-            options={localeOptions}
-            size="small"
-            style={{width: 100}}
-            aria-label="Language switcher"
-        />
+        <Dropdown
+            menu={{
+                items: localeOptions,
+                onClick: handleLanguageChange,
+                selectedKeys: [locale]
+            }}
+            trigger={['click']}
+        >
+            <Button 
+                type="text" 
+                icon={<GlobalOutlined />}
+                className={styles.langSwitcher}
+                aria-label="Language switcher"
+            >
+                {locale === 'zh-CN' ? '中文' : 'EN'}
+            </Button>
+        </Dropdown>
     );
 };

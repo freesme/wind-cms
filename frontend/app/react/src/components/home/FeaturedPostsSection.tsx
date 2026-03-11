@@ -2,7 +2,7 @@ import React from 'react';
 import {Button} from 'antd';
 import {useTranslations} from 'next-intl';
 
-import styles from '../../app/home.module.css';
+import styles from './home.module.css';
 
 export default function FeaturedPostsSection() {
     const t = useTranslations('page.home');

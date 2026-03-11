@@ -1,45 +1,12 @@
-:root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --color-surface: #0a0a0a;
-    --color-text-primary: rgba(255, 255, 255, 0.85);
-    --color-text-secondary: rgba(255, 255, 255, 0.65);
-    --color-border: rgba(255, 255, 255, 0.1);
-    --header-bg: transparent;
-    --header-control-bg: rgba(255, 255, 255, 0.08);
-    --header-control-text: rgba(255, 255, 255, 0.85);
-    --header-control-border: rgba(255, 255, 255, 0.1);
-    --header-control-text-muted: rgba(255, 255, 255, 0.45);
-    --header-control-hover-bg: rgba(102, 126, 234, 0.2);
-}
-
+/* 全局样式 */
 * {
     box-sizing: border-box;
     padding: 0;
     margin: 0;
 }
 
-html {
-    color-scheme: dark;
-}
-
 html,
 body {
     max-width: 100vw;
     overflow-x: hidden;
-    background: var(--background);
-    color: var(--foreground);
-}
-
-body {
-    color: var(--foreground);
-    background: var(--background);
-    font-family: Arial, Helvetica, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-    color: inherit;
-    text-decoration: none;
 }

@@ -1,0 +1,12 @@
+.langSwitcher {
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.langSwitcher:hover {
+    color: #722ED1;
+    background: rgba(255, 255, 255, 0.1);
+}

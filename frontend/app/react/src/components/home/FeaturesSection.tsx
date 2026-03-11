@@ -1,6 +1,6 @@
 import React from 'react';
 import {useTranslations} from 'next-intl';
-import styles from '../../app/home.module.css';
+import styles from './home.module.css';
 
 interface Feature {
     icon?: string;

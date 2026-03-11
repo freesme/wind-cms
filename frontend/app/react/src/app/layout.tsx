@@ -1,18 +1,20 @@
-import {getMessages} from 'next-intl/server';
+import type { Metadata } from "next";
 
-import ClientLayout from './ClientLayout';
-import React from "react";
+export const metadata: Metadata = {
+  title: "Kratos CMS",
+  description: "A modern CMS built with Next.js",
+};
 
-export default async function RootLayout({children}: { children: React.ReactNode }) {
-    const messages = await getMessages();
-    const locale = 'zh-CN'; // 可根据实际动态获取
-    return (
-        <html lang={locale}>
-        <body>
-        <ClientLayout messages={messages} locale={locale}>
-            {children}
-        </ClientLayout>
-        </body>
-        </html>
-    );
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="zh-CN" suppressHydrationWarning>
+      <body>
+        {children}
+      </body>
+    </html>
+  );
 }

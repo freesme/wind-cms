@@ -1,15 +1,15 @@
 'use client';
 
 import React, {useEffect} from "react";
+import '../globals.css';
+import styles from './page.module.css';
 
-import styles from "./home.module.css";
-
-import HeroSection from '../components/home/HeroSection';
-import FeaturedPostsSection from '../components/home/FeaturedPostsSection';
-import CategoryListSection from '../components/home/CategoryListSection';
-import PopularTagsSection from '../components/home/PopularTagsSection';
-import LatestPostsSection from '../components/home/LatestPostsSection';
-import FeaturesSection from '../components/home/FeaturesSection';
+import HeroSection from '../../components/home/HeroSection';
+import FeaturedPostsSection from '../../components/home/FeaturedPostsSection';
+import CategoryListSection from '../../components/home/CategoryListSection';
+import PopularTagsSection from '../../components/home/PopularTagsSection';
+import LatestPostsSection from '../../components/home/LatestPostsSection';
+import FeaturesSection from '../../components/home/FeaturesSection';
 
 export default function Home() {
     // Intersection Observer for scroll reveal
@@ -51,3 +51,4 @@ export default function Home() {
         </div>
     );
 }
+

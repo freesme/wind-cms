@@ -1,6 +1,7 @@
 import {getRequestConfig} from 'next-intl/server';
+import {routing} from '../app/[locale]/routing';
 
-// zh-CN imports
+// 导入所有翻译文件
 import zhCN_authentication from './locales/zh-CN/authentication.json';
 import zhCN_app from './locales/zh-CN/app.json';
 import zhCN_page from './locales/zh-CN/page.json';
@@ -14,7 +15,7 @@ import zhCN_cms from './locales/zh-CN/cms.json';
 import zhCN_ui from './locales/zh-CN/ui.json';
 import zhCN_settings from './locales/zh-CN/settings.json';
 import zhCN_preferences from './locales/zh-CN/preferences.json';
-// en-US imports
+
 import enUS_cms from './locales/en-US/cms.json';
 import enUS_authentication from './locales/en-US/authentication.json';
 import enUS_app from './locales/en-US/app.json';
@@ -27,20 +28,16 @@ import enUS_component from './locales/en-US/component.json';
 import enUS_common from './locales/en-US/common.json';
 import enUS_settings from './locales/en-US/settings.json';
 
-export const locales = ['zh-CN', 'en-US'] as const;
-export type Locale = (typeof locales)[number];
-export const DEFAULT_LANGUAGE = 'zh-CN';
-export const defaultLocale: Locale = DEFAULT_LANGUAGE as Locale;
+export default getRequestConfig(async ({requestLocale}) => {
+    let locale = await requestLocale;
 
-export function validateLocale(locale?: string): Locale {
-    if (!locale || !locales.includes(locale)) {
-        return defaultLocale;
+    // 确保使用有效的 locale
+    if (!locale || !routing.locales.includes(locale as 'zh-CN' | 'en-US')) {
+        locale = routing.defaultLocale;
     }
-    return locale as Locale;
-}
 
-const allMessages: Record<Locale, Record<string, any>> = {
-    'zh-CN': {
+    // 根据 locale 返回对应的翻译消息
+    const messages = locale === 'zh-CN' ? {
         authentication: zhCN_authentication,
         app: zhCN_app,
         page: zhCN_page,
@@ -54,8 +51,7 @@ const allMessages: Record<Locale, Record<string, any>> = {
         ui: zhCN_ui,
         settings: zhCN_settings,
         preferences: zhCN_preferences,
-    },
-    'en-US': {
+    } : {
         cms: enUS_cms,
         authentication: enUS_authentication,
         app: enUS_app,
@@ -67,11 +63,10 @@ const allMessages: Record<Locale, Record<string, any>> = {
         component: enUS_component,
         common: enUS_common,
         settings: enUS_settings,
-    }
-};
+    };
 
-export default getRequestConfig(async ({locale}) => {
-    const validatedLocale = validateLocale(locale);
-    const messages = allMessages[validatedLocale] || allMessages[defaultLocale];
-    return {locale: validatedLocale, messages};
+    return {
+        locale,
+        messages
+    };
 });

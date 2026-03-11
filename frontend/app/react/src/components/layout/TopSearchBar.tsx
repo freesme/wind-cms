@@ -95,11 +95,11 @@ export default function TopSearchBar({brandTitle, logoSrc = '/logo.png', onLogoC
     const languageMenuItems = [
         {
             key: 'zh-CN',
-            label: '简体中文',
+            label: t('language') === '语言' ? '简体中文' : 'Chinese',
         },
         {
             key: 'en-US',
-            label: 'English',
+            label: t('language') === '语言' ? 'English' : 'English',
         },
     ];
 
@@ -193,7 +193,9 @@ export default function TopSearchBar({brandTitle, logoSrc = '/logo.png', onLogoC
                             icon={<GlobalOutlined/>}
                         >
                             <span
-                                className={styles.langText}>{languageStore.language.locale?.split('-')[0] === 'zh' ? '中文' : 'EN'}</span>
+                                className={styles.langText}>
+                                {languageStore.language.locale === 'zh-CN' ? '中文' : 'EN'}
+                            </span>
                         </Button>
                     </Dropdown>
 
