@@ -28,8 +28,10 @@ interface TopSearchBarProps {
     onLogoClick?: () => void;
 }
 
-export default function TopSearchBar({brandTitle, logoSrc = '/logo.png', onLogoClick}: TopSearchBarProps) {
+export default function TopSearchBar({logoSrc = '/logo.png', onLogoClick}: Omit<TopSearchBarProps, 'brandTitle'>) {
     const t = useTranslations('navbar.top');
+    const appT = useTranslations('app');
+    const brandTitle = appT('title');
     const menuT = useTranslations('menu');
     const themeStore = useThemeStore();
     const languageStore = useLanguageStore();
@@ -209,8 +211,7 @@ export default function TopSearchBar({brandTitle, logoSrc = '/logo.png', onLogoC
                             aria-label="Language"
                             icon={<GlobalOutlined/>}
                         >
-                            <span
-                                className={styles.langText}>
+                            <span className={styles.langText}>
                                 {languageStore.language.locale === 'zh-CN' ? '中文' : 'EN'}
                             </span>
                         </Button>

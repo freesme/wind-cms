@@ -64,6 +64,10 @@ export function useI18nRouter() {
         router.replace(localizedPath, options);
     };
 
+    const replaceWithoutLocale = (path: string, options?: { scroll?: boolean }) => {
+        router.replace(path, options);
+    }
+
     /**
      * 获取本地化路径（不执行导航）
      */
@@ -96,6 +100,7 @@ export function useI18nRouter() {
     return {
         push,
         replace,
+        replaceWithoutLocale,
         back,
         forward,
         refresh,

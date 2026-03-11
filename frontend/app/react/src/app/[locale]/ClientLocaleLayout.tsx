@@ -5,6 +5,7 @@ import {NextIntlClientProvider} from "next-intl";
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import GlobalLoading from "@/components/layout/GlobalLoading";
 
 import ReduxProvider from "@/store/ReduxProvider";
 
@@ -26,6 +27,7 @@ const ClientLocaleLayout: React.FC<ClientLocaleLayoutProps> = ({locale, messages
                         {children}
                     </main>
                     <Footer/>
+                    <GlobalLoading />
                 </div>
             </ReduxProvider>
         </NextIntlClientProvider>
