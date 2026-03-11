@@ -8,7 +8,6 @@ import {useI18nRouter} from '@/i18n/helpers/useI18nRouter';
 
 import type {siteservicev1_Navigation, siteservicev1_NavigationItem} from '@/api/generated/app/service/v1';
 import {useNavigationStore} from '@/store/slices/navigation/hooks';
-import {useLanguageStore} from '@/store/core/language/hooks';
 import {useLanguageChangeEffect} from '@/hooks/useLanguageChangeEffect';
 
 import type {TopNavBarTabItem} from './types';
@@ -33,7 +32,6 @@ const rightTabList: TopNavBarTabItem[] = [];
 
 export default function TopNavbar({onClick}: TopNavbarProps) {
     const navigationStore = useNavigationStore();
-    const languageStore = useLanguageStore();
     const router = useI18nRouter();
     const [navigationItems, setNavigationItems] = useState<siteservicev1_NavigationItem[]>([]);
     const [activeOverlay, setActiveOverlay] = useState<string | null>(null);

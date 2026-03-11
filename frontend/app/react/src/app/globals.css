@@ -39,6 +39,13 @@ body {
 
     /* Header 颜色 */
     --header-color: rgba(255, 255, 255, 0.95);
+    
+    /* Header 控件颜色 - 亮色模式 */
+    --header-control-bg: rgba(0, 0, 0, 0.02);
+    --header-control-hover-bg: rgba(102, 126, 234, 0.08);
+    --header-control-text: rgba(0, 0, 0, 0.85);
+    --header-control-text-muted: rgba(0, 0, 0, 0.45);
+    --header-control-border: rgba(0, 0, 0, 0.06);
 }
 
 /* 暗黑模式 */
@@ -52,6 +59,13 @@ html.dark {
     --color-card-shadow: rgba(0, 0, 0, 0.2);
     --color-hover-shadow: rgba(0, 0, 0, 0.3);
     --header-color: rgba(30, 41, 59, 0.95);
+    
+    /* Header 控件颜色 - 暗黑模式 */
+    --header-control-bg: rgba(255, 255, 255, 0.05);
+    --header-control-hover-bg: rgba(102, 126, 234, 0.15);
+    --header-control-text: rgba(255, 255, 255, 0.85);
+    --header-control-text-muted: rgba(255, 255, 255, 0.45);
+    --header-control-border: rgba(255, 255, 255, 0.1);
 }
 
 /* ========== 全局过渡动画 ========== */
