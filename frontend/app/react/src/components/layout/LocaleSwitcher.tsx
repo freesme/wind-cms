@@ -50,7 +50,7 @@ export const LocaleSwitcher: React.FC = () => {
                 className={styles.langSwitcher}
                 aria-label="Language switcher"
             >
-                {locale === 'zh-CN' ? '中文' : 'EN'}
+                {/* 仅保留 icon，无文本 */}
             </Button>
         </Dropdown>
     );

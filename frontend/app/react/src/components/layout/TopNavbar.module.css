@@ -111,6 +111,18 @@
     font-weight: 700;
     border-color: var(--color-brand, #667eea);
     box-shadow: 0 4px 24px rgba(102, 126, 234, 0.12);
+    position: relative;
+}
+.navbarMenu :global(.ant-menu-item-selected)::after {
+    content: '';
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 8px;
+    height: 3px;
+    background: var(--color-brand, #667eea);
+    border-radius: 2px;
+    opacity: 0.85;
 }
 
 .navbarMenu :global(.ant-menu-item) > span {

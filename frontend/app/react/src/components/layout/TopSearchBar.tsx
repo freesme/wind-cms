@@ -181,8 +181,9 @@ export default function TopSearchBar({logoSrc = '/logo.png', onLogoClick}: Omit<
                     ) : (
                         <>
                             <Divider orientation="vertical"/>
+                            {/* 登录/注册按钮改为填充式按钮，统一视觉 */}
                             <Button
-                                type="text"
+                                type="primary"
                                 className={styles.headerLoginBtn}
                                 aria-label={t('login')}
                                 onClick={handleClickLogin}
@@ -190,7 +191,7 @@ export default function TopSearchBar({logoSrc = '/logo.png', onLogoClick}: Omit<
                                 {t('login')}
                             </Button>
                             <Button
-                                type="text"
+                                type="primary"
                                 className={styles.headerRegisterBtn}
                                 aria-label={t('register')}
                                 onClick={handleClickRegister}
@@ -206,33 +207,27 @@ export default function TopSearchBar({logoSrc = '/logo.png', onLogoClick}: Omit<
                         trigger={['hover']}
                     >
                         <Button
-                            shape="circle"
+                            type="primary"
                             className={styles.langBtn}
                             aria-label="Language"
                             icon={
-                                <>
-                                    <GlobalOutlined className={styles.langIcon} />
-                                    <span className={styles.langText}>
-                                        {languageStore.language.locale === 'zh-CN' ? '中' : 'EN'}
-                                    </span>
-                                </>
+                                <span className={styles.langIcon}>
+                                    {'🌐'}
+                                </span>
                             }
                         />
                     </Dropdown>
 
                     {/* Theme Toggle */}
                     <Button
-                        shape="circle"
+                        type="primary"
                         className={styles.themeBtn}
                         aria-label="Toggle theme"
                         onClick={toggleDarkMode}
                         icon={
-                            <>
-                                {themeStore.theme.mode === 'dark' ? <MoonOutlined /> : <SunOutlined />}
-                                <span className={styles.themeText}>
-                                    {themeStore.theme.mode === 'dark' ? t('dark_mode') : t('light_mode')}
-                                </span>
-                            </>
+                            <span className={styles.themeIcon}>
+                                {themeStore.theme.mode === 'dark' ? '🌙' : '☀️'}
+                            </span>
                         }
                     />
                 </Space>
