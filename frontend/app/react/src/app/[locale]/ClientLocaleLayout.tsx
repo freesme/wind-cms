@@ -13,7 +13,7 @@ import styles from './layout.module.css';
 
 interface ClientLocaleLayoutProps {
     locale: string;
-      messages: Record<string, unknown>;
+    messages: Record<string, unknown>;
     children: React.ReactNode;
 }
 
@@ -27,7 +27,7 @@ const ClientLocaleLayout: React.FC<ClientLocaleLayoutProps> = ({locale, messages
                         {children}
                     </main>
                     <Footer/>
-                    <GlobalLoading />
+                    <GlobalLoading/>
                 </div>
             </ReduxProvider>
         </NextIntlClientProvider>

@@ -183,6 +183,27 @@ html.dark .fixedTop {
     color: #fff;
 }
 
+.logoNavSection {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbarMenuWrap {
+    display: flex;
+    align-items: center;
+    margin-left: 8px;
+}
+
+.searchBarWrap {
+    display: flex;
+    align-items: center;
+    margin-left: 8px;
+    margin-right: 8px;
+    max-width: 320px;
+    flex: 1 1 320px;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .topBar {
@@ -300,6 +321,15 @@ html.dark .fixedTop {
         min-height: 32px;
         height: 32px;
         flex-shrink: 0;
+    }
+
+    .searchBarWrap {
+        max-width: 180px;
+        flex: 1 1 120px;
+    }
+
+    .navbarMenuWrap {
+        margin-left: 4px;
     }
 }
 
