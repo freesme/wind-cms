@@ -11,7 +11,7 @@ import {
 
 import {useI18n} from '@/i18n';
 import {useI18nRouter} from '@/i18n/helpers/useI18nRouter';
-import {useThemeStore} from '@/store/core/theme/hooks';
+import {useThemeStore, useThemeMode} from '@/store/core/theme/hooks';
 
 import TopNavbar from './TopNavbar';
 
@@ -24,6 +24,7 @@ export default function Header() {
     const brandTitle = appT('title');
     const menuT = useTranslations('menu');
     const themeStore = useThemeStore();
+    const currentMode = useThemeMode(); // ✅ 直接从 Redux store 获取，保证 SSR/CSR 一致
     const {changeLocale} = useI18n();
     const router = useI18nRouter();
     const isLogin = false; // TODO: 从 accessStore 获取
@@ -98,110 +99,117 @@ export default function Header() {
         }
     ];
     // 占位语言切换
-    const handleLanguageChange = ({ key }: { key: string }) => {
+    const handleLanguageChange = ({key}: { key: string }) => {
         changeLocale(key);
     };
 
-const themeMenuItems = [
-    {
-        key: 'dark',
-        label: t('theme.dark'),
-        icon: <span>🌙</span>,
-        onClick: () => themeStore.setMode('dark')
-    },
-    {
-        key: 'light',
-        label: t('theme.light'),
-        icon: <span>☀️</span>,
-        onClick: () => themeStore.setMode('light')
-    },
-    {
-        key: 'system',
-        label: t('theme.system'),
-        icon: <span>🖥️</span>,
-        onClick: () => themeStore.setMode('system')
-    },
-];
+    const themeMenuItems = [
+        {
+            key: 'dark',
+            label: t('theme.dark'),
+            icon: <span>🌙</span>,
+            onClick: () => themeStore.setMode('dark')
+        },
+        {
+            key: 'light',
+            label: t('theme.light'),
+            icon: <span>☀️</span>,
+            onClick: () => themeStore.setMode('light')
+        },
+        {
+            key: 'system',
+            label: t('theme.system'),
+            icon: <span>🖥️</span>,
+            onClick: () => themeStore.setMode('system')
+        },
+    ];
 
-return (
-    <div className={styles.fixedTop}>
-        <div className={styles.headerInner}>
-            <div className={styles.topBar}>
-                {/* Logo + 导航区 */}
-                <div className={styles.logoNavSection}>
-                    <div
-                        className={styles.logoSection}
-                        role="button"
-                        tabIndex={0}
-                        aria-label="Go to homepage"
-                        onClick={handleClickLogo}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                                handleClickLogo();
-                            }
-                        }}
-                    >
-                        <Image
-                            src={'/logo.png'}
-                            alt="Logo"
-                            width={55}
-                            height={55}
-                            className={styles.logo}
-                            preview={false}
-                        />
-                        <span className={styles.siteName}>{brandTitle}</span>
-                    </div>
-                    {/* 主导航菜单 */}
-                    <div className={styles.navbarMenuWrap}>
-                        <TopNavbar/>
-                    </div>
-                </div>
-                {/* 功能按钮区 */}
-                <div className={styles.actions}>
-                    <Space size="middle">
-                        <Dropdown
-                            menu={{
-                                items: userMenuItems
+    // ✅ 直接使用 currentMode，不需要 mounted 状态
+    const themeIconMap: Record<string, string> = {
+        dark: '🌙',
+        light: '☀️',
+        system: '🖥️'
+    };
+    const iconValue = themeIconMap[currentMode] || '🖥️';
+
+    return (
+        <div className={styles.fixedTop}>
+            <div className={styles.headerInner}>
+                <div className={styles.topBar}>
+                    {/* Logo + 导航区 */}
+                    <div className={styles.logoNavSection}>
+                        <div
+                            className={styles.logoSection}
+                            role="button"
+                            tabIndex={0}
+                            aria-label="Go to homepage"
+                            onClick={handleClickLogo}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    handleClickLogo();
+                                }
                             }}
-                            trigger={['click']}
-                            popupRender={menu => (
-                                <div className={styles.dropdownMenu}>{menu}</div>
-                            )}
                         >
-                            <Button
-                                type="text"
-                                className={styles.iconBtn}
-                                aria-label="User menu"
-                                icon={<UserOutlined/>}
+                            <Image
+                                src={'/logo.png'}
+                                alt="Logo"
+                                width={55}
+                                height={55}
+                                className={styles.logo}
+                                preview={false}
                             />
-                        </Dropdown>
-                        <Dropdown
-                            menu={{items: languageMenuItems, onClick: handleLanguageChange}}
-                            trigger={['click']}
-                        >
-                            <Button
-                                type="text"
-                                className={styles.iconBtn}
-                                aria-label="Language"
-                                icon={<span className={styles.langIcon}>{'🌐'}</span>}
-                            />
-                        </Dropdown>
-                        <Dropdown
-                            menu={{items: themeMenuItems}}
-                            trigger={['click']}
-                        >
-                            <Button
-                                type="text"
-                                className={styles.iconBtn}
-                                aria-label="Toggle theme"
-                                icon={<span
-                                    className={styles.themeIcon}>{themeStore.theme.mode === 'dark' ? '🌙' : themeStore.theme.mode === 'light' ? '☀️' : '🖥️'}</span>}
-                            />
-                        </Dropdown>
-                    </Space>
+                            <span className={styles.siteName}>{brandTitle}</span>
+                        </div>
+                        {/* 主导航菜单 */}
+                        <div className={styles.navbarMenuWrap}>
+                            <TopNavbar/>
+                        </div>
+                    </div>
+                    {/* 功能按钮区 */}
+                    <div className={styles.actions}>
+                        <Space size="middle">
+                            <Dropdown
+                                menu={{
+                                    items: userMenuItems
+                                }}
+                                trigger={['click']}
+                                popupRender={menu => (
+                                    <div className={styles.dropdownMenu}>{menu}</div>
+                                )}
+                            >
+                                <Button
+                                    type="text"
+                                    className={styles.iconBtn}
+                                    aria-label="User menu"
+                                    icon={<UserOutlined/>}
+                                />
+                            </Dropdown>
+                            <Dropdown
+                                menu={{items: languageMenuItems, onClick: handleLanguageChange}}
+                                trigger={['click']}
+                            >
+                                <Button
+                                    type="text"
+                                    className={styles.iconBtn}
+                                    aria-label="Language"
+                                    icon={<span className={styles.langIcon}>{'🌐'}</span>}
+                                />
+                            </Dropdown>
+                            <Dropdown
+                                menu={{items: themeMenuItems}}
+                                trigger={['click']}
+                            >
+                                <Button
+                                    type="text"
+                                    className={styles.iconBtn}
+                                    aria-label="Toggle theme"
+                                    icon={<span className={styles.themeIcon}>{iconValue}</span>}
+                                />
+                            </Dropdown>
+                        </Space>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-);
+    );
 }

@@ -10,13 +10,12 @@ export default function ThemeClientProvider({children}: { children: React.ReactN
     useEffect(() => {
         const html = document.documentElement;
 
+        console.log('[Theme Provider] mode:', mode, 'current classes:', html.className);
+
         // 清理之前的监听器
         if (mqRef.current) {
             mqRef.current.onchange = null;
         }
-
-        // 移除所有主题类
-        html.classList.remove('dark', 'light');
 
         if (mode === 'system') {
             // 跟随系统
@@ -24,15 +23,30 @@ export default function ThemeClientProvider({children}: { children: React.ReactN
             mqRef.current = mq;
 
             // ✅ 立即应用当前系统主题
-            html.classList.add(mq.matches ? 'dark' : 'light');
+            const currentTheme = mq.matches ? 'dark' : 'light';
+            
+            // 只有当当前类名与系统主题不一致时才更新
+            if (!html.classList.contains(currentTheme)) {
+                console.log('[Theme Provider] Applying system theme:', currentTheme);
+                html.classList.remove('dark', 'light');
+                html.classList.add(currentTheme);
+            }
 
             mq.onchange = (e) => {
-                html.classList.remove('dark', 'light');
-                html.classList.add(e.matches ? 'dark' : 'light');
+                const newTheme = e.matches ? 'dark' : 'light';
+                if (!html.classList.contains(newTheme)) {
+                    console.log('[Theme Provider] System theme changed to:', newTheme);
+                    html.classList.remove('dark', 'light');
+                    html.classList.add(newTheme);
+                }
             };
         } else {
             // 直接应用指定主题
-            html.classList.add(mode);
+            if (!html.classList.contains(mode)) {
+                console.log('[Theme Provider] Applying stored mode:', mode);
+                html.classList.remove('dark', 'light');
+                html.classList.add(mode);
+            }
         }
 
         // 清理函数

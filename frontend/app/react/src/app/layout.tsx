@@ -20,7 +20,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
             <head>
                 <script
                     dangerouslySetInnerHTML={{
-                        __html: initThemeScript.toString() + '()',
+                        __html: `(${initThemeScript.toString()})()`,
                     }}
                 />
             </head>
