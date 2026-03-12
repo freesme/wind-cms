@@ -4,14 +4,16 @@ import React, {useState, useEffect} from 'react';
 import {Menu, Tabs} from 'antd';
 
 import {XIcon} from '@/plugins/xicon';
-import {useI18nRouter} from '@/i18n/helpers/useI18nRouter';
 
-import type {siteservicev1_Navigation, siteservicev1_NavigationItem} from '@/api/generated/app/service/v1';
+import {useI18nRouter} from '@/i18n/helpers/useI18nRouter';
 import {useNavigationStore} from '@/store/slices/navigation/hooks';
 import {useLanguageChangeEffect} from '@/hooks/useLanguageChangeEffect';
 
+import type {siteservicev1_Navigation, siteservicev1_NavigationItem} from '@/api/generated/app/service/v1';
+
 import type {TopNavBarTabItem} from './types';
 import TopNavbarTab from './TopNavbarTab';
+
 import styles from './TopNavbar.module.css';
 
 export interface TopNavbarItem {
@@ -40,12 +42,12 @@ export default function TopNavbar({onClick}: TopNavbarProps) {
     // 将数据转换为 Ant Design Menu 所需的格式
     const getMenuOptions = (navItems: siteservicev1_NavigationItem[]) => {
         return navItems.map(item => ({
-            key: item.id,
+            key: item.id?.toString() || `nav-${item.id}`,
             label: item.title,
             icon: item.icon ? <XIcon name={`carbon:${item.icon}`} size={22}/> : undefined,
             children: item.children && item.children.length > 0
                 ? item.children.map((child: siteservicev1_NavigationItem) => ({
-                    key: child.id,
+                    key: child.id?.toString() || `nav-${child.id}`,
                     label: child.title,
                     icon: child.icon ? <XIcon name={`carbon:${child.icon}`} size={18}/> : undefined,
                 }))
@@ -63,19 +65,11 @@ export default function TopNavbar({onClick}: TopNavbarProps) {
         async function loadNavigation() {
             try {
                 setIsLoading(true);
-
-                // 调用 API 获取所有导航数据
-                const res = await navigationStore.listNavigation(
-                    {page: 1, pageSize: 10}
-                ) as unknown as { items: siteservicev1_Navigation[]; total: number };
+                const res = await navigationStore.listNavigation({
+                    paging: {page: 1, pageSize: 10}
+                }) as unknown as { items: siteservicev1_Navigation[]; total: number };
 
                 if (res.items && res.items.length > 0) {
-                    res.items.forEach((nav, index) => {
-                        console.log(`[${index}] location: ${nav.location}, isActive: ${nav.isActive}, items count: ${nav.items?.length}`);
-                        console.log(`[${index}] items:`, nav.items);
-                    });
-
-                    // 在前端过滤出 HEADER 位置且激活的导航
                     const headerNav = res.items.find(nav =>
                         nav.location === 'HEADER' && nav.isActive === true
                     );
@@ -85,7 +79,7 @@ export default function TopNavbar({onClick}: TopNavbarProps) {
                     }
                 }
             } catch (error) {
-                console.error('❌ 加载导航失败:', error);
+                console.error('[TopNavbar] 加载导航失败:', error);
             } finally {
                 setIsLoading(false);
             }
@@ -93,16 +87,14 @@ export default function TopNavbar({onClick}: TopNavbarProps) {
 
         loadNavigation();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); // 移除 languageStore.language.locale 依赖，改用 useLanguageChangeEffect
+    }, []);
 
     // 监听语言变化，自动重新加载导航数据
     useLanguageChangeEffect(() => {
-        console.log('[TopNavbar] 语言变化，重新加载导航数据');
-        // 重新加载导航数据的逻辑已经在 useEffect 中，这里不需要额外操作
-        // 因为 useEffect 的依赖是空的，所以不会自动重新执行
-        // 我们需要手动触发重新加载
         setIsLoading(true);
-        navigationStore.listNavigation({page: 1, pageSize: 10})
+        navigationStore.listNavigation({
+            paging: {page: 1, pageSize: 10}
+        })
             .then(res => {
                 const navRes = res as unknown as { items: siteservicev1_Navigation[]; total: number };
                 if (navRes.items && navRes.items.length > 0) {
@@ -115,7 +107,7 @@ export default function TopNavbar({onClick}: TopNavbarProps) {
                 }
             })
             .catch(error => {
-                console.error('❌ 重新加载导航失败:', error);
+                console.error('[TopNavbar] 重新加载导航失败:', error);
             })
             .finally(() => {
                 setIsLoading(false);
@@ -133,12 +125,7 @@ export default function TopNavbar({onClick}: TopNavbarProps) {
         }
     };
 
-    const menuItems = getMenuOptions(navigationItems);
-
-    console.log('=== Menu 渲染 ===');
-    console.log('navigationItems:', navigationItems);
-    console.log('menuItems:', menuItems);
-    console.log('isLoading:', isLoading);
+    const menuItems = getMenuOptions(navigationItems) || [];
 
     return (
         <div className={styles.navbarWrapper}>
@@ -170,20 +157,19 @@ export default function TopNavbar({onClick}: TopNavbarProps) {
                     <Tabs
                         activeKey={activeOverlay || undefined}
                         type="card"
-                        trigger="hover"
                         animated
                         onTabClick={(key) => setActiveOverlay(key)}
                         onMouseLeave={hideOverlay}
                         items={leftTabList.map(item => ({
                             key: item.key,
                             label: <TopNavbarTab data={item}/>,
-                            children: (
+                            children: item.component ? (
                                 <div className={styles.overlayMask}>
                                     <div className={styles.overlay}>
                                         <item.component/>
                                     </div>
                                 </div>
-                            ),
+                            ) : undefined,
                         }))}
                     />
                 )}
@@ -194,20 +180,19 @@ export default function TopNavbar({onClick}: TopNavbarProps) {
                     <Tabs
                         activeKey={activeOverlay || undefined}
                         type="card"
-                        trigger="hover"
                         animated
                         onTabClick={(key) => setActiveOverlay(key)}
                         onMouseLeave={hideOverlay}
                         items={rightTabList.map(item => ({
                             key: item.key,
                             label: <TopNavbarTab data={item}/>,
-                            children: (
+                            children: item.component ? (
                                 <div className={styles.overlayMask}>
                                     <div className={styles.overlay}>
                                         <item.component/>
                                     </div>
                                 </div>
-                            ),
+                            ) : undefined,
                         }))}
                     />
                 )}

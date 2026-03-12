@@ -71,17 +71,17 @@ const CommentSection: React.FC<CommentSectionProps> = ({
         }
 
         try {
-            const res = await commentStore.listComment(
-                {
+            const res = await commentStore.listComment({
+                paging: {
                     page: reset ? 1 : currentPage,
                     pageSize: pageSize
                 },
-                {
+                formValues: {
                     objectId: objectId,
                     contentType: contentType,
                     status: 'STATUS_APPROVED'
                 }
-            );
+            });
 
             const newComments = res.items || [];
             const newTotal = res.total || 0;
@@ -186,18 +186,18 @@ const CommentSection: React.FC<CommentSectionProps> = ({
         if (!objectId || !contentType) return;
 
         try {
-            const res = await commentStore.listComment(
-                {
+            const res = await commentStore.listComment({
+                paging: {
                     page: 1,
                     pageSize: 50
                 },
-                {
+                formValues: {
                     objectId: objectId,
                     contentType: contentType,
                     parentId: parentComment.id,
                     status: 'STATUS_APPROVED'
                 }
-            );
+            });
 
             parentComment.children = res.items || [];
         } catch (error) {

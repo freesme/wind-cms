@@ -28,8 +28,9 @@ html.dark .fixedTop {
     flex-direction: column;
     gap: 0;
     padding: 0;
-    width: min(var(--layout-max-width, 1200px), calc(100% - 48px));
+    width: 100%;
     max-width: var(--layout-max-width, 1200px);
+    margin: 0 auto;
 }
 
 /* 每行之间添加分割线 */
