@@ -17,7 +17,7 @@ export function useThemeStore() {
         dispatch,
         setMode: (mode: ThemeMode) => {
             dispatch(setMode(mode));
-            storage.setItem('mode', mode);
+            // storage.setItem 已经在 slice 中处理
         },
     };
 }
@@ -26,8 +26,6 @@ export function useThemeStore() {
  * 获取当前主题模式
  */
 export function useThemeMode() {
-    const storage = new StorageManager({prefix: `${appNamespace}-theme`});
-    const storedMode = storage.getItem<ThemeMode>('mode', null);
-    if (storedMode) return storedMode;
+    // 始终使用 Redux store 中的值，确保响应式更新
     return useSelector<RootState, ThemeMode>((state) => state.theme.mode);
 }

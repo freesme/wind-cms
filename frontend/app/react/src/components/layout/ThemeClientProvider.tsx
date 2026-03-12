@@ -5,7 +5,7 @@ import {useThemeMode} from '@/store/core/theme/hooks';
 
 export default function ThemeClientProvider({children}: { children: React.ReactNode }) {
     const mode = useThemeMode();
-    const mqRef = useRef<MediaQueryList | null>(null);
+    const mqRef = useRef<any>(null);
 
     useEffect(() => {
         const html = document.documentElement;
@@ -22,8 +22,9 @@ export default function ThemeClientProvider({children}: { children: React.ReactN
             // 跟随系统
             const mq = window.matchMedia('(prefers-color-scheme: dark)');
             mqRef.current = mq;
-            const sysTheme = mq.matches ? 'dark' : 'light';
-            html.classList.add(sysTheme);
+
+            // ✅ 立即应用当前系统主题
+            html.classList.add(mq.matches ? 'dark' : 'light');
 
             mq.onchange = (e) => {
                 html.classList.remove('dark', 'light');
