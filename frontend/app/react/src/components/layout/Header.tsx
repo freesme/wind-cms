@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {useTranslations} from 'next-intl';
 import {Image, Button, Space, Dropdown} from 'antd';
 import {
@@ -130,7 +130,21 @@ export default function Header() {
         light: '☀️',
         system: '🖥️'
     };
-    const iconValue = themeIconMap[currentMode] || '🖥️';
+    
+    // ✅ 确保 currentMode 始终是有效的 ThemeMode 值
+    const validMode: ThemeMode = (currentMode && ['dark', 'light', 'system'].includes(currentMode)) 
+        ? currentMode 
+        : 'system';
+    const iconValue = themeIconMap[validMode];
+    
+    // ✅ SSR 兼容：只在客户端渲染图标，避免 hydration 不匹配
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+    
+    // SSR 期间显示占位符，客户端渲染后显示实际图标
+    const displayIcon = mounted ? iconValue : '🖥️';
 
     return (
         <div className={styles.fixedTop}>
@@ -203,7 +217,7 @@ export default function Header() {
                                     type="text"
                                     className={styles.iconBtn}
                                     aria-label="Toggle theme"
-                                    icon={<span className={styles.themeIcon}>{iconValue}</span>}
+                                    icon={<span className={styles.themeIcon}>{displayIcon}</span>}
                                 />
                             </Dropdown>
                         </Space>
