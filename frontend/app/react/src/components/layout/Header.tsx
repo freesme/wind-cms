@@ -164,7 +164,7 @@ return (
                                 items: userMenuItems
                             }}
                             trigger={['click']}
-                            dropdownRender={menu => (
+                            popupRender={menu => (
                                 <div className={styles.dropdownMenu}>{menu}</div>
                             )}
                         >
