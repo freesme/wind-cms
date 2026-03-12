@@ -1,19 +1,15 @@
 'use client';
 
 import React, {useState, useEffect} from 'react';
-import {Menu, Tabs} from 'antd';
+import {Menu} from 'antd';
+import type {MenuProps} from 'antd';
 
 import {XIcon} from '@/plugins/xicon';
-
 import {useI18nRouter} from '@/i18n/helpers/useI18nRouter';
 import {useNavigationStore} from '@/store/slices/navigation/hooks';
 import {useLanguageChangeEffect} from '@/hooks/useLanguageChangeEffect';
 
 import type {siteservicev1_Navigation, siteservicev1_NavigationItem} from '@/api/generated/app/service/v1';
-
-import type {TopNavBarTabItem} from './types';
-import TopNavbarTab from './TopNavbarTab';
-
 import styles from './TopNavbar.module.css';
 
 export interface TopNavbarItem {
@@ -28,19 +24,14 @@ interface TopNavbarProps {
     onClick?: (key: number) => void;
 }
 
-// 模拟左侧和右侧的 Tab 列表（实际应该从 store 获取）
-const leftTabList: TopNavBarTabItem[] = [];
-const rightTabList: TopNavBarTabItem[] = [];
-
 export default function TopNavbar({onClick}: TopNavbarProps) {
     const navigationStore = useNavigationStore();
     const router = useI18nRouter();
     const [navigationItems, setNavigationItems] = useState<siteservicev1_NavigationItem[]>([]);
-    const [activeOverlay, setActiveOverlay] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     // 将数据转换为 Ant Design Menu 所需的格式
-    const getMenuOptions = (navItems: siteservicev1_NavigationItem[]) => {
+    const getMenuOptions = (navItems: siteservicev1_NavigationItem[]): MenuProps['items'] => {
         return navItems.map(item => ({
             key: item.id?.toString() || `nav-${item.id}`,
             label: item.title,
@@ -52,12 +43,7 @@ export default function TopNavbar({onClick}: TopNavbarProps) {
                     icon: child.icon ? <XIcon name={`carbon:${child.icon}`} size={18}/> : undefined,
                 }))
                 : undefined,
-        }));
-    };
-
-    // 隐藏悬浮层
-    const hideOverlay = () => {
-        setActiveOverlay(null);
+        })) as MenuProps['items'];
     };
 
     // 加载导航数据
@@ -131,19 +117,26 @@ export default function TopNavbar({onClick}: TopNavbarProps) {
 
     return (
         <div className={styles.navbarWrapper}>
-            <div className={styles.navbarLeft}>
-                {/* 左侧导航菜单 */}
+            <div className={styles.navbarContent}>
+                {/* 导航菜单 */}
                 {isLoading ? (
                     <div className={styles.loadingState}>
                         Loading navigation...
                     </div>
-                ) : navigationItems.length > 0 ? (
+                ) : menuItems.length > 0 ? (
                     <Menu
                         mode="horizontal"
                         className={styles.navbarMenu}
                         items={menuItems}
-                        onClick={({key}) => {
-                            const item = navigationStore.findNavItem(navigationItems, Number(key));
+                        onClick={({key, keyPath}) => {
+                            // keyPath: [childKey, parentKey] for submenu
+                            let item: siteservicev1_NavigationItem | null;
+                            if (keyPath.length > 1) {
+                                // 子菜单项
+                                item = navigationStore.findNavItem(navigationItems, Number(keyPath[0]));
+                            } else {
+                                item = navigationStore.findNavItem(navigationItems, Number(key));
+                            }
                             if (item) handleNavigate(item);
                             onClick?.(Number(key));
                         }}
@@ -152,51 +145,6 @@ export default function TopNavbar({onClick}: TopNavbarProps) {
                     <div className={styles.loadingState}>
                         No navigation items
                     </div>
-                )}
-
-                {/* 原有的 Tabs */}
-                {leftTabList.length > 0 && (
-                    <Tabs
-                        activeKey={activeOverlay || undefined}
-                        type="card"
-                        animated
-                        onTabClick={(key) => setActiveOverlay(key)}
-                        onMouseLeave={hideOverlay}
-                        items={leftTabList.map(item => ({
-                            key: item.key,
-                            label: <TopNavbarTab data={item}/>,
-                            children: item.component ? (
-                                <div className={styles.overlayMask}>
-                                    <div className={styles.overlay}>
-                                        <item.component/>
-                                    </div>
-                                </div>
-                            ) : undefined,
-                        }))}
-                    />
-                )}
-            </div>
-
-            <div className={styles.navbarRight}>
-                {rightTabList.length > 0 && (
-                    <Tabs
-                        activeKey={activeOverlay || undefined}
-                        type="card"
-                        animated
-                        onTabClick={(key) => setActiveOverlay(key)}
-                        onMouseLeave={hideOverlay}
-                        items={rightTabList.map(item => ({
-                            key: item.key,
-                            label: <TopNavbarTab data={item}/>,
-                            children: item.component ? (
-                                <div className={styles.overlayMask}>
-                                    <div className={styles.overlay}>
-                                        <item.component/>
-                                    </div>
-                                </div>
-                            ) : undefined,
-                        }))}
-                    />
                 )}
             </div>
         </div>
