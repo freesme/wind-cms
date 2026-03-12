@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {useTranslations} from 'next-intl';
-import {Image, Button, Divider, Space, Dropdown} from 'antd';
+import {Image, Button, Space, Dropdown} from 'antd';
 import {
     UserOutlined,
     HomeOutlined,
@@ -19,7 +19,7 @@ import styles from './Header.module.css';
 
 
 export default function Header() {
-    const t = useTranslations('navbar.top');
+    const t = useTranslations('navbar');
     const appT = useTranslations('app');
     const brandTitle = appT('title');
     const menuT = useTranslations('menu');
@@ -76,11 +76,11 @@ export default function Header() {
     const languageMenuItems = [
         {
             key: 'zh-CN',
-            label: t('language') === '语言' ? '简体中文' : 'Chinese',
+            label: '简体中文',
         },
         {
             key: 'en-US',
-            label: t('language') === '语言' ? 'English' : 'English',
+            label: 'English',
         },
     ];
     const handleLanguageChange = ({key}: { key: string }) => {
@@ -99,6 +99,27 @@ export default function Header() {
             localStorage.setItem('themeMode', newMode);
         }
     };
+
+    const themeMenuItems = [
+        {
+            key: 'dark',
+            label: t('theme.dark'),
+            icon: <span>🌙</span>,
+            onClick: () => themeStore.setMode('dark')
+        },
+        {
+            key: 'light',
+            label: t('theme.light'),
+            icon: <span>☀️</span>,
+            onClick: () => themeStore.setMode('light')
+        },
+        {
+            key: 'system',
+            label: t('theme.system'),
+            icon: <span>🖥️</span>,
+            onClick: () => themeStore.setMode('system')
+        },
+    ];
 
     return (
         <div className={styles.fixedTop}>
@@ -136,65 +157,73 @@ export default function Header() {
                     {/* 功能按钮区 */}
                     <div className={styles.actions}>
                         <Space size="middle">
-                            {isLogin ? (
-                                <>
-                                    <Dropdown
-                                        menu={{items: userMenuItems}}
-                                        trigger={['hover']}
-                                    >
-                                        <Button
-                                            type="text"
-                                            className={styles.iconBtn}
-                                            aria-label={menuT('my_profile')}
-                                            icon={<UserOutlined/>}
-                                        />
-                                    </Dropdown>
-                                </>
-                            ) : (
-                                <>
-                                    <Divider orientation="vertical"/>
-                                    <Button
-                                        type="primary"
-                                        className={styles.headerLoginBtn}
-                                        aria-label={t('login')}
-                                        onClick={handleClickLogin}
-                                    >
-                                        {t('login')}
-                                    </Button>
-                                    <Button
-                                        type="primary"
-                                        className={styles.headerRegisterBtn}
-                                        aria-label={t('register')}
-                                        onClick={handleClickRegister}
-                                    >
-                                        {t('register')}
-                                    </Button>
-                                </>
-                            )}
+                            <Dropdown
+                                menu={{
+                                    items: [
+                                        {
+                                            key: 'login',
+                                            label: t('user.login'),
+                                            icon: <UserOutlined/>,
+                                            onClick: handleClickLogin
+                                        },
+                                        {
+                                            key: 'register',
+                                            label: t('user.register'),
+                                            icon: <UserOutlined/>,
+                                            onClick: handleClickRegister
+                                        },
+                                        {type: 'divider'},
+                                        {
+                                            key: 'homepage',
+                                            label: menuT('homepage'),
+                                            icon: <HomeOutlined/>,
+                                            onClick: handleClickUserHomepage
+                                        },
+                                        {
+                                            key: 'profile',
+                                            label: menuT('my_profile'),
+                                            icon: <UserOutlined/>,
+                                            onClick: handleClickSettings
+                                        },
+                                        {
+                                            key: 'logout',
+                                            label: menuT('logout'),
+                                            icon: <LogoutOutlined/>,
+                                            danger: true,
+                                            onClick: handleClickLogout
+                                        },
+                                    ]
+                                }}
+                                trigger={['click']}
+                            >
+                                <Button
+                                    type="text"
+                                    className={styles.iconBtn}
+                                    aria-label="User menu"
+                                    icon={<UserOutlined/>}
+                                />
+                            </Dropdown>
                             <Dropdown
                                 menu={{items: languageMenuItems, onClick: handleLanguageChange}}
                                 trigger={['click']}
                             >
                                 <Button
                                     type="text"
-                                    className={styles.langBtn}
+                                    className={styles.iconBtn}
                                     aria-label="Language"
                                     icon={<span className={styles.langIcon}>{'🌐'}</span>}
                                 />
                             </Dropdown>
                             <Dropdown
-                                menu={{items: [
-                                        {key: 'dark', label: '暗色', icon: <span>🌙</span>, onClick: () => themeStore.setMode('dark')},
-                                        {key: 'light', label: '亮色', icon: <span>☀️</span>, onClick: () => themeStore.setMode('light')},
-                                        {key: 'system', label: '跟随系统', icon: <span>🖥️</span>, onClick: () => themeStore.setMode('system')},
-                                    ]}}
+                                menu={{items: themeMenuItems}}
                                 trigger={['click']}
                             >
                                 <Button
                                     type="text"
-                                    className={styles.themeBtn}
+                                    className={styles.iconBtn}
                                     aria-label="Toggle theme"
-                                    icon={<span className={styles.themeIcon}>{themeStore.theme.mode === 'dark' ? '🌙' : themeStore.theme.mode === 'light' ? '☀️' : '🖥️'}</span>}
+                                    icon={<span
+                                        className={styles.themeIcon}>{themeStore.theme.mode === 'dark' ? '🌙' : themeStore.theme.mode === 'light' ? '☀️' : '🖥️'}</span>}
                                 />
                             </Dropdown>
                         </Space>
