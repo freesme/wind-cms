@@ -44,7 +44,7 @@ html.dark .fixedTop {
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    padding: 12px 32px;
+    padding: 12px 48px 12px 56px; /* 增加左侧留白 */
     height: 75px;
     overflow: hidden;
     width: 100%;
@@ -55,7 +55,7 @@ html.dark .fixedTop {
     align-items: center;
     flex: 1;
     min-width: 0;
-    gap: 8px;
+    gap: 16px; /* 增加Logo与主导航间距 */
 }
 
 .logoSection {
@@ -67,6 +67,7 @@ html.dark .fixedTop {
     border-radius: var(--radius-sm, 4px);
     padding: 8px 12px;
     flex-shrink: 0;
+    margin-left: 0;
 }
 
 .logoSection:hover {
