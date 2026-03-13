@@ -5,7 +5,7 @@ import {useTranslations} from 'next-intl';
 
 export default function EmailRegisterPage() {
     const t = useTranslations('authentication');
-    
+
     const [email, setEmail] = useState('');
     const [visibleEnter, setVisibleEnter] = useState(false);
 

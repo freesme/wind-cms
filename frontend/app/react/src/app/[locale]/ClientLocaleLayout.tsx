@@ -2,6 +2,7 @@
 
 import React from "react";
 import {NextIntlClientProvider} from "next-intl";
+import {usePathname} from 'next/navigation';
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -19,15 +20,20 @@ interface ClientLocaleLayoutProps {
 }
 
 const ClientLocaleLayout: React.FC<ClientLocaleLayoutProps> = ({locale, messages, children}) => {
+    const pathname = usePathname();
+    
+    // 检查是否是认证页面（register, login 等）
+    const isAuthPage = pathname?.includes('/register') || pathname?.includes('/login');
+    
     return (
         <NextIntlClientProvider timeZone={DEFAULT_TIME_ZONE} locale={locale} messages={messages}>
             <ReduxProvider>
                 <div className={styles.appContainer}>
-                    <Header/>
+                    {!isAuthPage && <Header/>}
                     <main className={styles.content}>
                         {children}
                     </main>
-                    <Footer/>
+                    {!isAuthPage && <Footer/>}
                     <GlobalLoading/>
                 </div>
             </ReduxProvider>

@@ -5,7 +5,7 @@ import {useTranslations} from 'next-intl';
 
 export default function AccountRegisterPage() {
     const t = useTranslations('authentication');
-    
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');

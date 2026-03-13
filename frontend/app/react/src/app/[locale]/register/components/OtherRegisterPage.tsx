@@ -1,6 +1,7 @@
 'use client';
 
 import {useTranslations} from 'next-intl';
+
 import XIcon from '@/plugins/xicon';
 
 export default function OtherRegisterPage() {

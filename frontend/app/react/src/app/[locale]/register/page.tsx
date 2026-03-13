@@ -4,16 +4,26 @@ import {useState, useMemo} from 'react';
 import {useTranslations} from 'next-intl';
 import XIcon from '@/plugins/xicon';
 
+import '../../globals.css'; // 导入全局 CSS，确保 CSS 变量可用
+import styles from './register.module.css';
+
 import AccountRegisterPage from './components/AccountRegisterPage';
 import EmailRegisterPage from './components/EmailRegisterPage';
 import PhoneRegisterPage from './components/PhoneRegisterPage';
 import OtherRegisterPage from './components/OtherRegisterPage';
 
-import './register.module.css';
+// 获取初始主题状态（仅在客户端调用）
+function getInitialTheme(): boolean {
+    if (typeof window === 'undefined') {
+        return false;
+    }
+    return document.documentElement.classList.contains('dark');
+}
 
 export default function RegisterPage() {
     const t = useTranslations('authentication');
     const [activeTab, setActiveTab] = useState<'account' | 'email' | 'phone' | 'other'>('account');
+    const [isDark, setIsDark] = useState<boolean>(getInitialTheme);
 
     // 语言选项
     const languageOptions = useMemo(() => [
@@ -29,11 +39,12 @@ export default function RegisterPage() {
 
     // 切换主题
     const handleToggleTheme = () => {
-        const isDark = document.documentElement.classList.contains('dark');
-        if (isDark) {
-            document.documentElement.classList.remove('dark');
-        } else {
+        const newIsDark = !document.documentElement.classList.contains('dark');
+        setIsDark(newIsDark);
+        if (newIsDark) {
             document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
         }
     };
 
@@ -58,11 +69,11 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="register-page">
+        <div className={styles.registerPage}>
             {/* 顶部控制按钮 */}
-            <div className="register-controls">
+            <div className={styles.registerControls}>
                 <select
-                    className="language-select"
+                    className={styles.languageSelect}
                     value="zh-CN"
                     onChange={(e) => handleSelectLanguage(e.target.value)}
                 >
@@ -73,36 +84,36 @@ export default function RegisterPage() {
                     ))}
                 </select>
                 <button
-                    className="control-btn theme-toggle"
+                    className={`${styles.controlBtn} ${styles.themeToggle}`}
                     onClick={handleToggleTheme}
                     aria-label="Toggle theme"
                 >
-                    <XIcon name={document.documentElement.classList.contains('dark') ? 'carbon:sun' : 'carbon:moon'} size={18}/>
+                    <XIcon name={isDark ? 'carbon:sun' : 'carbon:moon'} size={18}/>
                 </button>
             </div>
 
             {/* 左侧品牌区 */}
-            <div className="register-left">
-                <div className="brand">
-                    <img src="/logo.png" alt={t('login.logo_alt')} className="brand-logo"/>
-                    <h1 className="brand-title">{t('login.brand_title')}</h1>
-                    <p className="brand-subtitle">{t('login.brand_subtitle')}</p>
+            <div className={styles.registerLeft}>
+                <div className={styles.brand}>
+                    <img src="/logo.png" alt={t('login.logo_alt')} className={styles.brandLogo}/>
+                    <h1 className={styles.brandTitle}>{t('login.brand_title')}</h1>
+                    <p className={styles.brandSubtitle}>{t('login.brand_subtitle')}</p>
                 </div>
 
-                <div className="benefits-list">
-                    <div className="benefit-item">
+                <div className={styles.benefitsList}>
+                    <div className={styles.benefitItem}>
                         <span>✓</span>
                         <span>{t('login.feature_projects')}</span>
                     </div>
-                    <div className="benefit-item">
+                    <div className={styles.benefitItem}>
                         <span>✓</span>
                         <span>{t('login.feature_isolation')}</span>
                     </div>
-                    <div className="benefit-item">
+                    <div className={styles.benefitItem}>
                         <span>✓</span>
                         <span>{t('login.feature_permissions')}</span>
                     </div>
-                    <div className="benefit-item">
+                    <div className={styles.benefitItem}>
                         <span>✓</span>
                         <span>{t('login.feature_analytics')}</span>
                     </div>
@@ -110,35 +121,35 @@ export default function RegisterPage() {
             </div>
 
             {/* 右侧注册卡片 */}
-            <div className="register-right">
-                <div className="register-card">
-                    <div className="card-header">
+            <div className={styles.registerRight}>
+                <div className={styles.registerCard}>
+                    <div className={styles.cardHeader}>
                         <h2>{t('register.title')}</h2>
                         <p>{t('register.register_with')}</p>
                     </div>
 
                     {/* Tab 切换 */}
-                    <div className="register-tabs">
+                    <div className={styles.registerTabs}>
                         <button
-                            className={`tab ${activeTab === 'account' ? 'active' : ''}`}
+                            className={`${styles.tab} ${activeTab === 'account' ? styles.active : ''}`}
                             onClick={() => setActiveTab('account')}
                         >
                             {t('login.tab_account')}
                         </button>
                         <button
-                            className={`tab ${activeTab === 'email' ? 'active' : ''}`}
+                            className={`${styles.tab} ${activeTab === 'email' ? styles.active : ''}`}
                             onClick={() => setActiveTab('email')}
                         >
                             {t('login.tab_email')}
                         </button>
                         <button
-                            className={`tab ${activeTab === 'phone' ? 'active' : ''}`}
+                            className={`${styles.tab} ${activeTab === 'phone' ? styles.active : ''}`}
                             onClick={() => setActiveTab('phone')}
                         >
                             {t('login.tab_phone')}
                         </button>
                         <button
-                            className={`tab ${activeTab === 'other' ? 'active' : ''}`}
+                            className={`${styles.tab} ${activeTab === 'other' ? styles.active : ''}`}
                             onClick={() => setActiveTab('other')}
                         >
                             {t('login.tab_other')}
@@ -146,7 +157,7 @@ export default function RegisterPage() {
                     </div>
 
                     {/* 注册表单内容 */}
-                    <div className="register-content">
+                    <div className={styles.registerContent}>
                         {activeTab === 'account' && <AccountRegisterPage/>}
                         {activeTab === 'email' && <EmailRegisterPage/>}
                         {activeTab === 'phone' && <PhoneRegisterPage/>}
@@ -154,31 +165,31 @@ export default function RegisterPage() {
                     </div>
 
                     {/* 登录链接 */}
-                    <div className="login-section">
+                    <div className={styles.loginSection}>
                         <p>
                             {t('register.already_have_account')}
-                            <button className="text-btn" onClick={handleLoginClick}>
+                            <button className={styles.textBtn} onClick={handleLoginClick}>
                                 {t('register.login_now')}
                             </button>
                         </p>
                     </div>
 
                     {/* 返回首页 */}
-                    <div className="back-home">
-                        <button className="text-btn" onClick={handleBackHome}>
+                    <div className={styles.backHome}>
+                        <button className={styles.textBtn} onClick={handleBackHome}>
                             ← {t('login.back_home')}
                         </button>
                     </div>
 
                     {/* 服务条款 */}
-                    <div className="terms">
+                    <div className={styles.terms}>
                         <small>
                             {t('login.terms_prefix')}
-                            <button className="text-btn" onClick={handleTermsClick}>
+                            <button className={styles.textBtn} onClick={handleTermsClick}>
                                 {t('login.terms_of_service')}
                             </button>
                             {t('login.terms_and')}
-                            <button className="text-btn" onClick={handlePrivacyClick}>
+                            <button className={styles.textBtn} onClick={handlePrivacyClick}>
                                 {t('login.privacy_policy')}
                             </button>
                         </small>

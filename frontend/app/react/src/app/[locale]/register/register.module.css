@@ -1,4 +1,5 @@
 /* Register Page Styles */
+
 .register-page {
     --auth-page-bg: var(--color-bg);
     --auth-right-bg: var(--color-surface);
@@ -542,9 +543,9 @@
     }
 }
 
-/* Dark Mode */
-html.dark {
-    .register-controls {
+/* Dark Mode - 使用 :global() 包装器 */
+:global(html.dark) :global(.registerPage) {
+    .registerControls {
         background: rgba(27, 31, 39, 0.95);
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -555,8 +556,8 @@ html.dark {
             transform: translateY(-2px);
         }
 
-        .language-select,
-        .control-btn {
+        .languageSelect,
+        .controlBtn {
             color: #aab3c2;
             border-color: rgba(102, 126, 234, 0.2);
 
@@ -567,18 +568,16 @@ html.dark {
         }
     }
 
-    .register-page:not(.force-light) {
-        --auth-page-bg: #121317;
-        --auth-right-bg: #1b1f27;
-        --auth-card-bg: #1b1f27;
-        --auth-border: #2a3140;
-        --auth-text-primary: #e8ecf3;
-        --auth-text-secondary: #aab3c2;
-        --auth-tab-bg: rgba(129, 147, 255, 0.18);
-        --auth-tab-active-bg: rgba(129, 147, 255, 0.26);
-        --auth-tab-active-text: #b8c5ff;
-        --auth-focus-ring: 0 0 0 3px rgba(129, 147, 255, 0.28);
-    }
+    --auth-page-bg: #121317;
+    --auth-right-bg: #1b1f27;
+    --auth-card-bg: #1b1f27;
+    --auth-border: #2a3140;
+    --auth-text-primary: #e8ecf3;
+    --auth-text-secondary: #aab3c2;
+    --auth-tab-bg: rgba(129, 147, 255, 0.18);
+    --auth-tab-active-bg: rgba(129, 147, 255, 0.26);
+    --auth-tab-active-text: #b8c5ff;
+    --auth-focus-ring: 0 0 0 3px rgba(129, 147, 255, 0.28);
 }
 
 /* Animation Keyframes */
