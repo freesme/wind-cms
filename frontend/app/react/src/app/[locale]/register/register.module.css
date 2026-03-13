@@ -1,5 +1,13 @@
 /* Register Page Styles */
 
+/* 强制移除 body 和 html 的默认间距 */
+:global(html),
+:global(body) {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden;
+}
+
 .register-page {
     --auth-page-bg: var(--color-bg);
     --auth-right-bg: var(--color-surface);
@@ -28,59 +36,61 @@
     top: 20px;
     right: 20px;
     display: flex;
-    gap: 8px;
+    gap: 12px;
     z-index: 100;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 8px;
-    border-radius: 16px;
+    background: var(--color-surface);
+    padding: 10px 14px;
+    border-radius: 20px;
     backdrop-filter: blur(12px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid var(--color-border);
 
     &:hover {
-        background: rgba(255, 255, 255, 0.95);
+        background: var(--color-surface);
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.1);
         transform: translateY(-2px);
     }
 
     .language-select {
-        padding: 8px 14px;
-        font-size: 13px;
-        font-weight: 600;
-        border: 1px solid rgba(102, 126, 234, 0.15);
-        border-radius: 12px;
-        background: transparent;
-        color: #4a5568;
+        padding: 8px 12px;
+        font-size: 14px;
+        font-weight: 500;
+        border: 1px solid var(--color-border);
+        border-radius: 10px;
+        background: var(--color-bg);
+        color: var(--auth-text-primary);
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        outline: none;
 
         &:hover {
-            border-color: rgba(102, 126, 234, 0.3);
-            color: var(--color-brand);
+            border-color: var(--color-brand);
+            background: var(--color-surface);
         }
     }
 
     .control-btn {
-        min-width: auto;
-        padding: 8px 14px;
-        font-size: 13px;
-        font-weight: 600;
+        min-width: 36px;
+        height: 36px;
+        padding: 0;
+        font-size: 16px;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 6px;
-        border-radius: 12px;
-        background: transparent;
-        border: 1px solid rgba(102, 126, 234, 0.15);
-        color: #4a5568;
+        border-radius: 10px;
+        background: var(--color-bg);
+        border: 1px solid var(--color-border);
+        color: var(--auth-text-primary);
         cursor: pointer;
 
         &:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
-            border-color: rgba(102, 126, 234, 0.3);
-            color: var(--color-brand);
+            border-color: var(--color-brand);
+            background: var(--color-surface);
         }
     }
 }

@@ -2,6 +2,7 @@
 
 import {useState, useMemo} from 'react';
 import {useTranslations} from 'next-intl';
+import styles from '../register.module.css';
 
 export default function AccountRegisterPage() {
     const t = useTranslations('authentication');
@@ -44,9 +45,9 @@ export default function AccountRegisterPage() {
     };
 
     return (
-        <div className="register-form">
+        <div className={styles['register-form']}>
             {/* Username */}
-            <div className="form-group">
+            <div className={styles['form-group']}>
                 <label htmlFor="register-account-username">
                     {t('register.username')}
                 </label>
@@ -57,15 +58,15 @@ export default function AccountRegisterPage() {
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder={t('register.input_username')}
                     autoComplete="username"
-                    className={`input-field ${username && !isValidUsername ? 'error' : ''}`}
+                    className={`${styles['input-field']} ${username && !isValidUsername ? styles.error : ''}`}
                 />
                 {username && !isValidUsername && (
-                    <span className="error-hint">{t('register.invalid_username')}</span>
+                    <span className={styles['error-hint']}>{t('register.invalid_username')}</span>
                 )}
             </div>
 
             {/* Password */}
-            <div className="form-group">
+            <div className={styles['form-group']}>
                 <label htmlFor="register-account-password">
                     {t('register.password')}
                 </label>
@@ -76,15 +77,15 @@ export default function AccountRegisterPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder={t('register.input_password')}
                     autoComplete="new-password"
-                    className={`input-field ${password && !isValidPassword ? 'error' : ''}`}
+                    className={`${styles['input-field']} ${password && !isValidPassword ? styles.error : ''}`}
                 />
                 {password && !isValidPassword && (
-                    <span className="error-hint">{t('register.invalid_password')}</span>
+                    <span className={styles['error-hint']}>{t('register.invalid_password')}</span>
                 )}
             </div>
 
             {/* Confirm Password */}
-            <div className="form-group">
+            <div className={styles['form-group']}>
                 <label htmlFor="register-account-confirm-password">
                     {t('register.confirm_password')}
                 </label>
@@ -95,17 +96,17 @@ export default function AccountRegisterPage() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder={t('register.input_confirm_password')}
                     autoComplete="new-password"
-                    className={`input-field ${confirmPassword && !isPasswordMatch ? 'error' : ''}`}
+                    className={`${styles['input-field']} ${confirmPassword && !isPasswordMatch ? styles.error : ''}`}
                 />
                 {confirmPassword && !isPasswordMatch && (
-                    <span className="error-hint">{t('register.password_not_match')}</span>
+                    <span className={styles['error-hint']}>{t('register.password_not_match')}</span>
                 )}
             </div>
 
             {/* Register Button */}
             <button
                 type="button"
-                className="register-button"
+                className={styles['register-button']}
                 disabled={!isFormValid}
                 onClick={handleButtonRegister}
             >

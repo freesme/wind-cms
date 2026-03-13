@@ -2,6 +2,7 @@
 
 import {useState, useEffect} from 'react';
 import {useTranslations} from 'next-intl';
+import styles from '../register.module.css';
 
 export default function PhoneRegisterPage() {
     const t = useTranslations('authentication');
@@ -56,9 +57,9 @@ export default function PhoneRegisterPage() {
     };
 
     return (
-        <div className="register-form">
+        <div className={styles['register-form']}>
             {/* Phone Number Group */}
-            <div className="form-group">
+            <div className={styles['form-group']}>
                 <label htmlFor="register-phone-number">
                     {t('register.phone')}
                 </label>
@@ -69,16 +70,16 @@ export default function PhoneRegisterPage() {
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder={t('register.input_phone')}
                     autoComplete="tel"
-                    className="input-field"
+                    className={styles['input-field']}
                 />
             </div>
 
             {/* Verification Code Group */}
-            <div className="form-group">
+            <div className={styles['form-group']}>
                 <label htmlFor="register-phone-code">
                     {t('register.code')}
                 </label>
-                <div className="code-input-row">
+                <div className={styles['code-input-row']}>
                     <input
                         id="register-phone-code"
                         type="text"
@@ -87,12 +88,12 @@ export default function PhoneRegisterPage() {
                         placeholder={t('register.input_code')}
                         maxLength={6}
                         autoComplete="one-time-code"
-                        className="input-field"
+                        className={styles['input-field']}
                     />
                     <button
                         type="button"
                         disabled={codeSent}
-                        className={`send-code-btn ${codeSent ? 'disabled' : ''}`}
+                        className={`${styles['send-code-btn']} ${codeSent ? styles.disabled : ''}`}
                         onClick={handleButtonSendVerifyCode}
                     >
                         {codeSent ? `${codeCountdown}s` : t('register.send_code')}
@@ -103,7 +104,7 @@ export default function PhoneRegisterPage() {
             {/* Register Button */}
             <button
                 type="button"
-                className="register-button"
+                className={styles['register-button']}
                 onClick={handleButtonRegisterOrLogin}
             >
                 {t('register.register_or_login')}

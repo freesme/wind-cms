@@ -2,6 +2,7 @@
 
 import {useState} from 'react';
 import {useTranslations} from 'next-intl';
+import styles from '../register.module.css';
 
 export default function EmailRegisterPage() {
     const t = useTranslations('authentication');
@@ -26,9 +27,9 @@ export default function EmailRegisterPage() {
     return (
         <div>
             {!visibleEnter ? (
-                <div className="register-form">
+                <div className={styles['register-form']}>
                     {/* Email Input Group */}
-                    <div className="form-group">
+                    <div className={styles['form-group']}>
                         <label htmlFor="register-email-address">
                             {t('register.email')}
                         </label>
@@ -39,17 +40,17 @@ export default function EmailRegisterPage() {
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder={t('register.input_email')}
                             autoComplete="email"
-                            className={`input-field ${email && !isValidEmail() ? 'error' : ''}`}
+                            className={`${styles['input-field']} ${email && !isValidEmail() ? styles.error : ''}`}
                         />
                         {email && !isValidEmail() && (
-                            <span className="error-hint">{t('register.invalid_email')}</span>
+                            <span className={styles['error-hint']}>{t('register.invalid_email')}</span>
                         )}
                     </div>
 
                     {/* Next Button */}
                     <button
                         type="button"
-                        className="register-button"
+                        className={styles['register-button']}
                         disabled={!isValidEmail()}
                         onClick={handleButtonNext}
                     >
@@ -103,16 +104,16 @@ function EmailRegisterEnterCodePage({email}: { email: string }) {
     };
 
     return (
-        <div className="code-container">
+        <div className={styles['code-container']}>
             {/* Email Hint */}
-            <div className="email-sent-info">
-                <p className="hint-title">{t('register.code_sent_title')}</p>
-                <p className="email-display">{email}</p>
-                <p className="hint-subtitle">{t('register.code_sent_subtitle')}</p>
+            <div className={styles['email-sent-info']}>
+                <p className={styles['hint-title']}>{t('register.code_sent_title')}</p>
+                <p className={styles['email-display']}>{email}</p>
+                <p className={styles['hint-subtitle']}>{t('register.code_sent_subtitle')}</p>
             </div>
 
             {/* Verification Code Input */}
-            <div className="code-input-wrapper">
+            <div className={styles['code-input-wrapper']}>
                 <input
                     type="text"
                     maxLength={6}
@@ -124,15 +125,15 @@ function EmailRegisterEnterCodePage({email}: { email: string }) {
                             handleInputComplete(value.join(''));
                         }
                     }}
-                    className="verification-code-input"
+                    className={styles['verification-code-input']}
                     placeholder="请输入验证码"
                 />
             </div>
 
             {/* Resend Button */}
-            <div className="resend-section">
+            <div className={styles['resend-section']}>
                 <button
-                    className="text-btn"
+                    className={styles['text-btn']}
                     disabled={codeSent}
                     onClick={handleButtonResend}
                 >
@@ -143,7 +144,7 @@ function EmailRegisterEnterCodePage({email}: { email: string }) {
             {/* Confirm Button */}
             <button
                 type="button"
-                className="register-button"
+                className={styles['register-button']}
                 disabled={!isCodeComplete}
                 onClick={handleButtonConfirm}
             >

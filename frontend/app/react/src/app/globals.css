@@ -11,6 +11,13 @@ body {
     overflow-x: hidden;
 }
 
+/* Register 页面特殊处理 - 移除顶部偏移 */
+html:has(.register-page),
+body:has(.register-page) {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
 /* ========== CSS Variables ========== */
 :root {
     /* 布局尺寸 */
