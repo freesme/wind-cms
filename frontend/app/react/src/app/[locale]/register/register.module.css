@@ -1,20 +1,5 @@
 /* Register Page Styles */
 
-/* 强制移除 body 和 html 的默认间距 */
-:global(html),
-:global(body) {
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow-x: hidden;
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-}
-
-/* Register wrapper - 确保正确的布局 */
-.registerPageWrapper {
-    display: contents;
-}
-
 .register-page {
     --auth-page-bg: var(--color-bg);
     --auth-right-bg: var(--color-surface);
@@ -560,31 +545,8 @@
     }
 }
 
-/* Dark Mode - 使用 :global() 包装器 */
-:global(html.dark) :global(.registerPage) {
-    .registerControls {
-        background: rgba(27, 31, 39, 0.95);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-
-        &:hover {
-            background: rgba(27, 31, 39, 0.98);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.4);
-            transform: translateY(-2px);
-        }
-
-        .languageSelect,
-        .controlBtn {
-            color: #aab3c2;
-            border-color: rgba(102, 126, 234, 0.2);
-
-            &:hover {
-                color: #b8c5ff;
-                border-color: rgba(102, 126, 234, 0.4);
-            }
-        }
-    }
-
+/* Dark Mode Styles */
+html.dark .register-page {
     --auth-page-bg: #121317;
     --auth-right-bg: #1b1f27;
     --auth-card-bg: #1b1f27;
@@ -595,6 +557,28 @@
     --auth-tab-active-bg: rgba(129, 147, 255, 0.26);
     --auth-tab-active-text: #b8c5ff;
     --auth-focus-ring: 0 0 0 3px rgba(129, 147, 255, 0.28);
+}
+
+html.dark .register-controls {
+    background: rgba(27, 31, 39, 0.95);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    &:hover {
+        background: rgba(27, 31, 39, 0.98);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .language-select,
+    .control-btn {
+        color: #aab3c2;
+        border-color: rgba(102, 126, 234, 0.2);
+
+        &:hover {
+            color: #b8c5ff;
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+    }
 }
 
 /* Animation Keyframes */
