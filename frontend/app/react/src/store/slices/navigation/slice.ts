@@ -8,15 +8,10 @@ import {
 } from '@/api/generated/app/service/v1';
 import {currentLocaleLanguageCode} from "@/i18n";
 import {makeOrderBy, makeQueryString} from "@/transport/rest/utils";
+import {INavigationState} from "@/store/types";
 
-export interface NavigationState {
-    list: siteservicev1_Navigation[];
-    detail: siteservicev1_Navigation | null;
-    loading: boolean;
-    total: number;
-}
 
-const initialState: NavigationState = {
+const initialState: INavigationState = {
     list: [],
     detail: null,
     loading: false,

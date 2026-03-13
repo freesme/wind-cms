@@ -3,21 +3,13 @@ import type {AxiosProgressEvent} from 'axios';
 
 import {requestApi} from '@/transport/rest';
 import {
-    storageservicev1_UploadFileResponse,
-    storageservicev1_DownloadFileResponse,
     createFileTransferServiceClient,
 } from '@/api/generated/app/service/v1';
 import {requestClient} from "@/transport/rest/rest-client";
+import {IFileTransferState} from "@/store/types";
 
 
-export interface FileTransferState {
-    list: storageservicev1_UploadFileResponse[];
-    detail: storageservicev1_DownloadFileResponse | null;
-    loading: boolean;
-    total: number;
-}
-
-const initialState: FileTransferState = {
+const initialState: IFileTransferState = {
     list: [],
     detail: null,
     loading: false,

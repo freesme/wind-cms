@@ -1,14 +1,11 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 
-import {createUserProfileServiceClient, type identityservicev1_User} from "@/api/generated/app/service/v1";
+import {createUserProfileServiceClient} from "@/api/generated/app/service/v1";
 import {requestApi} from "@/transport/rest";
+import {IUserProfileState} from "@/store/types";
 
-export interface UserProfileState {
-    detail: identityservicev1_User | null;
-    loading: boolean;
-}
 
-const initialState: UserProfileState = {
+const initialState: IUserProfileState = {
     detail: null,
     loading: false,
 };

@@ -7,16 +7,11 @@ import {
 } from '@/api/generated/app/service/v1';
 import {currentLocaleLanguageCode} from "@/i18n";
 import {makeOrderBy, makeQueryString} from "@/transport/rest/utils";
+import {IPostState} from "@/store/types";
 
-export interface PostState {
-    list: contentservicev1_Post[];
-    detail: contentservicev1_Post | null;
-    loading: boolean;
-    total: number;
-}
 
 // 初始状态
-const initialState: PostState = {
+const initialState: IPostState = {
     list: [],
     detail: null,
     loading: false,

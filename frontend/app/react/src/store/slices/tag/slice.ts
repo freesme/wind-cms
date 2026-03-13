@@ -7,16 +7,10 @@ import {
 } from '@/api/generated/app/service/v1';
 import {currentLocaleLanguageCode} from '@/i18n';
 import {makeOrderBy, makeQueryString} from "@/transport/rest/utils";
+import {ITagState} from "@/store/types";
 
 
-export interface TagState {
-    list: contentservicev1_Tag[];
-    detail: contentservicev1_Tag | null;
-    loading: boolean;
-    total: number;
-}
-
-const initialState: TagState = {
+const initialState: ITagState = {
     list: [],
     detail: null,
     loading: false,

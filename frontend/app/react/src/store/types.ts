@@ -1,3 +1,14 @@
+import {
+    type commentservicev1_Comment,
+    type contentservicev1_Category,
+    type contentservicev1_Page,
+    type contentservicev1_Post,
+    type contentservicev1_Tag,
+    type identityservicev1_User,
+    type siteservicev1_Navigation,
+    type storageservicev1_DownloadFileResponse, type storageservicev1_UploadFileResponse
+} from "@/api/generated/app/service/v1";
+
 export interface IRootState {
     access: IAccessState;
     language: ILanguageState;
@@ -112,48 +123,62 @@ export interface IUserState {
 }
 
 export interface IAuthenticationState {
+    loginLoading: boolean;
     loading: boolean;
     error: string | null;
 }
 
 export interface ICategoryState {
-    categories: any[];
+    list: contentservicev1_Category[];
+    detail: contentservicev1_Category | null;
     loading: boolean;
+    total: number;
 }
 
 export interface ICommentState {
-    comments: any[];
+    list: commentservicev1_Comment[];
+    detail: commentservicev1_Comment | null;
     loading: boolean;
+    total: number;
 }
 
 export interface IFileTransferState {
-    uploading: boolean;
-    downloading: boolean;
-    progress: number;
+    list: storageservicev1_UploadFileResponse[];
+    detail: storageservicev1_DownloadFileResponse | null;
+    loading: boolean;
+    total: number;
 }
 
 export interface INavigationState {
-    items: any[];
+    list: siteservicev1_Navigation[];
+    detail: siteservicev1_Navigation | null;
     loading: boolean;
+    total: number;
 }
 
 export interface IPageState {
-    pages: any[];
+    list: contentservicev1_Page[];
+    detail: contentservicev1_Page | null;
     loading: boolean;
+    total: number;
 }
 
 export interface IPostState {
-    posts: any[];
+    list: contentservicev1_Post[];
+    detail: contentservicev1_Post | null;
     loading: boolean;
+    total: number;
 }
 
 export interface ITagState {
-    tags: any[];
+    list: contentservicev1_Tag[];
+    detail: contentservicev1_Tag | null;
     loading: boolean;
+    total: number;
 }
 
 export interface IUserProfileState {
-    profile: any | null;
+    detail: identityservicev1_User | null;
     loading: boolean;
 }
 

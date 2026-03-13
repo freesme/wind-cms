@@ -8,15 +8,10 @@ import {
 import {requestApi} from '@/transport/rest';
 import {makeOrderBy, makeQueryString, makeUpdateMask} from "@/transport/rest/utils";
 import {currentLocaleLanguageCode} from "@/i18n";
+import {ICategoryState} from "@/store/types";
 
-export interface CategoryState {
-    list: contentservicev1_Category[];
-    detail: contentservicev1_Category | null;
-    loading: boolean;
-    total: number;
-}
 
-const initialState: CategoryState = {
+const initialState: ICategoryState = {
     list: [],
     detail: null,
     loading: false,

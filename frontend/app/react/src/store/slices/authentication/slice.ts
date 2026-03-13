@@ -1,19 +1,18 @@
 import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
 
-import {createAuthenticationServiceClient, createUserProfileServiceClient} from "@/api/generated/app/service/v1";
+import {
+    createAuthenticationServiceClient,
+    createUserProfileServiceClient
+} from "@/api/generated/app/service/v1";
 
 import {requestApi} from "@/transport/rest";
 
 import {setAccessToken, setLoginExpired} from "@/store/core/access/slice";
 import {useAccessStore} from "@/store/core/access/hooks";
+import {IAuthenticationState} from "@/store/types";
 
-interface AuthState {
-    loginLoading: boolean;
-    loading: boolean;
-    error: string | null;
-}
 
-const initialState: AuthState = {
+const initialState: IAuthenticationState = {
     loginLoading: false,
     loading: false,
     error: null,

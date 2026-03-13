@@ -7,15 +7,9 @@ import {
 } from '@/api/generated/app/service/v1';
 import {currentLocaleLanguageCode} from '@/i18n';
 import {makeOrderBy, makeQueryString} from "@/transport/rest/utils";
+import {IPageState} from "@/store/types";
 
-export interface PageState {
-    list: contentservicev1_Page[];
-    detail: contentservicev1_Page | null;
-    loading: boolean;
-    total: number;
-}
-
-const initialState: PageState = {
+const initialState: IPageState = {
     list: [],
     detail: null,
     loading: false,

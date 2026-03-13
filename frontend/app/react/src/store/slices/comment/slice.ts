@@ -5,15 +5,10 @@ import {
     commentservicev1_Comment,
 } from '@/api/generated/app/service/v1';
 import {makeOrderBy, makeQueryString} from "@/transport/rest/utils";
+import {ICommentState} from "@/store/types";
 
-export interface CommentState {
-    list: commentservicev1_Comment[];
-    detail: commentservicev1_Comment | null;
-    loading: boolean;
-    total: number;
-}
 
-const initialState: CommentState = {
+const initialState: ICommentState = {
     list: [],
     detail: null,
     loading: false,
