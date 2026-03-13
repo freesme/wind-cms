@@ -346,7 +346,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                 <Empty
                     description={t('no_comments')}
                     className={styles.emptyState}
-                    style={{marginTop: 40}}
+                    style={{
+                        marginTop: 40,
+                        color: 'var(--color-text-primary)',
+                    }}
                 />
             )}
         </section>

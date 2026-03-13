@@ -66,6 +66,13 @@ const PostList: React.FC<PostListProps> = ({
         }
     }, [currentPageSize, pageSize]);
 
+    // 监听 categoryId 和 tagId 变化，重置页码并重新查询
+    useEffect(() => {
+        setCurrentPage(1);
+        // 直接调用 fetchPosts，使用新的 categoryId/tagId
+        fetchPosts(1, currentPageSize);
+    }, [categoryId, tagId]);
+
     const fetchPosts = useCallback(async (page: number, pageSize: number) => {
         setLoading(true);
         try {
@@ -91,7 +98,7 @@ const PostList: React.FC<PostListProps> = ({
         } finally {
             setLoading(false);
         }
-    }, [postStore, queryParams, fieldMask, orderBy]);
+    }, [postStore, queryParams, categoryId, tagId, fieldMask, orderBy]);
 
     // 监听页面变化
     useEffect(() => {

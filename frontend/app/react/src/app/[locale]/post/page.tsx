@@ -1,6 +1,6 @@
 'use client';
 
-import {useState} from 'react';
+import {useState, useMemo} from 'react';
 import {useTranslations} from 'next-intl';
 
 import CategoryFilter from '@/components/category/CategoryFilter';
@@ -14,8 +14,17 @@ export default function PostListPage() {
     const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
 
     const handleCategoryChange = (categoryId: number | null) => {
+        console.log('[PostListPage] Category changed:', categoryId);
         setSelectedCategoryId(categoryId);
     };
+
+    // 构建查询参数 - 使用 useMemo 确保稳定性
+    const queryParams = useMemo(() => {
+        if (selectedCategoryId) {
+            return {category_ids__in: [selectedCategoryId]};
+        }
+        return {};
+    }, [selectedCategoryId]);
 
     return (
         <div className={styles['post-list-page']}>
@@ -36,9 +45,10 @@ export default function PostListPage() {
                 />
 
                 <PostList
+                    key={selectedCategoryId || 'all'}  // 使用 key 强制重新渲染
+                    queryParams={queryParams}
                     initialPageSize={12}
                     pageSizes={[12, 24, 36, 48]}
-                    categoryId={selectedCategoryId ?? undefined}
                 />
             </div>
         </div>
