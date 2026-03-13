@@ -1,8 +1,7 @@
 'use client';
 
 import React, {useState, useEffect, useRef} from 'react';
-import {Button, Input, Form, Empty} from 'antd';
-import {Row, Col} from 'antd';
+import {Button, Empty} from 'antd';
 import {useTranslations} from 'next-intl';
 
 import {XIcon} from '@/plugins/xicon';
@@ -14,8 +13,6 @@ import type {
 
 import styles from './CommentSection.module.css';
 import CommentTree from './CommentTree';
-
-const {TextArea} = Input;
 
 interface CommentForm {
     content: string;
@@ -251,48 +248,36 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                     </div>
                     <h3>{t('write_comment')}</h3>
                 </div>
-                <Form layout="vertical">
-                    <Row gutter={24}>
-                        <Col span={12}>
-                            <Input
+                <div className={styles.commentFormWrapper}>
+                    <div className={styles.formRow}>
+                        <div className={styles.formGroup}>
+                            <input
                                 value={newComment.authorName}
                                 onChange={(e) => setNewComment({...newComment, authorName: e.target.value})}
                                 placeholder={t('nickname') + ' *'}
-                                size="large"
+                                className={styles.inputField}
                                 disabled={submitting}
-                                allowClear
-                                prefix={<XIcon name="carbon:user" size={18}/>}
-                                onPressEnter={(e) => {
-                                    if (!e.shiftKey) {
-                                        e.preventDefault();
-                                        handleSubmitComment();
-                                    }
-                                }}
                             />
-                        </Col>
-                        <Col span={12}>
-                            <Input
+                        </div>
+                        <div className={styles.formGroup}>
+                            <input
                                 value={newComment.authorEmail}
                                 onChange={(e) => setNewComment({...newComment, authorEmail: e.target.value})}
                                 placeholder={t('email') + ' *'}
-                                size="large"
+                                className={styles.inputField}
                                 disabled={submitting}
-                                allowClear
-                                prefix={<XIcon name="carbon:email" size={18}/>}
                                 type="email"
                             />
-                        </Col>
-                    </Row>
-                    <Form.Item style={{marginTop: 24}}>
-                        <TextArea
+                        </div>
+                    </div>
+                    <div className={styles.formGroup}>
+                        <textarea
                             value={newComment.content}
                             onChange={(e) => setNewComment({...newComment, content: e.target.value})}
-                            rows={6}
                             placeholder={t('write_comment')}
-                            size="large"
+                            className={styles.textareaField}
                             disabled={submitting}
-                            showCount
-                            maxLength={1000}
+                            rows={6}
                             onKeyDown={(e) => {
                                 // Ctrl/Cmd + Enter 提交
                                 if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
@@ -301,30 +286,31 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                                 }
                             }}
                         />
-                    </Form.Item>
-                    <Form.Item>
-                        <div className={styles.formActions}>
-                            <Button
-                                type="primary"
-                                size="large"
-                                onClick={handleSubmitComment}
-                                loading={submitting}
-                                shape="round"
-                                icon={<XIcon name="carbon:send-alt" size={18}/>}
-                            >
-                                {t('submit_comment')}
-                            </Button>
-                            <span className={styles.formTip}>
-                                <XIcon name="carbon:information" size={16}/>
-                                {t('fill_form_info')}
-                            </span>
-                            <span className={styles.formShortcut}>
-                                <XIcon name="carbon:keyboard" size={16}/>
-                                Ctrl + Enter {t('submit_comment')}
-                            </span>
+                        <div className={styles.charCount}>
+                            {newComment.content.length} / 1000
                         </div>
-                    </Form.Item>
-                </Form>
+                    </div>
+                    <div className={styles.formActions}>
+                        <Button
+                            type="primary"
+                            size="large"
+                            onClick={handleSubmitComment}
+                            loading={submitting}
+                            shape="round"
+                            icon={<XIcon name="carbon:send-alt" size={18}/>}
+                        >
+                            {t('submit_comment')}
+                        </Button>
+                        <span className={styles.formTip}>
+                            <XIcon name="carbon:information" size={16}/>
+                            {t('fill_form_info')}
+                        </span>
+                        <span className={styles.formShortcut}>
+                            <XIcon name="carbon:keyboard" size={16}/>
+                            Ctrl + Enter {t('submit_comment')}
+                        </span>
+                    </div>
+                </div>
             </div>
 
             {/* Comments List */}

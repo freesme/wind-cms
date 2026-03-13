@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useState} from 'react';
-import {Button, Input, Avatar, Spin} from 'antd';
+import {Button, Avatar, Spin} from 'antd';
 import {useTranslations} from 'next-intl';
 
 import {XIcon} from '@/plugins/xicon';
@@ -220,20 +220,23 @@ const CommentTree: React.FC<CommentTreeProps> = ({
                             {/* 回复表单 */}
                             {replyingCommentId === comment.id && (
                                 <div className={styles.replyForm}>
-                                    <Input.TextArea
+                                    <textarea
                                         value={replyContent}
                                         onChange={(e) => setReplyContent(e.target.value)}
                                         rows={3}
                                         placeholder={t('write_comment')}
-                                        size="small"
+                                        className={styles.replyTextarea}
                                         disabled={submitting}
-                                        onPressEnter={(e) => {
-                                            if (e.ctrlKey) {
+                                        onKeyDown={(e) => {
+                                            if (e.ctrlKey || e.metaKey) {
                                                 e.preventDefault();
                                                 submitReply(comment);
                                             }
                                         }}
                                     />
+                                    <div className={styles.charCount}>
+                                        {replyContent.length} / 1000
+                                    </div>
                                     <div className={styles.replyFormActions}>
                                         <Button
                                             size="small"

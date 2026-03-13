@@ -163,6 +163,94 @@
     }
 }
 
+/* Comment Form Wrapper */
+.commentFormWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.inputField {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    color: var(--color-text-primary);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    transition: all 0.3s;
+
+    &:hover {
+        border-color: var(--color-brand);
+    }
+
+    &:focus {
+        outline: none;
+        border-color: var(--color-brand);
+        box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+    }
+
+    &::placeholder {
+        color: var(--color-text-secondary);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.textareaField {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    color: var(--color-text-primary);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    transition: all 0.3s;
+    resize: vertical;
+    min-height: 120px;
+
+    &:hover {
+        border-color: var(--color-brand);
+    }
+
+    &:focus {
+        outline: none;
+        border-color: var(--color-brand);
+        box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+    }
+
+    &::placeholder {
+        color: var(--color-text-secondary);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.charCount {
+    text-align: right;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    margin-top: -0.5rem;
+}
+
 /* Override Ant Design Input Styles */
 .commentForm :global(.ant-input) {
     background: rgba(255, 255, 255, 0.05) !important;
@@ -339,6 +427,11 @@
         }
     }
 
+    .formRow {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
     .formActions {
         flex-direction: column;
         align-items: stretch;
@@ -492,6 +585,7 @@ html.dark .loadMoreContainer {
 html.dark .commentForm :global(.ant-input) {
     background: rgba(0, 0, 0, 0.2) !important;
     border-color: rgba(168, 85, 247, 0.2) !important;
+    color: var(--color-text-primary) !important;
 }
 
 html.dark .commentForm :global(.ant-input:hover) {
@@ -503,6 +597,10 @@ html.dark .commentForm :global(.ant-input:focus) {
     background: rgba(0, 0, 0, 0.3) !important;
     border-color: var(--color-brand) !important;
     box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2) !important;
+}
+
+html.dark .commentForm :global(.ant-input::placeholder) {
+    color: var(--color-text-secondary) !important;
 }
 
 html.dark .commentForm :global(.ant-input-prefix) {
@@ -530,6 +628,11 @@ html.dark .commentForm :global(.ant-input-textarea:focus) {
     border-color: var(--color-brand) !important;
 }
 
+html.dark .commentForm :global(.ant-input-textarea textarea) {
+    background: transparent !important;
+    color: var(--color-text-primary) !important;
+}
+
 /* Dark Mode - Button Styles */
 html.dark .commentForm :global(.ant-btn-primary) {
     background: linear-gradient(135deg,
@@ -547,4 +650,39 @@ html.dark .commentForm :global(.ant-btn-primary:hover) {
 
 html.dark .commentForm :global(.ant-btn-primary:active) {
     transform: translateY(-1px) !important;
+}
+
+/* Dark Mode - Form Fields */
+html.dark .inputField {
+    background: var(--color-surface) !important;
+    border-color: var(--color-border) !important;
+    color: var(--color-text-primary) !important;
+}
+
+html.dark .inputField:hover {
+    border-color: var(--color-brand) !important;
+}
+
+html.dark .inputField:focus {
+    border-color: var(--color-brand) !important;
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2) !important;
+}
+
+html.dark .textareaField {
+    background: var(--color-surface) !important;
+    border-color: var(--color-border) !important;
+    color: var(--color-text-primary) !important;
+}
+
+html.dark .textareaField:hover {
+    border-color: var(--color-brand) !important;
+}
+
+html.dark .textareaField:focus {
+    border-color: var(--color-brand) !important;
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2) !important;
+}
+
+html.dark .charCount {
+    color: var(--color-text-secondary) !important;
 }
