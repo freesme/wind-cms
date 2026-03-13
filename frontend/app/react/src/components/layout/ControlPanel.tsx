@@ -2,8 +2,9 @@
 
 import {useState, useMemo} from 'react';
 import {useRouter, usePathname} from 'next/navigation';
-import {useTranslations} from 'next-intl';
+
 import XIcon from '@/plugins/xicon';
+
 import styles from './ControlPanel.module.css';
 
 // 获取初始主题状态（仅在客户端调用）
@@ -17,10 +18,9 @@ function getInitialTheme(): boolean {
 export default function ControlPanel() {
     const router = useRouter();
     const pathname = usePathname();
-    const t = useTranslations('authentication');
-    
+
     const [isDark, setIsDark] = useState<boolean>(getInitialTheme);
-    
+
     // 从 URL 中获取当前语言
     const currentLocale = pathname?.split('/')[1] || 'zh-CN';
 

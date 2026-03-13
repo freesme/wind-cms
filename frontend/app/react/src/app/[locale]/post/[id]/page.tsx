@@ -1,7 +1,7 @@
 'use client';
 
 import {useEffect, useState, useRef, useMemo, useCallback} from 'react';
-import {useParams, useRouter, useSearchParams} from 'next/navigation';
+import {useParams, useSearchParams} from 'next/navigation';
 import {useTranslations} from 'next-intl';
 
 import CommentSection from '@/components/comment/CommentSection';
@@ -13,6 +13,7 @@ import {usePostStore} from '@/store/slices/post/hooks';
 import {formatDate} from "@/utils";
 import {contentservicev1_Post} from "@/api/generated/app/service/v1";
 import XIcon from '@/plugins/xicon';
+import {useI18nRouter} from "@/i18n/helpers";
 
 import '../../../globals.css'; // 导入全局 CSS，确保 CSS 变量可用
 import styles from './post-detail.module.css';
@@ -31,7 +32,7 @@ interface TocItem {
 export default function PostDetailPage() {
     const t = useTranslations('page');
     const params = useParams();
-    const router = useRouter();
+    const router = useI18nRouter();
     const searchParams = useSearchParams();
     const postStore = usePostStore();
 
