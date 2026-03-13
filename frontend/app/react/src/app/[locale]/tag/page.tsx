@@ -2,7 +2,8 @@
 
 import {useState, useEffect} from 'react';
 import {useTranslations} from 'next-intl';
-import {Skeleton, Empty, Pagination} from 'antd';
+import {Skeleton, Pagination} from 'antd';
+import {AppEmpty} from '@/components/ui';
 
 import {XIcon} from '@/plugins/xicon';
 import {useI18nRouter} from "@/i18n/helpers";
@@ -131,17 +132,13 @@ export default function TagListPage() {
                                     </div>
                                 ))}
                                 {tags.length === 0 && total > 0 && (
-                                    <div className={styles['empty-page']}>
-                                        <Empty description={t('tags.no_tags_in_page')}/>
-                                    </div>
+                                    <AppEmpty description={t('tags.no_tags_in_page')}/>
                                 )}
                             </div>
                         )}
 
                         {!loading && tags.length === 0 && total === 0 && (
-                            <div className={styles['empty-state']}>
-                                <Empty description={t('tags.no_tags')}/>
-                            </div>
+                            <AppEmpty inContainer description={t('tags.no_tags')}/>
                         )}
 
                         {total > pageSize && (

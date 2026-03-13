@@ -390,25 +390,6 @@
     letter-spacing: 0.5px;
 }
 
-/* Empty State */
-.emptyState {
-    margin-top: 40px;
-}
-
-.emptyState :global(.ant-empty-description) {
-    color: var(--color-text-secondary);
-    font-size: 14px;
-}
-
-/* Dark Mode - Empty State */
-html.dark .emptyState :global(.ant-empty-description) {
-    color: rgba(255, 255, 255, 0.65) !important;
-}
-
-html.dark .emptyState :global(.ant-empty) {
-    color: var(--color-text-primary) !important;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
     .commentsSection {
@@ -703,23 +684,4 @@ html.dark .textareaField:focus {
 
 html.dark .charCount {
     color: var(--color-text-secondary) !important;
-}
-
-/* Dark Mode - Empty Component */
-html.dark .commentsSection :global(.ant-empty) {
-    color: var(--color-text-primary) !important;
-}
-
-html.dark .commentsSection :global(.ant-empty-description) {
-    color: var(--color-text-secondary) !important;
-    opacity: 0.8 !important;
-}
-
-html.dark .commentsSection :global(.ant-empty-image) {
-    filter: brightness(0.8) contrast(1.2) !important;
-}
-
-/* Ensure empty state text is visible in dark mode */
-html.dark .commentsSection :global(.ant-empty .ant-empty-description) {
-    color: rgba(255, 255, 255, 0.65) !important;
 }

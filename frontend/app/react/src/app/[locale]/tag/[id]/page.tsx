@@ -3,8 +3,9 @@
 import {useState, useEffect, useMemo} from 'react';
 import {useParams} from 'next/navigation';
 import {useTranslations} from 'next-intl';
-import {Button, Empty} from 'antd';
+import {Button} from 'antd';
 import {ArrowLeftOutlined} from '@ant-design/icons';
+import {AppEmpty} from '@/components/ui';
 
 import {XIcon} from '@/plugins/xicon';
 import {useI18nRouter} from "@/i18n/helpers";
@@ -56,7 +57,7 @@ export default function TagDetailPage() {
     }, [tagId]);
 
     if (!tagId) {
-        return <Empty description="Invalid tag ID"/>;
+        return <AppEmpty variant="error" description="Invalid tag ID"/>;
     }
 
     return (

@@ -3,8 +3,9 @@
 import {useState, useEffect, useMemo} from 'react';
 import {useParams} from 'next/navigation';
 import {useTranslations} from 'next-intl';
-import {Button, Empty} from 'antd';
+import {Button} from 'antd';
 import {ArrowLeftOutlined} from '@ant-design/icons';
+import {AppEmpty} from '@/components/ui';
 
 import {useI18nRouter} from "@/i18n/helpers";
 
@@ -79,7 +80,7 @@ export default function CategoryDetailPage() {
     }, [categoryId]);
 
     if (!categoryId) {
-        return <Empty description="Invalid category ID"/>;
+        return <AppEmpty variant="error" description="Invalid category ID"/>;
     }
 
     return (

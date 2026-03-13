@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
-import {Empty, Skeleton} from 'antd';
+import {Skeleton} from 'antd';
 import {useTranslations} from 'next-intl';
+import {AppEmpty} from '@/components/ui';
 
 import type {contentservicev1_Category} from '@/api/generated/app/service/v1';
 
@@ -77,9 +78,7 @@ const CategoryList: React.FC<CategoryListProps> = ({
 
             {/* Empty State */}
             {!loading && categories.length === 0 && (
-                <div className={styles.emptyState}>
-                    <Empty description={t('no_categories')}/>
-                </div>
+                <AppEmpty description={t('no_categories')}/>
             )}
         </div>
     );

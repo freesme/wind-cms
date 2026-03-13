@@ -1,10 +1,11 @@
 'use client';
 
 import React, {useState, useEffect, useRef} from 'react';
-import {Button, Empty} from 'antd';
+import {Button} from 'antd';
 import {useTranslations} from 'next-intl';
 
 import {XIcon} from '@/plugins/xicon';
+import {AppEmpty} from '@/components/ui';
 import {useCommentStore} from '@/store/slices/comment/hooks';
 import type {
     commentservicev1_Comment,
@@ -343,13 +344,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                     )}
                 </div>
             ) : (
-                <Empty
+                <AppEmpty
                     description={t('no_comments')}
-                    className={styles.emptyState}
-                    style={{
-                        marginTop: 40,
-                        color: 'var(--color-text-primary)',
-                    }}
+                    inContainer
                 />
             )}
         </section>

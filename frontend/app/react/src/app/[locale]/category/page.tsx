@@ -2,7 +2,8 @@
 
 import {useState, useEffect} from 'react';
 import {useTranslations} from 'next-intl';
-import {Skeleton, Empty} from 'antd';
+import {Skeleton} from 'antd';
+import {AppEmpty} from '@/components/ui';
 
 import {useCategoryStore} from '@/store/slices/category/hooks';
 import CategoryTree from '@/components/category/CategoryTree';
@@ -76,9 +77,9 @@ export default function CategoryListPage() {
                                 onCategoryClick={handleCategoryClick}
                             />
                         ) : (
-                            <Empty
+                            <AppEmpty
                                 description={t('categories.no_categories')}
-                                style={{margin: '80px 0'}}
+                                inContainer
                                 image={<span className="i-carbon:folder-blank" style={{fontSize: '64px'}}/>}
                             />
                         )}

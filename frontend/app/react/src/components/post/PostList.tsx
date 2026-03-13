@@ -1,8 +1,9 @@
 'use client';
 
 import React, {useState, useEffect, useCallback} from 'react';
-import {Pagination, Empty, Skeleton} from 'antd';
+import {Pagination, Skeleton} from 'antd';
 import {useTranslations} from 'next-intl';
+import {AppEmpty} from '@/components/ui';
 
 import {usePostStore} from '@/store/slices/post/hooks';
 import type {
@@ -179,9 +180,7 @@ const PostList: React.FC<PostListProps> = ({
 
             {/* Empty State */}
             {!loading && posts.length === 0 && (
-                <div className={styles.emptyState}>
-                    <Empty description={t('no_results')}/>
-                </div>
+                <AppEmpty description={t('no_results')}/>
             )}
         </div>
     );
