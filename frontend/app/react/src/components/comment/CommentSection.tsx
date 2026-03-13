@@ -345,6 +345,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
             ) : (
                 <Empty
                     description={t('no_comments')}
+                    className={styles.emptyState}
                     style={{marginTop: 40}}
                 />
             )}

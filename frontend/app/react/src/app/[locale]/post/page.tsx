@@ -1,6 +1,6 @@
 'use client';
 
-import {useState, useRef} from 'react';
+import {useState} from 'react';
 import {useTranslations} from 'next-intl';
 
 import CategoryFilter from '@/components/category/CategoryFilter';
