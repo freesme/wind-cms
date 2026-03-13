@@ -7,6 +7,7 @@ import {useTranslations} from 'next-intl';
 import CommentSection from '@/components/comment/CommentSection';
 import ContentViewer from '@/components/content/ContentViewer';
 import PostList from '@/components/post/PostList';
+import BackToTop from '@/components/layout/BackToTop';
 
 import {usePostStore} from '@/store/slices/post/hooks';
 import {formatDate} from "@/utils";
@@ -17,7 +18,6 @@ import '../../../globals.css'; // 导入全局 CSS，确保 CSS 变量可用
 import styles from './post-detail.module.css';
 
 // 常量定义
-const SCROLL_THRESHOLD = 500;
 const HEADING_OFFSET = 150;
 const THROTTLE_DELAY = 200;
 
@@ -42,7 +42,6 @@ export default function PostDetailPage() {
     const isLoading = localLoading || (postStore.loading && !post);
     const [tableOfContents, setTableOfContents] = useState<TocItem[]>([]);
     const [activeHeading, setActiveHeading] = useState('');
-    const [showBackToTop, setShowBackToTop] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
     const [isTocExpanded, setIsTocExpanded] = useState(true);
@@ -189,7 +188,7 @@ export default function PostDetailPage() {
             headings.forEach((heading, index) => {
                 const level = heading.tagName === 'H2' ? 2 : 3;
                 const id = `heading-${index}`;
-                
+
                 // 确保 ID 存在
                 if (!heading.id) {
                     heading.setAttribute('id', id);
@@ -224,8 +223,6 @@ export default function PostDetailPage() {
 
     // 滚动处理函数
     const handleScroll = useCallback(() => {
-        setShowBackToTop(window.scrollY > SCROLL_THRESHOLD);
-
         if (tableOfContents.length > 0) {
             let currentActive = activeHeading;
             for (const heading of tableOfContents) {
@@ -303,31 +300,31 @@ export default function PostDetailPage() {
         const element = tocItem?.element || document.getElementById(id);
 
         if (element) {
-            console.log('[TOC Scroll] Start', 
+            console.log('[TOC Scroll] Start',
                 'ID:', id,
                 '| Element:', element.textContent?.trim()
             );
-            
+
             // 直接使用 scrollIntoView，让浏览器处理滚动
             // 然后通过计算调整到正确的位置
-            element.scrollIntoView({ behavior: 'auto', block: 'start' });
-            
+            element.scrollIntoView({behavior: 'auto', block: 'start'});
+
             // 等待浏览器完成滚动后，再向下调整 headerOffset 的距离
             setTimeout(() => {
                 const currentScroll = window.pageYOffset;
                 const headerOffset = 100; // 导航栏高度
                 const targetPosition = currentScroll - headerOffset;
-                
-                console.log('[TOC Scroll] Adjusting:', 
+
+                console.log('[TOC Scroll] Adjusting:',
                     'from:', currentScroll.toFixed(2),
                     'to:', targetPosition.toFixed(2)
                 );
-                
+
                 window.scrollTo({
                     top: Math.max(0, targetPosition),
                     behavior: 'smooth'
                 });
-                
+
                 setActiveHeading(id);
 
                 // 更新 URL hash
@@ -341,10 +338,6 @@ export default function PostDetailPage() {
         } else {
             console.error('[ScrollToHeading] Element not found:', id);
         }
-    };
-
-    const scrollToTop = () => {
-        window.scrollTo({top: 0, behavior: 'smooth'});
     };
 
     if (isLoading) {
@@ -409,7 +402,7 @@ export default function PostDetailPage() {
             {/* Back Navigation */}
             <div className={styles['back-navigation']}>
                 <button onClick={handleBack} className={styles['back-btn']} aria-label={t('post_detail.back')}>
-                    <XIcon name="carbon:arrow-left" />
+                    <XIcon name="carbon:arrow-left"/>
                     <span>{t('post_detail.back')}</span>
                 </button>
             </div>
@@ -431,14 +424,14 @@ export default function PostDetailPage() {
                             <div className={styles['toc-container']}>
                                 <div className={styles['toc-header']}>
                                     <h3 className={styles['toc-title']}>
-                                        <XIcon name="carbon:list" />
+                                        <XIcon name="carbon:list"/>
                                         <span>{t('post_detail.table_of_contents')}</span>
                                     </h3>
                                     <button
                                         onClick={() => setIsTocExpanded(false)}
                                         className={styles['toc-collapse-btn']}
                                     >
-                                        <XIcon name="carbon:chevron-left" />
+                                        <XIcon name="carbon:chevron-left"/>
                                     </button>
                                 </div>
                                 <nav className={styles['toc-list']}>
@@ -465,9 +458,9 @@ export default function PostDetailPage() {
                     {tableOfContents.length > 0 && !isTocExpanded && (
                         <div className={styles['toc-expand-trigger']}>
                             <button onClick={() => setIsTocExpanded(true)}>
-                                <XIcon name="carbon:list" />
+                                <XIcon name="carbon:list"/>
                                 <span>{t('post_detail.table_of_contents')}</span>
-                                <XIcon name="carbon:chevron-right" />
+                                <XIcon name="carbon:chevron-right"/>
                             </button>
                         </div>
                     )}
@@ -478,19 +471,19 @@ export default function PostDetailPage() {
                             <h1 className={styles['post-title']}>{displayTitle}</h1>
                             <div className={styles['post-meta']}>
                                 <div className={styles['meta-item']}>
-                                    <XIcon name="carbon:user-avatar" />
+                                    <XIcon name="carbon:user-avatar"/>
                                     <span>{post.authorName}</span>
                                 </div>
                                 <div className={styles['meta-item']}>
-                                    <XIcon name="carbon:calendar" />
+                                    <XIcon name="carbon:calendar"/>
                                     <span>{formatDate(post.createdAt)}</span>
                                 </div>
                                 <div className={styles['meta-item']}>
-                                    <XIcon name="carbon:view" />
+                                    <XIcon name="carbon:view"/>
                                     <span>{post.visits || 0}</span>
                                 </div>
                                 <div className={styles['meta-item']}>
-                                    <XIcon name="carbon:thumbs-up" />
+                                    <XIcon name="carbon:thumbs-up"/>
                                     <span>{post.likes || 0}</span>
                                 </div>
                             </div>
@@ -509,21 +502,21 @@ export default function PostDetailPage() {
                                     className={`${styles['action-btn']} ${isLiked ? styles['liked'] : ''}`}
                                     aria-label={t('post_detail.likes')}
                                 >
-                                    <XIcon name={isLiked ? 'carbon:thumbs-up-filled' : 'carbon:thumbs-up'} />
+                                    <XIcon name={isLiked ? 'carbon:thumbs-up-filled' : 'carbon:thumbs-up'}/>
                                 </button>
                                 <button
                                     onClick={handleBookmark}
                                     className={`${styles['action-btn']} ${isBookmarked ? styles['bookmarked'] : ''}`}
                                     aria-label={t('post_detail.bookmark')}
                                 >
-                                    <XIcon name={isBookmarked ? 'carbon:bookmark-filled' : 'carbon:bookmark'} />
+                                    <XIcon name={isBookmarked ? 'carbon:bookmark-filled' : 'carbon:bookmark'}/>
                                 </button>
                                 <button
                                     onClick={handleShare}
                                     className={styles['action-btn']}
                                     aria-label={t('post_detail.share')}
                                 >
-                                    <XIcon name="carbon:share" />
+                                    <XIcon name="carbon:share"/>
                                 </button>
                             </div>
                         </footer>
@@ -543,7 +536,7 @@ export default function PostDetailPage() {
             <section className={styles['related-section']}>
                 <div className={styles['section-header']}>
                     <h2>
-                        <XIcon name="carbon:book" />
+                        <XIcon name="carbon:book"/>
                         <span>{t('post_detail.related_posts')}</span>
                     </h2>
                 </div>
@@ -561,11 +554,7 @@ export default function PostDetailPage() {
             </section>
 
             {/* Back to Top Button */}
-            {showBackToTop && (
-                <button onClick={scrollToTop} className={styles['back-to-top']}>
-                    <XIcon name="carbon:arrow-up" />
-                </button>
-            )}
+            <BackToTop scrollThreshold={500}/>
         </div>
     );
 }
