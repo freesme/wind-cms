@@ -78,7 +78,7 @@ const CommentTree: React.FC<CommentTreeProps> = ({
     // 处理点赞
     function handleLike(comment: commentservicev1_Comment) {
         const commentId = comment.id || 0;
-        
+
         if (likedComments.has(commentId)) {
             // 取消点赞
             setLikedComments(prev => {
@@ -174,7 +174,7 @@ const CommentTree: React.FC<CommentTreeProps> = ({
                                 {comment.content}
                             </div>
                             <div className={styles.commentActions}>
-                                <span 
+                                <span
                                     className={`${styles.actionItem} ${likedComments.has(comment.id || 0) ? styles.liked : ''}`}
                                     onClick={() => handleLike(comment)}
                                     title={likedComments.has(comment.id || 0) ? t('unlike') : t('like')}

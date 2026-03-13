@@ -108,7 +108,7 @@
             color: #fff;
             font-weight: 600;
             box-shadow: 0 2px 12px rgba(168, 85, 247, 0.3),
-                        0 0 0 2px rgba(255, 255, 255, 0.15);
+            0 0 0 2px rgba(255, 255, 255, 0.15);
             border: none;
         }
     }
@@ -177,8 +177,13 @@
                     gap: 4px;
 
                     &::before {
-                        content: '📍';
-                        font-size: 11px;
+                        content: '';
+                        display: inline-block;
+                        width: 11px;
+                        height: 11px;
+                        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 0a8 8 0 0 0-8 8c0 4.418 8 8 8 8s8-3.582 8-8a8 8 0 0 0-8-8zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z'/%3E%3C/svg%3E") no-repeat center/contain;
+                        background-color: currentColor;
+                        opacity: 0.7;
                     }
                 }
             }
@@ -191,8 +196,13 @@
                 gap: 6px;
 
                 &::before {
-                    content: '📅';
-                    font-size: 12px;
+                    content: '';
+                    display: inline-block;
+                    width: 12px;
+                    height: 12px;
+                    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.5h14v.5h-14v-.5zm13 12H2V5h12v10.5z'/%3E%3C/svg%3E") no-repeat center/contain;
+                    background-color: currentColor;
+                    opacity: 0.7;
                 }
             }
         }
@@ -255,6 +265,7 @@
         }
 
         /* Reply Form */
+
         .replyForm {
             margin-top: 16px;
             padding-top: 16px;
@@ -311,6 +322,7 @@
                     min-width: 80px;
 
                     /* 提交按钮 - 主按钮 */
+
                     &:nth-child(1) {
                         background: linear-gradient(135deg,
                         var(--color-brand) 0%,
@@ -327,6 +339,7 @@
                     }
 
                     /* 取消按钮 - 次按钮 */
+
                     &:nth-child(2) {
                         background: transparent;
                         border: 1px solid rgba(168, 85, 247, 0.3);
@@ -344,6 +357,7 @@
         }
 
         /* Loading Children */
+
         .loadingChildren {
             display: flex;
             align-items: center;
