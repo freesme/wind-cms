@@ -199,7 +199,7 @@ const CommentTree: React.FC<CommentTreeProps> = ({
                                     {t('share')}
                                 </span>
                                 {/* 查看回复按钮 */}
-                                {comment.replyCount && comment.replyCount > 0 && (
+                                {comment.replyCount && comment.replyCount > 0 ? (
                                     <span
                                         className={`${styles.actionItem} ${styles.viewReplies}`}
                                         onClick={() => toggleExpand(comment)}
@@ -214,7 +214,7 @@ const CommentTree: React.FC<CommentTreeProps> = ({
                                             : t('view_replies', {count: comment.replyCount})
                                         }
                                     </span>
-                                )}
+                                ) : null}
                             </div>
 
                             {/* 回复表单 */}
