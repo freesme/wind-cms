@@ -36,6 +36,8 @@ export default function RegisterPage() {
         // 确保没有顶部偏移
         document.body.style.marginTop = '0';
         document.body.style.paddingTop = '0';
+        document.body.style.top = '0';
+        document.documentElement.style.top = '0';
         
         return () => {
             // 清理（如果需要）

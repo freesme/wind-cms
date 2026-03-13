@@ -30,7 +30,7 @@ const ClientLocaleLayout: React.FC<ClientLocaleLayoutProps> = ({locale, messages
             <ReduxProvider>
                 <div className={styles.appContainer}>
                     {!isAuthPage && <Header/>}
-                    <main className={styles.content}>
+                    <main className={`${styles.content} ${isAuthPage ? styles.noHeader : ''}`}>
                         {children}
                     </main>
                     {!isAuthPage && <Footer/>}

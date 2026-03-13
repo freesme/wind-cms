@@ -10,6 +10,11 @@
     padding-top: 0 !important;
 }
 
+/* Register wrapper - 确保正确的布局 */
+.registerPageWrapper {
+    display: contents;
+}
+
 .register-page {
     --auth-page-bg: var(--color-bg);
     --auth-right-bg: var(--color-surface);
@@ -25,7 +30,7 @@
     --auth-tab-active-text: var(--color-brand);
     --auth-focus-ring: 0 0 0 3px rgba(102, 126, 234, 0.18);
     --auth-button-gradient: linear-gradient(135deg, var(--color-brand) 0%, #a855f7 100%);
-    --auth-button-shadow: 0 4px 16px rgba(168, 85, 247, 0.3);
+    --auth-button-shadow: 0 4px 16px rgba(168, 85, 234, 0.3);
 
     display: flex;
     min-height: 100vh;
@@ -35,8 +40,8 @@
 
 .register-controls {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 30px;
+    right: 30px;
     display: flex;
     gap: 12px;
     z-index: 100;
