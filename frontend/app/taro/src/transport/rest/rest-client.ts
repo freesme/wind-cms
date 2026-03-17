@@ -1,6 +1,7 @@
 import {RequestClient} from "@/transport/rest/request-client";
 import {HttpResponse} from "@/transport/rest/types";
 import {authenticateResponseInterceptor, errorMessageResponseInterceptor} from "@/transport/rest/preset-interceptors";
+import Taro from '@tarojs/taro';
 
 import store from "@/store";
 
@@ -67,8 +68,13 @@ export function createRequestClient(baseURL: string, getLocale?: () => string, g
       const responseData = (error as unknown as {
         response?: { data?: Record<string, unknown> }
       })?.response?.data ?? {};
-      const errorMessage = responseData?.error ?? responseData?.message ?? '';
-      window.alert(errorMessage || msg);
+      const errorMessage = typeof responseData?.error === 'string' ? responseData?.error :
+        typeof responseData?.message === 'string' ? responseData?.message : '';
+      Taro.showToast({
+        title: errorMessage || String(msg),
+        icon: 'none',
+        duration: 3000
+      });
     }),
   );
 
