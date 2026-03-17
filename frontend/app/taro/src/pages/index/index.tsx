@@ -3,12 +3,12 @@ import {View} from '@tarojs/components';
 
 import styles from './page.scss';
 
-import HeroSection from '@/components/home/HeroSection';
-import FeaturedPostsSection from '@/components/home/FeaturedPostsSection';
-import CategoryListSection from '@/components/home/CategoryListSection';
-import PopularTagsSection from '@/components/home/PopularTagsSection';
-import LatestPostsSection from '@/components/home/LatestPostsSection';
-import FeaturesSection from '@/components/home/FeaturesSection';
+import HeroSection from './components/HeroSection';
+import FeaturedPostsSection from './components/FeaturedPostsSection';
+import CategoryListSection from './components/CategoryListSection';
+import PopularTagsSection from './components/PopularTagsSection';
+import LatestPostsSection from './components/LatestPostsSection';
+import FeaturesSection from './components/FeaturesSection';
 
 export default function Home() {
 
