@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next';
 import {View, Text, Image} from '@tarojs/components';
 
-import '../../globals.css'; // 导入全局 CSS，确保 CSS 变量可用
+
 import styles from './about.scss';
 
 export default function AboutPage() {

@@ -2,7 +2,7 @@ import {useState, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import {View, Text} from '@tarojs/components';
 
-import '../../globals.css'; // 导入全局 CSS，确保 CSS 变量可用
+
 import styles from './settings.scss';
 import XIcon from "@/plugins/xicon";
 

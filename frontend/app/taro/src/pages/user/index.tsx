@@ -10,7 +10,6 @@ import {
 import {usePostStore} from "@/store/slices/post/hooks";
 import {useUserProfileStore} from "@/store/slices/userProfile/hooks";
 
-import '../../globals.css';
 import styles from './user.scss';
 import {formatDateTime} from "@/utils";
 
@@ -88,7 +87,7 @@ export default function UserProfilePage() {
       const result = await postStore.listPost({
         paging: {page: 1, pageSize: 10},
         formValues: {author_id: user.id},
-        fieldMask: null,
+        fieldMask: undefined,
         orderBy: ['-createdAt']
       }) as unknown as contentservicev1_ListPostResponse;
 
