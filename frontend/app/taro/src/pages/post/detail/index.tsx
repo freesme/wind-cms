@@ -26,7 +26,7 @@ interface TocItem {
 }
 
 export default function PostDetailPage() {
-  const {t} = useTranslation('page');
+  const {t} = useTranslation();
   const postStore = usePostStore();
 
   // 直接使用 store 中的数据，而不是本地 state
@@ -339,9 +339,9 @@ export default function PostDetailPage() {
     <View className={styles['post-detail-page']}>
       {/* Back Navigation */}
       <View className={styles['back-navigation']}>
-        <View onClick={handleBack} className={styles['back-btn']} aria-label={t('post_detail.back')}>
+        <View onClick={handleBack} className={styles['back-btn']} aria-label={t('page.post_detail.back')}>
           <Text>← </Text>
-          <Text>{t('post_detail.back')}</Text>
+          <Text>{t('page.post_detail.back')}</Text>
         </View>
       </View>
 
@@ -363,7 +363,7 @@ export default function PostDetailPage() {
                 <View className={styles['toc-header']}>
                   <Text className={styles['toc-title']}>
                     <Text>📑</Text>
-                    <Text>{t('post_detail.table_of_contents')}</Text>
+                    <Text>{t('page.post_detail.table_of_contents')}</Text>
                   </Text>
                   <View
                     onClick={() => setIsTocExpanded(false)}
@@ -394,7 +394,7 @@ export default function PostDetailPage() {
             <View className={styles['toc-expand-trigger']}>
               <View onClick={() => setIsTocExpanded(true)}>
                 <Text>📑 </Text>
-                <Text>{t('post_detail.table_of_contents')}</Text>
+                <Text>{t('page.post_detail.table_of_contents')}</Text>
                 <Text> ▶</Text>
               </View>
             </View>
@@ -435,21 +435,21 @@ export default function PostDetailPage() {
                 <View
                   onClick={handleLike}
                   className={`${styles['action-btn']} ${isLiked ? styles['liked'] : ''}`}
-                  aria-label={t('post_detail.likes')}
+                  aria-label={t('page.post_detail.likes')}
                 >
                   <Text>{isLiked ? '👍' : '👎'}</Text>
                 </View>
                 <View
                   onClick={handleBookmark}
                   className={`${styles['action-btn']} ${isBookmarked ? styles['bookmarked'] : ''}`}
-                  aria-label={t('post_detail.bookmark')}
+                  aria-label={t('page.post_detail.bookmark')}
                 >
                   <Text>{isBookmarked ? '🔖' : '📑'}</Text>
                 </View>
                 <View
                   onClick={handleShare}
                   className={styles['action-btn']}
-                  aria-label={t('post_detail.share')}
+                  aria-label={t('page.post_detail.share')}
                 >
                   <Text>📤</Text>
                 </View>
@@ -472,7 +472,8 @@ export default function PostDetailPage() {
         <View className={styles['section-header']}>
           <Text className={styles['section-title']}>
             <Text>📚 </Text>
-            <Text>{t('post_detail.related_posts')}</Text>
+            <Text>{t('page.post_detail.related_posts')}</Text>
+            <Text>{t('page.post_detail.related_posts')}</Text>
           </Text>
         </View>
         {relatedPostsQuery && (

@@ -3,6 +3,7 @@ import {View, Text, Image} from '@tarojs/components';
 
 import {usePostStore} from '@/store/slices/post/hooks';
 import {useI18nRouter} from '@/i18n/helpers/useI18nRouter';
+import XIcon from '@/plugins/xicon';
 
 import type {contentservicev1_Post} from '@/api/generated/app/service/v1';
 import {formatDate} from "@/utils";
@@ -29,7 +30,7 @@ const PostCard: React.FC<PostCardProps> = ({
       query.push(`categoryId=${categoryId}`);
     }
 
-    router.push(`/post/${post.id}?${query.join('&')}`);
+    router.push(`/post/detail/${post.id}?${query.join('&')}`);
 
     // Taro 中滚动到顶部
     // TODO: 使用 Taro.pageScrollTo API
@@ -50,19 +51,19 @@ const PostCard: React.FC<PostCardProps> = ({
         <Text className='post-summary'>{postStore.getPostSummary(post)}</Text>
         <View className='post-meta'>
           <View className='meta-item'>
-            <Text className='meta-icon'>👤</Text>
+            <XIcon name='carbon:user' size={16} className='meta-icon' />
             <Text>{post.authorName}</Text>
           </View>
           <View className='meta-item'>
-            <Text className='meta-icon'>📅</Text>
+            <XIcon name='carbon:calendar' size={16} className='meta-icon' />
             <Text>{formatDate(post.createdAt)}</Text>
           </View>
           <View className='meta-item'>
-            <Text className='meta-icon'>👁️</Text>
+            <XIcon name='carbon:view' size={16} className='meta-icon' />
             <Text>{post.visits || 0}</Text>
           </View>
           <View className='meta-item'>
-            <Text className='meta-icon'>👍</Text>
+            <XIcon name='carbon:thumbs-up' size={16} className='meta-icon' />
             <Text>{post.likes || 0}</Text>
           </View>
         </View>

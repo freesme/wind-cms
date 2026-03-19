@@ -82,7 +82,7 @@ export default function TagListPage() {
         {/* Loading Skeleton - TODO: 实现 Taro 骨架屏 */}
         {loading ? (
           <View className={styles['tags-grid']}>
-            <Text>加载中...</Text>
+            <Text>{t('page.common.loading')}</Text>
           </View>
         ) : (
           <>

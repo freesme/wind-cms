@@ -173,7 +173,7 @@ export function getTranslation(category: contentservicev1_Category | null) {
  */
 export function getCategoryName(category: contentservicev1_Category | null, t?: (key: string) => string) {
     const translation = getTranslation(category);
-    return translation?.name || (t ? t('category_untitled') : '未命名分类');
+    return translation?.name || t?.('page.categories.category_untitled') || '';
 }
 
 /**

@@ -4,6 +4,7 @@ import {View, Text} from '@tarojs/components';
 
 import {useCategoryStore} from '@/store/slices/category/hooks';
 import type {contentservicev1_Category, contentservicev1_ListCategoryResponse} from '@/api/generated/app/service/v1';
+import XIcon from '@/plugins/xicon';
 
 import './index.scss';
 
@@ -28,7 +29,6 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
                                                        }) => {
   const {t} = useTranslation();
   const categoryStore = useCategoryStore();
-  const {t: categoryT} = useTranslation();
 
   const [internalCategories, setInternalCategories] = useState<contentservicev1_Category[]>([]);
   const [loading, setLoading] = useState(false);
@@ -72,7 +72,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
 
   function getCategoryName(category: contentservicev1_Category | null): string {
     if (!category?.id) return '';
-    return categoryStore.getCategoryName(category, categoryT);
+    return categoryStore.getCategoryName(category, t);
   }
 
   const displayCategories = externalCategories || internalCategories;
@@ -104,7 +104,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
   };
 
   if (loading && autoLoad) {
-    return <View className='loading'>加载中...</View>;
+    return <View className='loading'>{t('page.common.loading')}</View>;
   }
 
   return (
@@ -115,8 +115,8 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
           className={`category-tab ${selectedCategory === null ? 'active' : ''}`}
           onClick={() => handleCategoryChange(null)}
         >
-          <Text>📁</Text>
-          <Text>{t('posts.all_categories')}</Text>
+          <XIcon name={'carbon:folder'} size={24} className='category-icon' />
+          <Text>{t('page.posts.all_categories')}</Text>
         </View>
 
         {/* 树形模式 */}
@@ -127,7 +127,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
                 className={`category-tab ${selectedCategory === node.id ? 'active' : ''}`}
                 onClick={() => node.id && handleCategoryClick(node.id)}
               >
-                <Text>{node.icon ? node.icon : '📁'}</Text>
+                <XIcon name={node.icon || 'carbon:folder'} size={24} className='category-icon' />
                 <Text>{getCategoryName(node)}</Text>
               </View>
 
@@ -143,7 +143,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
                         handleCategoryChange(child.id || 0);
                       }}
                     >
-                      <Text>{child.icon ? child.icon : '📁'}</Text>
+                      <XIcon name={child.icon || 'carbon:folder'} size={20} className='category-icon' />
                       <Text>{getCategoryName(child)}</Text>
                     </View>
                   ))}
@@ -161,7 +161,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
               className={`category-tab ${selectedCategory === cat.id ? 'active' : ''}`}
               onClick={() => handleCategoryChange(cat.id || 0)}
             >
-              <Text>{cat.icon ? cat.icon : '📁'}</Text>
+              <XIcon name={cat.icon || 'carbon:folder'} size={24} className='category-icon' />
               <Text>{getCategoryName(cat)}</Text>
             </View>
           );

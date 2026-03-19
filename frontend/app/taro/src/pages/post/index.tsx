@@ -8,7 +8,7 @@ import PostList from '@/components/post/PostList';
 import './post-list.scss';
 
 export default function PostListPage() {
-  const {t} = useTranslation('page');
+  const {t} = useTranslation();
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
 
   const handleCategoryChange = (categoryId: number | null) => {
@@ -29,8 +29,8 @@ export default function PostListPage() {
       {/* Hero Section */}
       <View className='hero-section'>
         <View className='hero-content'>
-          <Text>{t('posts.posts_list')}</Text>
-          <Text>{t('posts.explore_latest')}</Text>
+          <Text>{t('page.posts.posts_list')}</Text>
+          <Text>{t('page.posts.explore_latest')}</Text>
         </View>
       </View>
 
