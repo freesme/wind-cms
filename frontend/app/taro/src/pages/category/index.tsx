@@ -12,7 +12,7 @@ import {useI18nRouter} from "@/i18n/helpers";
 import styles from './category.scss';
 
 export default function CategoryListPage() {
-  const {t} = useTranslation('page');
+  const {t} = useTranslation();
   const router = useI18nRouter();
   const categoryStore = useCategoryStore();
 
@@ -49,8 +49,8 @@ export default function CategoryListPage() {
       {/* Hero Section */}
       <View className={styles['hero-section']}>
         <View className={styles['hero-content']}>
-          <Text>{t('categories.categories')}</Text>
-          <Text>{t('categories.browse_all')}</Text>
+          <Text>{t('page.categories.categories')}</Text>
+          <Text>{t('page.categories.browse_all')}</Text>
         </View>
       </View>
 
@@ -70,7 +70,7 @@ export default function CategoryListPage() {
               />
             ) : (
               <AppEmpty
-                description={t('categories.no_categories')}
+                description={t('page.categories.no_categories')}
                 inContainer
                 image={<span className="i-carbon:folder-blank" style={{fontSize: '64px'}}/>}
               />

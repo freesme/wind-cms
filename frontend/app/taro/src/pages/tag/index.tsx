@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next';
 import {View, Text} from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import {AppEmpty} from '@/components/ui';
+import XIcon from '@/plugins/xicon';
 
 import {useTagStore} from '@/store/slices/tag/hooks';
 import {contentservicev1_ListTagResponse, contentservicev1_Tag} from '@/api/generated/app/service/v1';
@@ -10,7 +11,7 @@ import {contentservicev1_ListTagResponse, contentservicev1_Tag} from '@/api/gene
 import styles from './tag-list.scss';
 
 export default function TagListPage() {
-  const {t} = useTranslation('page');
+  const {t} = useTranslation();
   const tagStore = useTagStore();
 
   const [loading, setLoading] = useState(false);
@@ -43,7 +44,7 @@ export default function TagListPage() {
   }
 
   function handleTagClick(id: number) {
-    Taro.navigateTo({url: `/pages/[locale]/tag/${id}/page`});
+    Taro.navigateTo({url: `/tag/${id}`});
   }
 
   function handlePageChange(newPage: number) {
@@ -66,12 +67,12 @@ export default function TagListPage() {
       {/* Hero Section */}
       <View className={styles['hero-section']}>
         <View className={styles['hero-content']}>
-          <Text>{t('tags.tags_list')}</Text>
-          <Text>{t('tags.explore_all')}</Text>
+          <Text>{t('page.tags.tags_list')}</Text>
+          <Text>{t('page.tags.explore_all')}</Text>
           <View className={styles['tag-stats']}>
             <View className={styles['stat-item']}>
-              <Text>🏷️</Text>
-              <Text>{tags.length} {t('tags.total_tags')}</Text>
+              <XIcon name='carbon:tag' size={24}/>
+              <Text>{tags.length} {t('page.tags.total_tags')}</Text>
             </View>
           </View>
         </View>
@@ -102,30 +103,30 @@ export default function TagListPage() {
                       className={styles['tag-icon']}
                       style={{color: tag.color || 'var(--color-brand)'}}
                     >
-                      <Text>🏷️</Text>
+                      <XIcon name='carbon:tag' size={32}/>
                     </View>
                     <View className={styles['tag-content']}>
-                      <Text>{tagStore.getTranslation(tag)?.name || t('tags.tag_untitled')}</Text>
+                      <Text>{tagStore.getTranslation(tag)?.name || t('page.tags.tag_untitled')}</Text>
                       <Text className={styles['tag-description']}>
                         {tagStore.getTranslation(tag)?.description || ''}
                       </Text>
                       <View className={styles['tag-meta']}>
-                        <Text>📄</Text>
+                        <XIcon name='carbon:document' size={16}/>
                         <Text>
-                          {tag.postCount || 0} {t('posts.articles')}
+                          {tag.postCount || 0} {t('page.posts.articles')}
                         </Text>
                       </View>
                     </View>
                   </View>
                 ))}
                 {tags.length === 0 && total > 0 && (
-                  <AppEmpty description={t('tags.no_tags_in_page')}/>
+                  <AppEmpty description={t('page.tags.no_tags_in_page')}/>
                 )}
               </View>
             )}
 
             {!loading && tags.length === 0 && total === 0 && (
-              <AppEmpty inContainer description={t('tags.no_tags')}/>
+              <AppEmpty inContainer description={t('page.tags.no_tags')}/>
             )}
 
             {total > pageSize && (

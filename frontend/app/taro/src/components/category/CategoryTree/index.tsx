@@ -4,20 +4,21 @@ import {View, Text, Image} from '@tarojs/components';
 
 import {useCategoryStore} from '@/store/slices/category/hooks';
 import type {contentservicev1_Category} from '@/api/generated/app/service/v1';
+import XIcon from '@/plugins/xicon';
 
 import './index.scss';
 
 interface CategoryTreeProps {
-    categories: contentservicev1_Category[];
-    level?: number;
-    onCategoryClick?: (id: number) => void;
+  categories: contentservicev1_Category[];
+  level?: number;
+  onCategoryClick?: (id: number) => void;
 }
 
 const CategoryTree: React.FC<CategoryTreeProps> = ({
-  categories = [],
-  level = 0,
-  onCategoryClick
-}) => {
+                                                     categories = [],
+                                                     level = 0,
+                                                     onCategoryClick
+                                                   }) => {
   const {t} = useTranslation();
   const categoryStore = useCategoryStore();
   const [expandedCategories, setExpandedCategories] = useState<Set<number>>(new Set());
@@ -62,19 +63,20 @@ const CategoryTree: React.FC<CategoryTreeProps> = ({
                   mode='aspectFill'
                   className='category-img'
                 />
-                <View className='image-overlay' />
+                <View className='image-overlay'/>
               </View>
               <View className='category-content'>
-                <Text className={`category-title ${category.children && category.children.length > 0 ? 'has-children' : ''}`}>
+                <Text
+                  className={`category-title ${category.children && category.children.length > 0 ? 'has-children' : ''}`}>
                   {categoryStore.getCategoryName(category, t)}
                 </Text>
                 <Text className='description'>
                   {categoryStore.getCategoryDescription(category)}
                 </Text>
                 <View className='category-meta'>
-                  <Text className='meta-icon'>📄</Text>
+                  <XIcon name='carbon:document' size={16} className='meta-icon'/>
                   <Text className='meta-text'>
-                    {category.postCount || 0} {t('articles_count')}
+                    {category.postCount || 0} {t('page.categories.articles_count')}
                   </Text>
                 </View>
               </View>
@@ -89,7 +91,7 @@ const CategoryTree: React.FC<CategoryTreeProps> = ({
                   toggleExpand(category);
                 }}
               >
-                <Text>{isExpanded(category) ? '▼' : '▶'}</Text>
+                <XIcon name={isExpanded(category) ? 'carbon:chevron-down' : 'carbon:chevron-right'} size={20}/>
               </View>
             )}
           </View>

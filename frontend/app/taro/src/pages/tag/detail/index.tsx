@@ -79,7 +79,7 @@ export default function TagDetailPage() {
           <View className={styles['tag-stats']}>
             <View className={styles['stat-item']}>
               <Text>📄</Text>
-              <Text>{tag?.postCount || 0} {t('posts.articles')}</Text>
+              <Text>{tag?.postCount || 0} {t('page.posts.articles')}</Text>
             </View>
           </View>
         </View>

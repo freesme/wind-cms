@@ -83,7 +83,7 @@ export default function CategoryDetailPage() {
           <View className={styles['category-stats']}>
             <View className={styles['stat-item']}>
               <Text>📄</Text>
-              <Text>{categoryStore.detail?.postCount || 0} {t('posts.articles')}</Text>
+              <Text>{categoryStore.detail?.postCount || 0} {t('page.posts.articles')}</Text>
             </View>
           </View>
         </View>
