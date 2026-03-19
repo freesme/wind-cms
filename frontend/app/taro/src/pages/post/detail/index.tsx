@@ -30,7 +30,7 @@ export default function PostDetailPage() {
   const {t} = useTranslation();
   const postStore = usePostStore();
 
-  // 直接使用 store 中的数据，而不是本�?state
+  // 直接使用 store 中的数据，而不是本�?state
   const post = postStore.detail as contentservicev1_Post | null;
 
   const [localLoading, setLocalLoading] = useState(true);
@@ -43,10 +43,10 @@ export default function PostDetailPage() {
 
   const contentRef = useRef<HTMLDivElement>(null);
 
-  // 优化 postId 获取逻辑，兼�?Taro 路由参数
+  // 优化 postId 获取逻辑，兼�?Taro 路由参数
   const postId = useMemo(() => {
     let id: string | null | undefined = null;
-    // 优先�?Taro 路由参数获取
+    // 优先�?Taro 路由参数获取
     if (typeof Taro.getCurrentInstance === 'function') {
       const instance = Taro.getCurrentInstance();
       const routeId = instance?.router?.params?.id;
@@ -61,7 +61,7 @@ export default function PostDetailPage() {
     return id ? parseInt(id) : null;
   }, []);
 
-  // 计算属�?- 使用 postStore 提供的工具函�?
+  // 计算属�?- 使用 postStore 提供的工具函�?
   const displayTitle = useMemo(() => {
     if (!post) return '';
     return postStore.getPostTitle(post);
@@ -111,7 +111,7 @@ export default function PostDetailPage() {
         });
 
         if (fetchedPost) {
-          // TODO: Taro 中设置页面标�?
+          // TODO: Taro 中设置页面标�?
           // document.title = `${postStore.getPostTitle(fetchedPost)} - GoWind Content Hub`;
         }
       } catch (error) {
@@ -123,7 +123,7 @@ export default function PostDetailPage() {
 
     loadPost();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [postId]); // 只依�?postId
+  }, [postId]); // 只依�?postId
 
   // Generate table of contents - 在内容渲染后生成目录
   useEffect(() => {
@@ -148,7 +148,7 @@ export default function PostDetailPage() {
 
         headings.forEach((heading, index) => {
           const level = heading.tagName === 'H2' ? 2 : 3;
-          // 保证 id 唯一，使�?tagName + index
+          // 保证 id 唯一，使�?tagName + index
           const id = `${heading.tagName.toLowerCase()}-${index}`;
           if (!heading.id) heading.setAttribute('id', id);
 
@@ -168,10 +168,10 @@ export default function PostDetailPage() {
     return () => clearTimeout(timeoutId);
   }, [displayContent]); // 依赖计算后的内容
 
-  // 监听内容变化，重新生成目�?
+  // 监听内容变化，重新生成目�?
   useEffect(() => {
     if (displayContent && tableOfContents.length === 0) {
-      // 如果还没有生成目录，立即生成一�?
+      // 如果还没有生成目录，立即生成一�?
       generateTableOfContents();
     }
   }, [displayContent, tableOfContents.length]);
@@ -191,7 +191,7 @@ export default function PostDetailPage() {
 
         headings?.forEach((heading, index) => {
           const level = heading.tagName === 'H2' ? 2 : 3;
-          // 保证 id 唯一，使�?tagName + index
+          // 保证 id 唯一，使�?tagName + index
           const id = `${heading.tagName.toLowerCase()}-${index}`;
 
           // 确保 ID 存在
@@ -252,7 +252,7 @@ export default function PostDetailPage() {
 
   // Handlers
   const handleBack = () => {
-    // TODO: �?Taro.getCurrentPages() 获取参数
+    // TODO: �?Taro.getCurrentPages() 获取参数
     Taro.navigateBack();
   };
 
@@ -267,7 +267,7 @@ export default function PostDetailPage() {
   };
 
   const handleShare = () => {
-    // TODO: Taro 中使�?onShareAppMessage 配置分享
+    // TODO: Taro 中使�?onShareAppMessage 配置分享
     console.log('Share:', displayTitle);
   };
 
@@ -281,7 +281,7 @@ export default function PostDetailPage() {
         '| Element:', element.textContent?.trim()
       );
 
-      // Taro 中使�?pageScrollTo
+      // Taro 中使�?pageScrollTo
       Taro.pageScrollTo({
         selector: `#${id}`,
         duration: 300
@@ -410,6 +410,19 @@ export default function PostDetailPage() {
 
             {/* Right: Article Content */}
             <View className="article-content-inner">
+              {/* TOC Expand Button - Only show when collapsed */}
+              {tableOfContents.length > 0 && !isTocExpanded && (
+                <View className="toc-expand-trigger">
+                  <View onClick={() => setIsTocExpanded(true)}>
+                    <XIcon name='carbon:list' size={18}
+                           style={{display: 'inline-block', width: '18px', height: '18px', fontSize: '18px'}}/>
+                    <Text>{t('page.post_detail.table_of_contents')}</Text>
+                    <XIcon name='carbon:chevron-right' size={18}
+                           style={{display: 'inline-block', width: '18px', height: '18px', fontSize: '18px'}}/>
+                  </View>
+                </View>
+              )}
+
               {/* Post Header */}
               <View className="post-header">
                 <Text className="post-title">{displayTitle}</Text>
@@ -458,40 +471,27 @@ export default function PostDetailPage() {
                     className={`action-btn${isLiked ? ' liked' : ''}`}
                     aria-label={t('page.post_detail.likes')}
                   >
-                    <XIcon name={isLiked ? 'carbon:thumb-up' : 'carbon:thumb-up-outline'} size={18}
-                           style={{display: 'inline-block', width: '18px', height: '18px', fontSize: '18px'}}/>
+                    <XIcon name={isLiked ? 'carbon:thumbs-up-filled' : 'carbon:thumbs-up'} size={20}
+                           style={{display: 'inline-block', width: '20px', height: '20px', fontSize: '20px'}}/>
                   </View>
                   <View
                     onClick={handleBookmark}
                     className={`action-btn${isBookmarked ? ' bookmarked' : ''}`}
                     aria-label={t('page.post_detail.bookmark')}
                   >
-                    <XIcon name={isBookmarked ? 'carbon:bookmark' : 'carbon:bookmark-outline'} size={18}
-                           style={{display: 'inline-block', width: '18px', height: '18px', fontSize: '18px'}}/>
+                    <XIcon name={isBookmarked ? 'carbon:bookmark-filled' : 'carbon:bookmark'} size={20}
+                           style={{display: 'inline-block', width: '20px', height: '20px', fontSize: '20px'}}/>
                   </View>
                   <View
                     onClick={handleShare}
                     className="action-btn"
                     aria-label={t('page.post_detail.share')}
                   >
-                    <XIcon name='carbon:share' size={18}
-                           style={{display: 'inline-block', width: '18px', height: '18px', fontSize: '18px'}}/>
+                    <XIcon name='carbon:share' size={20}
+                           style={{display: 'inline-block', width: '20px', height: '20px', fontSize: '20px'}}/>
                   </View>
                 </View>
               </View>
-
-              {/* TOC Expand Button - Only show when collapsed */}
-              {tableOfContents.length > 0 && !isTocExpanded && (
-                <View className="toc-expand-trigger">
-                  <View onClick={() => setIsTocExpanded(true)}>
-                    <XIcon name='carbon:list' size={18}
-                           style={{display: 'inline-block', width: '18px', height: '18px', fontSize: '18px'}}/>
-                    <Text>{t('page.post_detail.table_of_contents')}</Text>
-                    <XIcon name='carbon:chevron-right' size={18}
-                           style={{display: 'inline-block', width: '18px', height: '18px', fontSize: '18px'}}/>
-                  </View>
-                </View>
-              )}
             </View>
           </View>
         </View>

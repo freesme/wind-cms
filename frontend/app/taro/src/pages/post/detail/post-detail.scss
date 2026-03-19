@@ -252,23 +252,25 @@
 }
 
 .toc-expand-trigger {
-  width: auto;
-  height: auto;
+  width: 100%;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   padding: 12px 20px;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  position: static;
   margin: 24px 0;
   gap: 10px;
   color: #555;
   font-size: 15px;
   border: 1px solid #f0f0f0;
-  align-self: flex-start;
+  
+  &:hover {
+    border-color: #a855f7;
+    background: rgba(168, 85, 247, 0.05);
+  }
 }
 
 .article-content {
@@ -566,36 +568,60 @@
 }
 
 .post-actions {
-  margin-top: 16px;
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid #f0f0f0;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 .action-buttons {
   display: flex;
-  gap: 12px;
+  gap: 16px;
 }
 
 .action-btn {
-  background: #f0f6ff;
-  border-radius: 6px;
-  padding: 8px 16px;
-  font-size: 16px;
-  color: #007aff;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #f5f7fa;
   display: flex;
   align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #666;
+  flex-shrink: 0;
+  
+  &:hover {
+    background: #a855f7;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+  }
+  
+  x-icon,
+  iconify-icon {
+    font-size: 20px !important;
+    width: 20px !important;
+    height: 20px !important;
+    display: inline-block !important;
+  }
 }
 
 .action-btn.liked,
 .action-btn.bookmarked {
-  background: #ffe6e6;
-  color: #e74c3c;
-}
-
-.action-btn:hover {
-  background: #e6f0ff;
+  background: #a855f7;
+  color: #fff;
+  
+  &:hover {
+    background: #9333ea;
+  }
+  
+  x-icon,
+  iconify-icon {
+    color: #fff !important;
+  }
 }
 
 .empty-state {
