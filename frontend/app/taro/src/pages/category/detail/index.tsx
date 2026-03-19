@@ -13,7 +13,7 @@ import {contentservicev1_Category} from "@/api/generated/app/service/v1";
 import './category-detail.scss';
 
 export default function CategoryDetailPage() {
-  const {t} = useTranslation('page');
+  const {t} = useTranslation();
   const categoryStore = useCategoryStore();
   const [childCategories, setChildCategories] = useState<contentservicev1_Category[]>([]);
 
@@ -51,12 +51,12 @@ export default function CategoryDetailPage() {
   }
 
   function handleViewChildCategory(id: number) {
-    Taro.navigateTo({url: `/pages/[locale]/category/${id}/page`});
+    Taro.navigateTo({url: `/category/${id}`});
   }
 
   function handleBackToParent() {
     if (parentCategoryId) {
-      Taro.navigateTo({url: `/pages/[locale]/category/${parentCategoryId}/page`});
+      Taro.navigateTo({url: `/category/${parentCategoryId}`});
     } else {
       Taro.navigateBack();
     }
@@ -75,7 +75,7 @@ export default function CategoryDetailPage() {
       {/* Hero Section */}
       <View className="hero-section">
         <View className="hero-content">
-          <Text>{categoryStore.getCategoryName(categoryStore.detail)}</Text>
+          <Text className="hero-title">{categoryStore.getCategoryName(categoryStore.detail)}</Text>
           {categoryStore.getCategoryDescription(categoryStore.detail) && (
             <Text className="category-description">
               {categoryStore.getCategoryDescription(categoryStore.detail)}
@@ -96,7 +96,7 @@ export default function CategoryDetailPage() {
         <View className="back-button-container">
           <View className="back-btn" onClick={handleBackToParent}>
             <Text>← </Text>
-            <Text>{parentCategoryId ? t('categories.back_to_parent') : t('categories.back_to_list')}</Text>
+            <Text>{parentCategoryId ? t('page.categories.back_to_parent') : t('page.categories.back_to_list')}</Text>
           </View>
         </View>
 

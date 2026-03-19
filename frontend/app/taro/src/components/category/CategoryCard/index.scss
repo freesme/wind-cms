@@ -1,16 +1,18 @@
 .category-card {
   border-radius: 12px;
   overflow: hidden;
-  background: var(--color-surface);
-  box-shadow: 0 2px 8px var(--color-card-shadow);
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(0, 0, 0, 0.04);
 
   &.clickable {
     cursor: pointer;
 
     &:hover {
       transform: translateY(-4px);
-      box-shadow: 0 8px 24px var(--color-hover-shadow);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      border-color: rgba(168, 85, 247, 0.2);
     }
   }
 }
@@ -18,13 +20,18 @@
 .category-card-image {
   position: relative;
   width: 100%;
-  height: 160px;
+  height: 200px;
   overflow: hidden;
 
   .category-image-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.3s;
+  }
+  
+  .category-card:hover & .category-image-img {
+    transform: scale(1.05);
   }
 
   .image-overlay {
@@ -38,22 +45,26 @@
 }
 
 .category-card-content {
-  padding: var(--space-4);
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 12px;
 }
 
 .category-title {
-  font-size: 1.125rem;
+  font-size: 18px;
   font-weight: 600;
-  color: var(--color-text-primary);
-  line-height: 1.5;
+  color: #222;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .category-description {
-  font-size: 0.95rem;
-  color: var(--color-text-secondary);
+  font-size: 14px;
+  color: #666;
   line-height: 1.6;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -65,16 +76,17 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding-top: var(--space-2);
+  padding-top: 12px;
   margin-top: auto;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .meta-icon {
-  font-size: 1rem;
-  color: var(--color-brand);
+  font-size: 16px;
+  color: #a855f7;
 }
 
 .meta-text {
-  font-size: 0.875rem;
-  color: var(--color-text-secondary);
+  font-size: 13px;
+  color: #888;
 }

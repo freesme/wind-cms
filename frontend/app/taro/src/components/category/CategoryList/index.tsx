@@ -79,7 +79,7 @@ const CategoryList: React.FC<CategoryListProps> = ({
 
       {/* Empty State */}
       {!loading && categories.length === 0 && (
-        <AppEmpty description={t('no_categories')}/>
+        <AppEmpty description={t('page.categories.no_categories')}/>
       )}
     </View>
   );

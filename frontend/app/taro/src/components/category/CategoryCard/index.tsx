@@ -48,7 +48,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
         <View className='category-card-meta'>
           <XIcon name='carbon:document' size={16} className='meta-icon' />
           <Text className='meta-text'>
-            {category.postCount || 0} {t('categories.articles_count')}
+            {category.postCount || 0} {t('page.categories.articles_count')}
           </Text>
         </View>
       </View>
