@@ -12,7 +12,7 @@ import type {contentservicev1_Tag} from "@/api/generated/app/service/v1";
 import './tag-detail.scss';
 
 export default function TagDetailPage() {
-  const {t} = useTranslation('page');
+  const {t} = useTranslation();
   const tagStore = useTagStore();
   const [tag, setTag] = useState<contentservicev1_Tag | null>(null);
   const [_loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ export default function TagDetailPage() {
   }
 
   function handleBack() {
-    Taro.navigateBack();
+    Taro.navigateTo({url: `/tag`});
   }
 
   useEffect(() => {
@@ -56,22 +56,9 @@ export default function TagDetailPage() {
   return (
     <View className="tag-detail-page">
       {/* Hero Section */}
-      <View
-        className="hero-section"
-        style={{
-          background: tag?.color
-            ? `linear-gradient(135deg, ${tag.color} 0%, ${tag.color}dd 50%, ${tag.color}aa 100%)`
-            : undefined
-        }}
-      >
+      <View className="hero-section">
         <View className="hero-content">
-          <View
-            className="tag-icon"
-            style={{color: tag?.color || '#6366f1'}}
-          >
-            <XIcon name='carbon:tag' size={32}/>
-          </View>
-          <Text>{translation?.name || t('tags.tag_untitled')}</Text>
+          <Text className="tag-title">{translation?.name || t('page.tags.tag_untitled')}</Text>
           {translation?.description && (
             <Text className="tag-description">
               {translation.description}
@@ -91,7 +78,7 @@ export default function TagDetailPage() {
         {/* Back Button */}
         <View className="back-button-container">
           <View className="back-btn" onClick={handleBack}>
-            <Text>← {t('categories.back_to_list')}</Text>
+            <Text>← {t('page.categories.back_to_list')}</Text>
           </View>
         </View>
 

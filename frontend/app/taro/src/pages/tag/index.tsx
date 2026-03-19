@@ -68,12 +68,12 @@ export default function TagListPage() {
       {/* Hero Section */}
       <View className="hero-section">
         <View className="hero-content">
-          <Text>{t('page.tags.tags_list')}</Text>
-          <Text>{t('page.tags.explore_all')}</Text>
+          <Text className="hero-title">标签列表</Text>
+          <Text className="hero-subtitle">探索所有标签</Text>
           <View className="tag-stats">
             <View className="stat-item">
-              <XIcon name='carbon:tag' size={24}/>
-              <Text>{tags.length} {t('page.tags.total_tags')}</Text>
+              <XIcon name='carbon:tag' size={20}/>
+              <Text>{total} {t('page.tags.total_tags')}</Text>
             </View>
           </View>
         </View>
@@ -95,17 +95,11 @@ export default function TagListPage() {
                     key={tag.id}
                     className="tag-card"
                     style={{
-                      borderColor: tag.color || 'var(--color-border)',
-                      background: `linear-gradient(135deg, ${tag.color}10 0%, var(--color-surface) 100%)`
+                      borderColor: tag.color || 'rgba(0, 0, 0, 0.08)',
+                      background: `linear-gradient(135deg, ${tag.color || '#f0f0f0'}15 0%, #ffffff 100%)`
                     }}
                     onClick={() => handleTagClick(tag.id || 0)}
                   >
-                    <View
-                      className="tag-icon"
-                      style={{color: tag.color || 'var(--color-brand)'}}
-                    >
-                      <XIcon name='carbon:tag' size={32}/>
-                    </View>
                     <View className="tag-content">
                       <Text>{tagStore.getTranslation(tag)?.name || t('page.tags.tag_untitled')}</Text>
                       <Text className="tag-description">
