@@ -4,7 +4,7 @@
   border-radius: 12px;
   overflow: hidden;
   background: var(--color-surface);
-  box-shadow: 0 2px 8px var(--color-card-shadow);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   
@@ -15,7 +15,7 @@
   @media (min-width: 768px) {
     &:hover {
       transform: translateY(-4px);
-      box-shadow: 0 8px 24px var(--color-hover-shadow);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     }
   }
 }
@@ -23,11 +23,11 @@
 .post-image {
   position: relative;
   width: 100%;
-  height: 180px;
+  height: 160px;
   overflow: hidden;
   
   @media (min-width: 768px) {
-    height: 200px;
+    height: 180px;
   }
 
   .post-image-img {
@@ -47,24 +47,29 @@
 }
 
 .post-content {
-  padding: var(--space-4);
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 12px;
+  
+  @media (min-width: 768px) {
+    padding: 20px;
+    gap: 14px;
+  }
 }
 
 .post-title {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 17px;
+  font-weight: 700;
   color: var(--color-text-primary);
-  line-height: 1.5;
+  line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   
   @media (min-width: 768px) {
-    font-size: 1.125rem;
+    font-size: 20px;
   }
 }
 
@@ -73,22 +78,36 @@
   color: var(--color-text-secondary);
   line-height: 1.6;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   
   @media (min-width: 768px) {
-    font-size: 0.95rem;
+    font-size: 14px;
+    line-height: 1.7;
+    -webkit-line-clamp: 3;
   }
 }
 
 .post-meta {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  padding-top: var(--space-2);
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 12px;
   border-top: 1px solid var(--color-border);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  
+  @media (min-width: 768px) {
+    padding-top: 16px;
+  }
+}
+
+.meta-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
 }
 
 .meta-item {
@@ -97,16 +116,19 @@
   gap: 4px;
   font-size: 12px;
   color: var(--color-text-secondary);
+  white-space: nowrap;
   
   @media (min-width: 768px) {
-    font-size: 0.875rem;
+    font-size: 13px;
   }
 
   .meta-icon {
     font-size: 14px;
+    display: flex;
+    align-items: center;
     
     @media (min-width: 768px) {
-      font-size: 1rem;
+      font-size: 15px;
     }
   }
 }

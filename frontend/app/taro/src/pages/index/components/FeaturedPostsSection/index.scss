@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   
   @media (min-width: 768px) {
     margin-bottom: 32px;
@@ -15,7 +15,7 @@
   .section-title {
     font-size: 20px;
     font-weight: 700;
-    color: var(--color-text-primary, #222);
+    color: #1f2937;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -27,17 +27,19 @@
 
   .view-all-btn {
     padding: 6px 12px;
-    background: rgba(99, 102, 241, 0.1);
-    color: var(--color-brand, #6366f1);
+    background: rgba(99, 102, 241, 0.08);
+    color: #6366f1;
     border-radius: 6px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
     border: 1px solid transparent;
+    white-space: nowrap;
     
     &:active {
-      opacity: 0.6;
+      background: rgba(99, 102, 241, 0.15);
+      transform: scale(0.96);
     }
 
     @media (min-width: 768px) {
@@ -45,8 +47,8 @@
       font-size: 15px;
       
       &:hover {
-        background: var(--color-brand, #6366f1);
-        color: #ffffff;
+        background: rgba(99, 102, 241, 0.12);
+        border-color: rgba(99, 102, 241, 0.3);
       }
     }
   }
