@@ -27,7 +27,7 @@ export default function FeaturedPostsSection() {
           orderBy={orderBy}
           page={1}
           pageSize={3}
-          columns={3}
+          columns={1}
           showSkeleton={true}
           from='home'
           showPagination={false}

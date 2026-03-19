@@ -14,32 +14,11 @@ export default function HeroSection() {
 
   return (
     <View className='hero'>
-      {/* Animated Background Elements */}
+      {/* 简化背景 - 移除复杂动画 */}
       <View className='hero-bg-wrapper'>
         <View className='hero-gradient-bg'/>
-        {/* Grid Background */}
+        {/* H5 端保留简单的网格背景 */}
         <View className='hero-grid-bg'/>
-        {/* Animated Shapes */}
-        <View className='hero-animated-shapes'>
-          <View className='shape shape1'/>
-          <View className='shape shape2'/>
-          <View className='shape shape3'/>
-        </View>
-        {/* Code Snippet Decorations */}
-        <View className='hero-code-snippets'>
-          <View className='code-snippet snippet1'>
-            <Text className='code-line'>func GetPost() {'{'}return post{'}'}</Text>
-          </View>
-          <View className='code-snippet snippet2'>
-            <Text className='code-line'>&lt;template&gt;&lt;div
-              class="content-hub"&gt;&lt;/div&gt;&lt;/template&gt;</Text>
-          </View>
-          <View className='code-snippet snippet3'>
-            <Text className='code-line'>{`// Content Hub API\nconst api = 'v1'`}</Text>
-          </View>
-        </View>
-        {/* SVG Waves */}
-        <View className='hero-waves'/>
       </View>
 
       <View className='hero-content'>

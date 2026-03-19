@@ -18,23 +18,33 @@ export default function Home() {
 
   return (
     <View className='page'>
+      {/* Hero Section - 首屏展示 */}
       <HeroSection/>
+      
+      {/* Featured Posts - 精选文章 */}
       <View className='section-container'>
         <FeaturedPostsSection/>
       </View>
-      <View className='section-container'>
+      
+      {/* Categories - 分类浏览 */}
+      <View className='section-container section-with-bg'>
         <CategoryListSection/>
       </View>
-      <View className='section-container'>
-        <PopularTagsSection/>
-      </View>
+      
+      {/* Latest Posts - 最新文章 */}
       <View className='section-container'>
         <LatestPostsSection/>
       </View>
+      
+      {/* Popular Tags - 热门标签 */}
+      <View className='section-container section-with-bg'>
+        <PopularTagsSection/>
+      </View>
+      
+      {/* Features - 特性介绍 */}
       <View className='section-container'>
         <FeaturesSection/>
       </View>
     </View>
   );
 }
-

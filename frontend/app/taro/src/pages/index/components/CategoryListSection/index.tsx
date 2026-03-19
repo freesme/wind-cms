@@ -94,15 +94,13 @@ export default function CategoryListSection(props: CategoryListSectionProps) {
 
       {/* Loading Skeleton */}
       {loading ? (
-        <View className='categories-grid desktop-grid'>
+        <View className='categories-grid mobile-grid'>
           {Array.from({length: skeletonCount}).map((_, i) => (
-            <View key={i} className='category-card-skeleton'>
-              <View className='skeleton-placeholder'/>
-            </View>
+            <View key={i} className='category-card-skeleton'/>
           ))}
         </View>
       ) : (
-        <View className='categories-grid desktop-grid'>
+        <View className='categories-grid mobile-grid'>
           {categories.map((category) => (
             <HomeCategoryCard
               key={category.id}

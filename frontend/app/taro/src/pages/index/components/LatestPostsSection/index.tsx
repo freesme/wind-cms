@@ -25,7 +25,7 @@ export default function LatestPostsSection() {
           orderBy={['-createdAt']}
           page={1}
           pageSize={6}
-          columns={3}
+          columns={1}
           showSkeleton={true}
           from='home'
           showPagination={false}
