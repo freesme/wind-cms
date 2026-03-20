@@ -283,17 +283,17 @@ html.dark .loading-state {
 
   .navbar-menu {
     flex-direction: column;
-    gap: 4px;
+    gap: 6px; // 增大菜单项之间的间距
   }
 
   .menu-item {
     flex-shrink: 0;
     white-space: nowrap;
-    padding: 18px 24px; // 增大内边距，更易点击
-    font-size: 17px; // 增大字体
-    border-radius: 8px;
+    padding: 20px 28px; // 进一步增大内边距
+    font-size: 18px; // 进一步增大字体
+    border-radius: 10px; // 增大圆角
     width: 100%;
-    min-height: 56px; // 最小高度，确保点击区域足够
+    min-height: 60px; // 最小高度增加到 60px
   }
 
   // 移动端优化子菜单显示
@@ -316,9 +316,9 @@ html.dark .loading-state {
   }
 
   .submenu-item {
-    padding: 16px 18px; // 增大内边距
-    font-size: 16px; // 增大字体
-    min-height: 52px; // 最小高度
+    padding: 18px 20px; // 进一步增大内边距
+    font-size: 17px; // 进一步增大字体
+    min-height: 56px; // 最小高度增加
   }
 
   // 移动端子菜单箭头

@@ -17,7 +17,7 @@ export default function Home() {
   }, []);
 
   return (
-    <View className='page'>
+    <View className='home-page'>
       {/* Hero Section - 首屏展示 */}
       <HeroSection/>
       

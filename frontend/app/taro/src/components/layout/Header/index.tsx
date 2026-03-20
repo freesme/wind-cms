@@ -160,7 +160,6 @@ export default function Header() {
             >
               <Image
                 src='/assets/images/logo.png'
-                style={{width: 55, height: 55}}
                 className='logo'
               />
               <Text className='site-name'>{t('app.title')}</Text>
@@ -180,7 +179,7 @@ export default function Header() {
                   aria-label='User menu'
                   onClick={() => console.log('User menu clicked')}
                 >
-                  <XIcon name='carbon:user' size={20}/>
+                  <XIcon name='carbon:user' size={24}/>
                 </View>
                 {/* TODO: 实现 Dropdown 组件 */}
               </View>
@@ -191,7 +190,7 @@ export default function Header() {
                   aria-label='Language'
                   onClick={() => console.log('Language clicked')}
                 >
-                  <XIcon name='carbon:language' size={20} className='lang-icon'/>
+                  <XIcon name='carbon:language' size={24} className='lang-icon'/>
                 </View>
               </View>
               <View className='dropdown-wrapper'>
@@ -201,7 +200,7 @@ export default function Header() {
                   aria-label='Toggle theme'
                   onClick={() => console.log('Theme clicked')}
                 >
-                  <XIcon name={displayIcon} size={20} className='theme-icon'/>
+                  <XIcon name={displayIcon} size={24} className='theme-icon'/>
                 </View>
               </View>
             </View>

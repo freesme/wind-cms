@@ -21,6 +21,7 @@
 
 .home-page {
   width: 100%;
-  min-height: 100vh;
+  // 移除 min-height，让内容自然撑开，避免 Footer 被挤出去
+  // min-height: 100vh;
   background: var(--color-bg, #f8fafc);
 }

@@ -4,6 +4,7 @@ import Taro from '@tarojs/taro';
 
 import Header from '../Header';
 import Footer from '../Footer';
+import './index.scss'; // 添加样式文件
 
 // 需要排除 Header 和 Footer 的页面路径
 const EXCLUDED_PAGES = [

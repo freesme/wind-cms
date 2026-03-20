@@ -163,18 +163,23 @@ html.dark .fixed-top {
 
 @media (max-width: 768px) {
   .top-bar {
-    padding: 0 16px; // 适中内边距
-    gap: 12px;
-    height: 64px; // 增大 Header 高度
+    padding: 0 20px !important; // 增大内边距
+    gap: 16px;
+    height: 70px !important; // 增大 Header 高度到 70px
+  }
+
+  .logo-nav-section {
+    gap: 20px; // 增大 Logo 和导航之间的间距
   }
 
   .logo {
-    width: 44px; // 增大 Logo 尺寸
-    height: 44px;
+    width: 56px !important; // 增大 Logo 尺寸到 56px
+    height: 56px !important;
   }
 
   .site-name {
-    font-size: 16px;
+    font-size: 17px; // 增大站点名称
+    font-weight: 700;
   }
 
   // 移动端导航栏自适应
@@ -187,40 +192,41 @@ html.dark .fixed-top {
   // 移动端汉堡按钮和图标按钮更大
   .mobile-menu-toggle,
   .actions .dropdown-wrapper .icon-btn {
-    width: 48px; // 增大点击区域
-    height: 48px;
-    min-width: 48px;
+    width: 52px !important; // 增大点击区域到 52px
+    height: 52px !important;
+    min-width: 52px !important;
   }
 
   .logo-section {
-    padding: 8px 12px; // 调整内边距
+    padding: 10px 16px !important; // 增大内边距
     max-width: none; // 移动端不限制宽度
-    gap: 12px; // 调整间距
+    gap: 16px; // 增大间距
+    border-radius: 12px; // 增大圆角
   }
 
   .actions .dropdown-wrapper .icon-btn {
-    font-size: 22px; // 增大图标
+    font-size: 24px !important; // 增大图标到 24px
   }
 }
 
 @media (max-width: 480px) {
   .top-bar {
-    padding: 0 12px; // 适中内边距
-    gap: 10px;
-    height: 60px; // 增大 Header 高度
+    padding: 0 16px !important; // 适中内边距
+    gap: 12px;
+    height: 66px !important; // 小屏保持较大高度
   }
 
   .logo-nav-section {
-    gap: 12px; // 减小间距
+    gap: 16px; // 减小间距
   }
 
   .logo {
-    width: 40px; // 增大 Logo 尺寸
-    height: 40px;
+    width: 50px !important; // 小屏保持较大 Logo 尺寸
+    height: 50px !important;
   }
 
   .site-name {
-    font-size: 14px;
+    font-size: 15px; // 适中字体
     display: none; // 小屏隐藏站点名称
   }
 
@@ -234,17 +240,17 @@ html.dark .fixed-top {
   // 小屏移动端汉堡按钮和图标按钮保持较大尺寸
   .mobile-menu-toggle,
   .actions .dropdown-wrapper .icon-btn {
-    width: 44px; // 保持足够大的点击区域
-    height: 44px;
-    min-width: 44px;
+    width: 48px !important; // 保持足够大的点击区域
+    height: 48px !important;
+    min-width: 48px !important;
   }
 
   .logo-section {
-    padding: 8px 10px; // 适中内边距
-    gap: 10px;
+    padding: 10px 14px !important; // 适中内边距
+    gap: 14px;
   }
 
   .actions .dropdown-wrapper .icon-btn {
-    font-size: 20px;
+    font-size: 22px !important; // 增大图标
   }
 }
