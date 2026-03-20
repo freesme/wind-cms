@@ -8,6 +8,9 @@ import PopularTagsSection from './components/PopularTagsSection';
 import LatestPostsSection from './components/LatestPostsSection';
 import FeaturesSection from './components/FeaturesSection';
 
+import './index.scss';
+import './page.scss';
+
 export default function Home() {
 
   // 获取路由参数
@@ -27,7 +30,7 @@ export default function Home() {
       </View>
       
       {/* Categories - 分类浏览 */}
-      <View className='section-container section-with-bg'>
+      <View className='section-container'>
         <CategoryListSection/>
       </View>
       
@@ -37,7 +40,7 @@ export default function Home() {
       </View>
       
       {/* Popular Tags - 热门标签 */}
-      <View className='section-container section-with-bg'>
+      <View className='section-container'>
         <PopularTagsSection/>
       </View>
       
