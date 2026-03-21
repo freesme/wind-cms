@@ -7,16 +7,16 @@
 /* Section Container - 移动端优先 */
 .section-container {
   width: 100%;
-  padding: var(--space-5) var(--space-4); // 移动端间距
+  padding: 0; // 移除 padding，让内容直接填满容器
   
   @media (min-width: 768px) {
     max-width: var(--layout-max-width);
     margin: 0 auto;
-    padding: var(--space-6) var(--space-5); // 平板间距
+    padding: 0; // 移除左右 padding
   }
   
   @media (min-width: 1200px) {
-    padding: 80px var(--space-6); // PC 间距
+    padding: 0; // 移除 PC 端 padding
   }
 }
 

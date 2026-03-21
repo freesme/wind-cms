@@ -1,9 +1,9 @@
 .popular-section {
-  padding: 40px 16px;
-  background: transparent; // 移除背景色，使用页面整体背景
+  padding: 16px 16px;
+  background: transparent;
   
   @media (min-width: 768px) {
-    padding: 60px 24px;
+    padding: 24px 24px;
   }
 }
 

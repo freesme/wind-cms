@@ -15,6 +15,19 @@ interface TagItem {
   color: string;
 }
 
+// 将十六进制颜色转换为 RGB
+function hexToRgb(hex: string): string {
+  // 处理十六进制颜色
+  if (hex.startsWith('#')) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (result) {
+      return `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`;
+    }
+  }
+  // 处理 HSL 或其他格式，返回默认值
+  return '139, 92, 246'; // 默认紫色
+}
+
 export default function PopularTagsSection() {
   const {t} = useTranslation();
   const tagStore = useTagStore();
@@ -69,7 +82,7 @@ export default function PopularTagsSection() {
     <View className='popular-section'>
       <View className='section-header'>
         <Text className='section-title'>
-          <XIcon name='carbon:fire' size={24} /> {t('page.tags.popular_tags')}
+          <XIcon name='carbon:fire' size={24}/> {t('page.tags.popular_tags')}
         </Text>
         <View
           className='view-all-btn'
@@ -94,6 +107,11 @@ export default function PopularTagsSection() {
                 key={tag.id}
                 className='tag-item'
                 onClick={() => handleViewTag(tag)}
+                style={{
+                  background: `rgba(${hexToRgb(tag.color), 0.08})`,
+                  borderColor: `rgba(${hexToRgb(tag.color), 0.2})`,
+                  color: tag.color,
+                }}
               >
                 <Text className='tag-label'>{tag.name}</Text>
               </View>
