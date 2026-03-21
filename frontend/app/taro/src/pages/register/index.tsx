@@ -21,7 +21,7 @@ export default function RegisterPage() {
 
   // 登录
   const handleLoginClick = () => {
-    router.push('pages/login');
+    router.push('/login');
   };
 
   // 返回首页
@@ -31,12 +31,12 @@ export default function RegisterPage() {
 
   // 服务条款
   const handleTermsClick = () => {
-    router.push('pages/terms');
+    router.push('/terms');
   };
 
   // 隐私政策
   const handlePrivacyClick = () => {
-    router.push('pages/privacy');
+    router.push('/privacy');
   };
 
   return (
@@ -51,7 +51,7 @@ export default function RegisterPage() {
           <Text className='brand-title'>{t('authentication.login.brand_title')}</Text>
           <Text className='brand-subtitle'>{t('authentication.login.brand_subtitle')}</Text>
         </View>
-        
+
         <View className='benefits-list'>
           <View className='benefit-item'>
             <XIcon name='carbon:checkmark' size={20} className='benefit-icon' />

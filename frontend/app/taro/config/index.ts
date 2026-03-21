@@ -70,6 +70,7 @@ export default defineConfig<'vite'>(async (merge, {}) => {
           'pages/contact/index': '/contact',
           'pages/disclaimer/index': '/disclaimer',
           'pages/privacy/index': '/privacy',
+          'pages/terms/index': '/terms',
           'pages/settings/index': '/settings',
           'pages/user/index': '/user',
           'pages/register/index': '/register',

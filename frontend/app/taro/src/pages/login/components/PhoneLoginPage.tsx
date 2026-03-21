@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
+import {View, Input, Button, Text} from '@tarojs/components';
 
 import '../index.scss';
 
@@ -34,47 +35,42 @@ export default function PhoneLoginPage() {
   };
 
   return (
-    <div className='login-form'>
-      <div className='form-group'>
-        <label htmlFor='login-phone'>{t('authentication.register.phone')}</label>
-        <input
-          id='login-phone'
-          type='tel'
-          className='input-field'
+    <View className='login-form'>
+      <View className='form-group'>
+        <Text className='form-label'>{t('authentication.register.phone')}</Text>
+        <Input
+          type='number'
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          onInput={(e) => setPhone(e.detail.value)}
           placeholder={t('authentication.login.placeholder_phone')}
-          autoComplete='tel'
+          className='input-field'
         />
-      </div>
+      </View>
 
-      <div className='form-group'>
-        <label htmlFor='login-code'>{t('authentication.register.code')}</label>
-        <div className='code-input-row'>
-          <input
-            id='login-code'
+      <View className='form-group'>
+        <Text className='form-label'>{t('authentication.register.code')}</Text>
+        <View className='code-input-row'>
+          <Input
             type='text'
-            className='input-field'
             value={verificationCode}
-            onChange={(e) => setVerificationCode(e.target.value)}
+            onInput={(e) => setVerificationCode(e.detail.value)}
             placeholder={t('authentication.login.placeholder_code')}
-            maxLength={6}
-            autoComplete='one-time-code'
-            onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+            className='input-field'
+            maxlength={6}
           />
-          <button
-            className={`send-code-btn ${codeSent ? 'disabled' : ''}`}
-            onClick={handleSendCode}
+          <Button
+            className='send-code-btn'
             disabled={codeSent}
+            onClick={handleSendCode}
           >
             {codeSent ? `${countdown}s` : t('authentication.register.send_code')}
-          </button>
-        </div>
-      </div>
+          </Button>
+        </View>
+      </View>
 
-      <button className='login-button' onClick={handleLogin}>
+      <Button className='login-button' onClick={handleLogin}>
         {t('authentication.login.login')}
-      </button>
-    </div>
+      </Button>
+    </View>
   );
 }

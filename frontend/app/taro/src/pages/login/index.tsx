@@ -4,7 +4,6 @@ import {View, Text, Image} from '@tarojs/components';
 
 import {useI18nRouter} from '@/i18n/helpers';
 import XIcon from '@/plugins/xicon';
-
 import ControlPanel from '@/components/layout/ControlPanel';
 
 import AccountLoginPage from './components/AccountLoginPage';
@@ -19,6 +18,26 @@ export default function LoginPage() {
   const [activeTab, setActiveTab] = useState<'account' | 'email' | 'phone' | 'other'>('account');
 
   const router = useI18nRouter();
+
+  // 注册
+  const handleRegisterClick = () => {
+    router.push('/register');
+  };
+
+  // 返回首页
+  const handleBackHome = () => {
+    router.push('pages/index');
+  };
+
+  // 服务条款
+  const handleTermsClick = () => {
+    router.push('/terms');
+  };
+
+  // 隐私政策
+  const handlePrivacyClick = () => {
+    router.push('/privacy');
+  };
 
   return (
     <View className='login-page'>
@@ -63,30 +82,30 @@ export default function LoginPage() {
 
           {/* Tab 切换 */}
           <View className='login-tabs'>
-            <button
+            <View
               className={`tab ${activeTab === 'account' ? 'active' : ''}`}
               onClick={() => setActiveTab('account')}
             >
               {t('authentication.login.tab_account')}
-            </button>
-            <button
+            </View>
+            <View
               className={`tab ${activeTab === 'email' ? 'active' : ''}`}
               onClick={() => setActiveTab('email')}
             >
               {t('authentication.login.tab_email')}
-            </button>
-            <button
+            </View>
+            <View
               className={`tab ${activeTab === 'phone' ? 'active' : ''}`}
               onClick={() => setActiveTab('phone')}
             >
               {t('authentication.login.tab_phone')}
-            </button>
-            <button
+            </View>
+            <View
               className={`tab ${activeTab === 'other' ? 'active' : ''}`}
               onClick={() => setActiveTab('other')}
             >
               {t('authentication.login.tab_other')}
-            </button>
+            </View>
           </View>
 
           {/* 登录表单内容 */}
@@ -101,30 +120,30 @@ export default function LoginPage() {
           <View className='register-section'>
             <Text>
               {t('authentication.login.no_account')}
-              <button className='text-btn' onClick={() => router.push('/register')}>
+              <Text className='text-btn' onClick={handleRegisterClick}>
                 {t('authentication.login.register_now')}
-              </button>
+              </Text>
             </Text>
           </View>
 
           {/* 返回首页 */}
           <View className='back-home'>
-            <button className='text-btn' onClick={() => router.push('pages/index')}>
+            <Text className='text-btn' onClick={handleBackHome}>
               ← {t('authentication.login.back_home')}
-            </button>
+            </Text>
           </View>
 
           {/* 服务条款 */}
           <View className='terms'>
-            <Text>
+            <Text className='terms-text'>
               {t('authentication.login.terms_prefix')}
-              <button className='text-btn' onClick={() => router.push('/terms')}>
+              <Text className='terms-link' onClick={handleTermsClick}>
                 {t('authentication.login.terms_of_service')}
-              </button>
+              </Text>
               {t('authentication.login.terms_and')}
-              <button className='text-btn' onClick={() => router.push('/privacy')}>
+              <Text className='terms-link' onClick={handlePrivacyClick}>
                 {t('authentication.login.privacy_policy')}
-              </button>
+              </Text>
             </Text>
           </View>
         </View>

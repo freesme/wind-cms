@@ -14,6 +14,7 @@ export default defineAppConfig({
     'pages/disclaimer/index',
     'pages/privacy/index',
     'pages/settings/index',
+    'pages/terms/index',
     'pages/user/index'
   ],
   window: {

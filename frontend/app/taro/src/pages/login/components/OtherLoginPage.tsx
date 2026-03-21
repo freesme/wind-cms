@@ -1,4 +1,5 @@
 import {useTranslation} from 'react-i18next';
+import {View, Text} from '@tarojs/components';
 
 import XIcon from '@/plugins/xicon';
 
@@ -16,16 +17,16 @@ export default function OtherLoginPage() {
   };
 
   return (
-    <div className='other-login'>
-      <button className='social-button' onClick={handleGithubLogin}>
-        <XIcon name='mdi:github' size={20} />
-        <span>{t('authentication.login.social_github')}</span>
-      </button>
+    <View className='other-login'>
+      <View className='social-button' onClick={handleGoogleLogin}>
+        <XIcon name='logos:google-icon' size={20} />
+        <Text>{t('authentication.login.social_google')}</Text>
+      </View>
 
-      <button className='social-button' onClick={handleGoogleLogin}>
-        <XIcon name='mdi:google' size={20} />
-        <span>{t('authentication.login.social_google')}</span>
-      </button>
-    </div>
+      <View className='social-button' onClick={handleGithubLogin}>
+        <XIcon name='logos:github-icon' size={20} />
+        <Text>{t('authentication.login.social_github')}</Text>
+      </View>
+    </View>
   );
 }

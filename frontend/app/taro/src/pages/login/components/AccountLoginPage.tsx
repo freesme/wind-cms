@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
+import {View, Input, Button, Text} from '@tarojs/components';
 
 import {useAuthenticationStore} from "@/store/slices/authentication/hooks";
 
@@ -31,51 +32,46 @@ export default function AccountLoginPage() {
   };
 
   return (
-    <div className='login-form'>
-      <div className='form-group'>
-        <label htmlFor='login-username'>{t('authentication.login.username')}</label>
-        <input
-          id='login-username'
+    <View className='login-form'>
+      <View className='form-group'>
+        <Text className='form-label'>{t('authentication.login.username')}</Text>
+        <Input
           type='text'
-          className='input-field'
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onInput={(e) => setUsername(e.detail.value)}
           placeholder={t('authentication.register.input_username')}
-          autoComplete='username'
-        />
-      </div>
-
-      <div className='form-group'>
-        <label htmlFor='login-password'>{t('authentication.login.password')}</label>
-        <input
-          id='login-password'
-          type='password'
           className='input-field'
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder={t('authentication.login.placeholder_password')}
-          autoComplete='current-password'
-          onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
         />
-      </div>
+      </View>
 
-      <div className='form-options'>
-        <label className='checkbox-label'>
-          <input
+      <View className='form-group'>
+        <Text className='form-label'>{t('authentication.login.password')}</Text>
+        <Input
+          type='password'
+          value={password}
+          onInput={(e) => setPassword(e.detail.value)}
+          placeholder={t('authentication.login.placeholder_password')}
+          className='input-field'
+        />
+      </View>
+
+      <View className='form-options'>
+        <View className='checkbox-label'>
+          <Input
             type='checkbox'
             checked={rememberMe}
-            onChange={(e) => setRememberMe(e.target.checked)}
+            onChange={(e) => setRememberMe(e.detail.value === true)}
           />
-          <span>{t('authentication.login.remember_me')}</span>
-        </label>
-        <button className='text-btn' onClick={handleForgotPassword}>
+          <Text>{t('authentication.login.remember_me')}</Text>
+        </View>
+        <Text className='text-btn' onClick={handleForgotPassword}>
           {t('authentication.login.forgot_password')}
-        </button>
-      </div>
+        </Text>
+      </View>
 
-      <button className='login-button' onClick={handleLogin}>
+      <Button className='login-button' onClick={handleLogin}>
         {t('authentication.login.login')}
-      </button>
-    </div>
+      </Button>
+    </View>
   );
 }
