@@ -127,7 +127,10 @@ export default defineConfig<'vite'>(async (merge, {}) => {
     }
   }
 
-  process.env.BROWSERSLIST_ENV = process.env.NODE_ENV
+  // 生产环境才设置 browserslist 环境变量
+  if (process.env.NODE_ENV === 'production') {
+    process.env.BROWSERSLIST_ENV = 'production'
+  }
 
   if (process.env.NODE_ENV === 'development') {
     // 本地开发构建配置（不混淆压缩）

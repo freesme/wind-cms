@@ -44,7 +44,8 @@ export function createRequestClient(baseURL: string, getLocaleFunc?: () => strin
         return responseData;
       }
 
-      const {code} = responseData as HttpResponse;
+      // 修正类型断言写法
+      const code = (responseData as HttpResponse).code;
       if (code !== null) {
         throw Object.assign({}, responseData, {responseData});
       }
@@ -58,17 +59,16 @@ export function createRequestClient(baseURL: string, getLocaleFunc?: () => strin
   client.addResponseInterceptor(
     authenticateResponseInterceptor({
       client,
-      doReAuthenticate: async () => {
-      },
+      doReAuthenticate: async () => { return; },
       doRefreshToken: async () => '',
       enableRefreshToken: true,
-      formatToken,
-    }),
+      formatToken
+    })
   );
 
-  // 通用的错误处理,如果没有进入上面的错误处理逻辑，就会进入这里
+  // 通用的错误处理，如果没有进入上面的错误处理逻辑，就会进入这里
   client.addResponseInterceptor(
-    errorMessageResponseInterceptor(async (msg: string, error) => {
+    errorMessageResponseInterceptor((msg: string, error) => {
       const responseData = (error as unknown as {
         response?: { data?: Record<string, unknown> }
       })?.response?.data ?? {};
@@ -95,7 +95,7 @@ function getLocale() {
   return store.getState().language.locale || 'zh-CN';
 }
 
-console.log('[API_BASE_URL]', API_BASE_URL, process.env)
+// console.log('[API_BASE_URL]', API_BASE_URL, process.env)
 
 export const requestClient = createRequestClient(
   API_BASE_URL,
