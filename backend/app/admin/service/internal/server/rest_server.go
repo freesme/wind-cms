@@ -125,6 +125,7 @@ func NewRestServer(
 	siteService *service.SiteService,
 	siteSettingService *service.SiteSettingService,
 	navigationService *service.NavigationService,
+	navigationItemService *service.NavigationItemService,
 
 	mediaAssetService *service.MediaAssetService,
 ) *http.Server {
@@ -187,8 +188,9 @@ func NewRestServer(
 	adminV1.RegisterPageServiceHTTPServer(srv, pageService)
 
 	adminV1.RegisterSiteSettingServiceHTTPServer(srv, siteSettingService)
-	adminV1.RegisterNavigationServiceHTTPServer(srv, navigationService)
 	adminV1.RegisterSiteServiceHTTPServer(srv, siteService)
+	adminV1.RegisterNavigationServiceHTTPServer(srv, navigationService)
+	adminV1.RegisterNavigationItemServiceHTTPServer(srv, navigationItemService)
 
 	adminV1.RegisterMediaAssetServiceHTTPServer(srv, mediaAssetService)
 

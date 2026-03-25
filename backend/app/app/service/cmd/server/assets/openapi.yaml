@@ -2121,15 +2121,15 @@ components:
             properties:
                 id:
                     type: integer
-                    description: 导航项ID
+                    description: 导航项目项ID
                     format: uint32
                 navigationId:
                     type: integer
-                    description: 所属导航菜单ID
+                    description: 所属导航项目菜单ID
                     format: uint32
                 title:
                     type: string
-                    description: 显示文本（单语言，多语言通过多套导航实现）
+                    description: 显示文本（单语言，多语言通过多套导航项目实现）
                 description:
                     type: string
                     description: 描述文本（用于悬停提示或移动端）
@@ -2163,13 +2163,13 @@ components:
                     description: 是否在新标签页打开
                 isInvalid:
                     type: boolean
-                    description: 是否无效（如关联的文章/页面被删除或设置为不可见，前端可根据此字段决定是否隐藏该导航项）
+                    description: 是否无效（如关联的文章/页面被删除或设置为不可见，前端可根据此字段决定是否隐藏该导航项目项）
                 cssClass:
                     type: string
-                    description: 额外的 CSS 类（前端可选地将此字段添加到导航项的 HTML class 属性中，便于自定义样式）
+                    description: 额外的 CSS 类（前端可选地将此字段添加到导航项目项的 HTML class 属性中，便于自定义样式）
                 requiredPermission:
                     type: string
-                    description: 访问权限标识（如 view_admin_panel，前端可根据用户权限决定是否显示该导航项）
+                    description: 访问权限标识（如 view_admin_panel，前端可根据用户权限决定是否显示该导航项目项）
                 parentId:
                     type: integer
                     description: 父菜单项ID（0 表示顶级项）
@@ -2203,7 +2203,7 @@ components:
                     type: string
                     description: 删除时间
                     format: date-time
-            description: 导航项
+            description: 导航项目项
         Page:
             type: object
             properties:

@@ -2718,12 +2718,101 @@ paths:
                 "200":
                     description: OK
                     content: {}
+    /admin/v1/navigation-items:
+        post:
+            tags:
+                - NavigationItemService
+            description: 创建导航项目
+            operationId: NavigationItemService_Create
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateNavigationItemRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/NavigationItem'
+    /admin/v1/navigation-items/{id}:
+        get:
+            tags:
+                - NavigationItemService
+            description: 获取导航项目数据
+            operationId: NavigationItemService_Get
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: title
+                  in: query
+                  schema:
+                    type: string
+                - name: viewMask
+                  in: query
+                  schema:
+                    type: string
+                    format: field-mask
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/NavigationItem'
+        put:
+            tags:
+                - NavigationItemService
+            description: 更新导航项目
+            operationId: NavigationItemService_Update
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint32
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateNavigationItemRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/NavigationItem'
+        delete:
+            tags:
+                - NavigationItemService
+            description: 删除导航
+            operationId: NavigationItemService_Delete
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content: {}
     /admin/v1/navigations:
         get:
             tags:
-                - NavigationService
-            description: 获取导航列表
-            operationId: NavigationService_List
+                - NavigationItemService
+            description: 获取导航项目列表
+            operationId: NavigationItemService_List
             parameters:
                 - name: page
                   in: query
@@ -2795,7 +2884,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/ListNavigationResponse'
+                                $ref: '#/components/schemas/ListNavigationItemResponse'
         post:
             tags:
                 - NavigationService
@@ -6269,6 +6358,12 @@ components:
                 data:
                     $ref: '#/components/schemas/Menu'
             description: 创建菜单 - 请求
+        CreateNavigationItemRequest:
+            type: object
+            properties:
+                data:
+                    $ref: '#/components/schemas/NavigationItem'
+            description: 请求 - 创建导航项目
         CreateNavigationRequest:
             type: object
             properties:
@@ -7357,6 +7452,16 @@ components:
                 total:
                     type: string
             description: 查询菜单列表 - 回应
+        ListNavigationItemResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/NavigationItem'
+                total:
+                    type: string
+            description: 回应 - 导航项目列表
         ListNavigationResponse:
             type: object
             properties:
@@ -8221,15 +8326,15 @@ components:
             properties:
                 id:
                     type: integer
-                    description: 导航项ID
+                    description: 导航项目项ID
                     format: uint32
                 navigationId:
                     type: integer
-                    description: 所属导航菜单ID
+                    description: 所属导航项目菜单ID
                     format: uint32
                 title:
                     type: string
-                    description: 显示文本（单语言，多语言通过多套导航实现）
+                    description: 显示文本（单语言，多语言通过多套导航项目实现）
                 description:
                     type: string
                     description: 描述文本（用于悬停提示或移动端）
@@ -8263,13 +8368,13 @@ components:
                     description: 是否在新标签页打开
                 isInvalid:
                     type: boolean
-                    description: 是否无效（如关联的文章/页面被删除或设置为不可见，前端可根据此字段决定是否隐藏该导航项）
+                    description: 是否无效（如关联的文章/页面被删除或设置为不可见，前端可根据此字段决定是否隐藏该导航项目项）
                 cssClass:
                     type: string
-                    description: 额外的 CSS 类（前端可选地将此字段添加到导航项的 HTML class 属性中，便于自定义样式）
+                    description: 额外的 CSS 类（前端可选地将此字段添加到导航项目项的 HTML class 属性中，便于自定义样式）
                 requiredPermission:
                     type: string
-                    description: 访问权限标识（如 view_admin_panel，前端可根据用户权限决定是否显示该导航项）
+                    description: 访问权限标识（如 view_admin_panel，前端可根据用户权限决定是否显示该导航项目项）
                 parentId:
                     type: integer
                     description: 父菜单项ID（0 表示顶级项）
@@ -8303,7 +8408,7 @@ components:
                     type: string
                     description: 删除时间
                     format: date-time
-            description: 导航项
+            description: 导航项目项
         OperationAuditLog:
             type: object
             properties:
@@ -10208,6 +10313,23 @@ components:
                     type: boolean
                     description: 如果设置为true的时候，资源不存在则会新增(插入)，并且在这种情况下`updateMask`字段将会被忽略。
             description: 更新菜单 - 请求
+        UpdateNavigationItemRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                data:
+                    $ref: '#/components/schemas/NavigationItem'
+                updateMask:
+                    example: id,realname,username
+                    type: string
+                    description: 要更新的字段列表
+                    format: field-mask
+                allowMissing:
+                    type: boolean
+                    description: 如果设置为true的时候，资源不存在则会新增(插入)，并且在这种情况下`updateMask`字段将会被忽略。
+            description: 请求 - 更新导航项目
         UpdateNavigationRequest:
             type: object
             properties:
@@ -10782,6 +10904,8 @@ tags:
       description: 媒体资源库服务
     - name: MenuService
       description: 后台菜单管理服务
+    - name: NavigationItemService
+      description: 导航项目服务
     - name: NavigationService
       description: 导航服务
     - name: OperationAuditLogService

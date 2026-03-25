@@ -125,10 +125,11 @@ func initApp(context *bootstrap.Context) (*kratos.App, func(), error) {
 	navigationItemRepo := data.NewNavigationItemRepo(context, entClient)
 	navigationRepo := data.NewNavigationRepo(context, entClient, navigationItemRepo)
 	navigationService := service.NewNavigationService(context, navigationRepo)
+	navigationItemService := service.NewNavigationItemService(context, navigationItemRepo)
 	mediaVariantRepo := data.NewMediaVariantRepo(context, entClient)
 	mediaAssetRepo := data.NewMediaAssetRepo(context, entClient, mediaVariantRepo)
 	mediaAssetService := service.NewMediaAssetService(context, mediaAssetRepo)
-	grpcServer, err := server.NewGrpcServer(context, v, authenticationService, loginPolicyService, taskService, uEditorService, fileService, dictTypeService, dictEntryService, languageService, tenantService, userService, roleService, positionService, orgUnitService, menuService, apiService, permissionService, permissionGroupService, permissionAuditLogService, policyEvaluationLogService, loginAuditLogService, apiAuditLogService, operationAuditLogService, dataAccessAuditLogService, internalMessageService, internalMessageCategoryService, internalMessageRecipientService, commentService, postService, categoryService, tagService, pageService, siteService, siteSettingService, navigationService, mediaAssetService)
+	grpcServer, err := server.NewGrpcServer(context, v, authenticationService, loginPolicyService, taskService, uEditorService, fileService, dictTypeService, dictEntryService, languageService, tenantService, userService, roleService, positionService, orgUnitService, menuService, apiService, permissionService, permissionGroupService, permissionAuditLogService, policyEvaluationLogService, loginAuditLogService, apiAuditLogService, operationAuditLogService, dataAccessAuditLogService, internalMessageService, internalMessageCategoryService, internalMessageRecipientService, commentService, postService, categoryService, tagService, pageService, siteService, siteSettingService, navigationService, navigationItemService, mediaAssetService)
 	if err != nil {
 		cleanup2()
 		cleanup()

@@ -6,11 +6,13 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/tx7do/kratos-bootstrap/bootstrap"
+
 	paginationV1 "github.com/tx7do/go-crud/api/gen/go/pagination/v1"
 	entCrud "github.com/tx7do/go-crud/entgo"
+
 	"github.com/tx7do/go-utils/copierutil"
 	"github.com/tx7do/go-utils/mapper"
-	"github.com/tx7do/kratos-bootstrap/bootstrap"
 
 	"go-wind-cms/app/core/service/internal/data/ent"
 	"go-wind-cms/app/core/service/internal/data/ent/navigation"
@@ -315,7 +317,7 @@ func (r *NavigationRepo) Delete(ctx context.Context, req *siteV1.DeleteNavigatio
 		}
 	}()
 
-	if err = r.entClient.Client().Navigation.DeleteOneID(req.GetId()).Exec(ctx); err != nil {
+	if err = tx.Navigation.DeleteOneID(req.GetId()).Exec(ctx); err != nil {
 		r.log.Errorf("delete one data failed: %s", err.Error())
 	}
 

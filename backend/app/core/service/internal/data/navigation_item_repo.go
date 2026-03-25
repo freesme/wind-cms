@@ -6,12 +6,15 @@ import (
 	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/tx7do/kratos-bootstrap/bootstrap"
+
+	paginationV1 "github.com/tx7do/go-crud/api/gen/go/pagination/v1"
 	entCrud "github.com/tx7do/go-crud/entgo"
+
 	"github.com/tx7do/go-utils/copierutil"
 	"github.com/tx7do/go-utils/mapper"
 	"github.com/tx7do/go-utils/timeutil"
 	"github.com/tx7do/go-utils/trans"
-	"github.com/tx7do/kratos-bootstrap/bootstrap"
 
 	"go-wind-cms/app/core/service/internal/data/ent"
 	"go-wind-cms/app/core/service/internal/data/ent/navigationitem"
@@ -96,8 +99,40 @@ func (r *NavigationItemRepo) CleanItems(
 	return nil
 }
 
-func (r *NavigationItemRepo) Get(ctx context.Context, id uint32) (*siteV1.NavigationItem, error) {
-	entity, err := r.entClient.Client().NavigationItem.Get(ctx, id)
+func (r *NavigationItemRepo) List(ctx context.Context, req *paginationV1.PagingRequest) (*siteV1.ListNavigationItemResponse, error) {
+	if req == nil {
+		return nil, siteV1.ErrorBadRequest("invalid parameter")
+	}
+
+	builder := r.entClient.Client().NavigationItem.Query()
+
+	ret, err := r.repository.ListWithPaging(ctx, builder, builder.Clone(), req)
+	if err != nil {
+		return nil, err
+	}
+	if ret == nil {
+		return &siteV1.ListNavigationItemResponse{Total: 0, Items: nil}, nil
+	}
+
+	return &siteV1.ListNavigationItemResponse{
+		Total: ret.Total,
+		Items: ret.Items,
+	}, nil
+}
+
+func (r *NavigationItemRepo) Get(ctx context.Context, req *siteV1.GetNavigationItemRequest) (*siteV1.NavigationItem, error) {
+	builder := r.entClient.Client().NavigationItem.Query()
+
+	switch req.QueryBy.(type) {
+	case *siteV1.GetNavigationItemRequest_Id:
+		builder = builder.Where(navigationitem.IDEQ(req.GetId()))
+	case *siteV1.GetNavigationItemRequest_Title:
+		builder = builder.Where(navigationitem.TitleEQ(req.GetTitle()))
+	default:
+		return nil, siteV1.ErrorBadRequest("invalid query by parameter")
+	}
+
+	entity, err := builder.Only(ctx)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, siteV1.ErrorFileNotFound("navigation item not found")
@@ -111,32 +146,71 @@ func (r *NavigationItemRepo) Get(ctx context.Context, id uint32) (*siteV1.Naviga
 	return r.mapper.ToDTO(entity), nil
 }
 
+func (r *NavigationItemRepo) newCreateBuilder(tx *ent.Tx, data *siteV1.NavigationItem) *ent.NavigationItemCreate {
+	now := time.Now()
+	builder := tx.NavigationItem.Create().
+		SetNillableNavigationID(data.NavigationId).
+		SetNillableTitle(data.Title).
+		SetNillableURL(data.Url).
+		SetNillableIcon(data.Icon).
+		SetNillableDescription(data.Description).
+		SetNillableLinkType(r.linkTypeConverter.ToEntity(data.LinkType)).
+		SetNillableObjectID(data.ObjectId).
+		SetNillableSortOrder(data.SortOrder).
+		SetNillableIsOpenNewTab(data.IsOpenNewTab).
+		SetNillableIsInvalid(data.IsInvalid).
+		SetNillableCSSClass(data.CssClass).
+		SetNillableRequiredPermission(data.RequiredPermission).
+		SetNillableParentID(data.ParentId).
+		SetNillableCreatedBy(data.CreatedBy).
+		SetCreatedAt(now)
+	return builder
+}
+
+func (r *NavigationItemRepo) Create(ctx context.Context, data *siteV1.NavigationItem) (dto *siteV1.NavigationItem, err error) {
+	if data == nil {
+		return nil, siteV1.ErrorBadRequest("invalid parameter")
+	}
+
+	var tx *ent.Tx
+	tx, err = r.entClient.Client().Tx(ctx)
+	if err != nil {
+		r.log.Errorf("start transaction failed: %s", err.Error())
+		return nil, siteV1.ErrorInternalServerError("start transaction failed")
+	}
+	defer func() {
+		if err != nil {
+			if rollbackErr := tx.Rollback(); rollbackErr != nil {
+				r.log.Errorf("transaction rollback failed: %s", rollbackErr.Error())
+			}
+			return
+		}
+		if commitErr := tx.Commit(); commitErr != nil {
+			r.log.Errorf("transaction commit failed: %s", commitErr.Error())
+			err = siteV1.ErrorInternalServerError("transaction commit failed")
+		}
+	}()
+
+	builder := r.newCreateBuilder(tx, data)
+
+	var entity *ent.NavigationItem
+	entity, err = builder.Save(ctx)
+	if err != nil {
+		r.log.Errorf("create navigation item failed: %s", err.Error())
+		return nil, siteV1.ErrorInternalServerError("create navigation item failed")
+	}
+
+	return r.mapper.ToDTO(entity), nil
+}
+
 func (r *NavigationItemRepo) BatchCreate(ctx context.Context, tx *ent.Tx, items []*siteV1.NavigationItem) error {
 	if len(items) == 0 {
 		return nil
 	}
 
-	now := time.Now()
-
 	builders := make([]*ent.NavigationItemCreate, 0, len(items))
 	for _, data := range items {
-		builder := tx.NavigationItem.Create().
-			SetNillableNavigationID(data.NavigationId).
-			SetNillableTitle(data.Title).
-			SetNillableURL(data.Url).
-			SetNillableIcon(data.Icon).
-			SetNillableDescription(data.Description).
-			SetNillableLinkType(r.linkTypeConverter.ToEntity(data.LinkType)).
-			SetNillableObjectID(data.ObjectId).
-			SetNillableSortOrder(data.SortOrder).
-			SetNillableIsOpenNewTab(data.IsOpenNewTab).
-			SetNillableIsInvalid(data.IsInvalid).
-			SetNillableCSSClass(data.CssClass).
-			SetNillableRequiredPermission(data.RequiredPermission).
-			SetNillableParentID(data.ParentId).
-			SetNillableCreatedBy(data.CreatedBy).
-			SetCreatedAt(now)
-
+		builder := r.newCreateBuilder(tx, data)
 		builders = append(builders, builder)
 	}
 
@@ -147,6 +221,78 @@ func (r *NavigationItemRepo) BatchCreate(ctx context.Context, tx *ent.Tx, items 
 	}
 
 	return nil
+}
+
+func (r *NavigationItemRepo) newUpdateOneBuilder(tx *ent.Tx, data *siteV1.NavigationItem) *ent.NavigationItemUpdateOne {
+	now := time.Now()
+	builder := tx.NavigationItem.UpdateOneID(*data.Id).
+		SetNillableNavigationID(data.NavigationId).
+		SetNillableTitle(data.Title).
+		SetNillableURL(data.Url).
+		SetNillableIcon(data.Icon).
+		SetNillableDescription(data.Description).
+		SetNillableLinkType(r.linkTypeConverter.ToEntity(data.LinkType)).
+		SetNillableObjectID(data.ObjectId).
+		SetNillableSortOrder(data.SortOrder).
+		SetNillableIsOpenNewTab(data.IsOpenNewTab).
+		SetNillableIsInvalid(data.IsInvalid).
+		SetNillableCSSClass(data.CssClass).
+		SetNillableRequiredPermission(data.RequiredPermission).
+		SetNillableParentID(data.ParentId).
+		SetNillableUpdatedBy(data.CreatedBy).
+		SetUpdatedAt(now)
+	return builder
+}
+
+func (r *NavigationItemRepo) Update(ctx context.Context, req *siteV1.UpdateNavigationItemRequest) (dto *siteV1.NavigationItem, err error) {
+	if req == nil || req.Data == nil {
+		return nil, siteV1.ErrorBadRequest("invalid parameter")
+	}
+
+	// 如果不存在则创建
+	if req.GetAllowMissing() {
+		var exist bool
+		exist, err = r.IsExist(ctx, req.GetId())
+		if err != nil {
+			return nil, err
+		}
+		if !exist {
+			req.Data.CreatedBy = req.Data.UpdatedBy
+			req.Data.UpdatedBy = nil
+			_, err = r.Create(ctx, req.Data)
+			return nil, err
+		}
+	}
+
+	var tx *ent.Tx
+	tx, err = r.entClient.Client().Tx(ctx)
+	if err != nil {
+		r.log.Errorf("start transaction failed: %s", err.Error())
+		return nil, siteV1.ErrorInternalServerError("start transaction failed")
+	}
+	defer func() {
+		if err != nil {
+			if rollbackErr := tx.Rollback(); rollbackErr != nil {
+				r.log.Errorf("transaction rollback failed: %s", rollbackErr.Error())
+			}
+			return
+		}
+		if commitErr := tx.Commit(); commitErr != nil {
+			r.log.Errorf("transaction commit failed: %s", commitErr.Error())
+			err = siteV1.ErrorInternalServerError("transaction commit failed")
+		}
+	}()
+
+	builder := r.newUpdateOneBuilder(tx, req.Data)
+
+	var entity *ent.NavigationItem
+	entity, err = builder.Save(ctx)
+	if err != nil {
+		r.log.Errorf("update navigation item failed: %s", err.Error())
+		return nil, siteV1.ErrorInternalServerError("update navigation item failed")
+	}
+
+	return r.mapper.ToDTO(entity), nil
 }
 
 func (r *NavigationItemRepo) Upsert(ctx context.Context, data *siteV1.NavigationItem) error {
@@ -278,4 +424,15 @@ func (r *NavigationItemRepo) ListItems(ctx context.Context, navigationID uint32,
 	}
 
 	return buildTree(0), nil
+}
+
+func (r *NavigationItemRepo) Delete(ctx context.Context, req *siteV1.DeleteNavigationItemRequest) (err error) {
+	if req == nil {
+		return siteV1.ErrorBadRequest("invalid parameter")
+	}
+
+	if err = r.entClient.Client().Navigation.DeleteOneID(req.GetId()).Exec(ctx); err != nil {
+		r.log.Errorf("delete one data failed: %s", err.Error())
+	}
+	return err
 }

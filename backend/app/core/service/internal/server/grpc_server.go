@@ -83,6 +83,7 @@ func NewGrpcServer(
 	siteService *service.SiteService,
 	siteSettingService *service.SiteSettingService,
 	navigationService *service.NavigationService,
+	navigationItemService *service.NavigationItemService,
 
 	mediaAssetService *service.MediaAssetService,
 ) (*grpc.Server, error) {
@@ -140,8 +141,9 @@ func NewGrpcServer(
 	contentV1.RegisterPageServiceServer(srv, pageService)
 
 	siteV1.RegisterSiteSettingServiceServer(srv, siteSettingService)
-	siteV1.RegisterNavigationServiceServer(srv, navigationService)
 	siteV1.RegisterSiteServiceServer(srv, siteService)
+	siteV1.RegisterNavigationServiceServer(srv, navigationService)
+	siteV1.RegisterNavigationItemServiceServer(srv, navigationItemService)
 
 	mediaV1.RegisterMediaAssetServiceServer(srv, mediaAssetService)
 

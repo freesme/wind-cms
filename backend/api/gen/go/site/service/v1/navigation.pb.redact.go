@@ -133,56 +133,6 @@ func (x *Navigation) Redact() string {
 	return x.String()
 }
 
-// Redact method implementation for NavigationItem
-func (x *NavigationItem) Redact() string {
-	if x == nil {
-		return ""
-	}
-
-	// Safe field: Id
-
-	// Safe field: NavigationId
-
-	// Safe field: Title
-
-	// Safe field: Description
-
-	// Safe field: Icon
-
-	// Safe field: Url
-
-	// Safe field: LinkType
-
-	// Safe field: ObjectId
-
-	// Safe field: SortOrder
-
-	// Safe field: IsOpenNewTab
-
-	// Safe field: IsInvalid
-
-	// Safe field: CssClass
-
-	// Safe field: RequiredPermission
-
-	// Safe field: ParentId
-
-	// Safe field: Children
-
-	// Safe field: CreatedBy
-
-	// Safe field: UpdatedBy
-
-	// Safe field: DeletedBy
-
-	// Safe field: CreatedAt
-
-	// Safe field: UpdatedAt
-
-	// Safe field: DeletedAt
-	return x.String()
-}
-
 // Redact method implementation for ListNavigationResponse
 func (x *ListNavigationResponse) Redact() string {
 	if x == nil {

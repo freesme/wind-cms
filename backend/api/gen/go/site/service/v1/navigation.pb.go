@@ -90,65 +90,6 @@ func (Navigation_Location) EnumDescriptor() ([]byte, []int) {
 	return file_site_service_v1_navigation_proto_rawDescGZIP(), []int{0, 0}
 }
 
-// 链接类型
-type NavigationItem_LinkType int32
-
-const (
-	NavigationItem_LINK_TYPE_UNSPECIFIED NavigationItem_LinkType = 0
-	NavigationItem_LINK_TYPE_CUSTOM      NavigationItem_LinkType = 1 // 站内自定义路径（如 "/about"）
-	NavigationItem_LINK_TYPE_POST        NavigationItem_LinkType = 2 // 关联文章
-	NavigationItem_LINK_TYPE_PAGE        NavigationItem_LinkType = 3 // 关联页面
-	NavigationItem_LINK_TYPE_CATEGORY    NavigationItem_LinkType = 4 // 关联分类
-	NavigationItem_LINK_TYPE_EXTERNAL    NavigationItem_LinkType = 5 // 外部链接（http/https）
-)
-
-// Enum value maps for NavigationItem_LinkType.
-var (
-	NavigationItem_LinkType_name = map[int32]string{
-		0: "LINK_TYPE_UNSPECIFIED",
-		1: "LINK_TYPE_CUSTOM",
-		2: "LINK_TYPE_POST",
-		3: "LINK_TYPE_PAGE",
-		4: "LINK_TYPE_CATEGORY",
-		5: "LINK_TYPE_EXTERNAL",
-	}
-	NavigationItem_LinkType_value = map[string]int32{
-		"LINK_TYPE_UNSPECIFIED": 0,
-		"LINK_TYPE_CUSTOM":      1,
-		"LINK_TYPE_POST":        2,
-		"LINK_TYPE_PAGE":        3,
-		"LINK_TYPE_CATEGORY":    4,
-		"LINK_TYPE_EXTERNAL":    5,
-	}
-)
-
-func (x NavigationItem_LinkType) Enum() *NavigationItem_LinkType {
-	p := new(NavigationItem_LinkType)
-	*p = x
-	return p
-}
-
-func (x NavigationItem_LinkType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (NavigationItem_LinkType) Descriptor() protoreflect.EnumDescriptor {
-	return file_site_service_v1_navigation_proto_enumTypes[1].Descriptor()
-}
-
-func (NavigationItem_LinkType) Type() protoreflect.EnumType {
-	return &file_site_service_v1_navigation_proto_enumTypes[1]
-}
-
-func (x NavigationItem_LinkType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use NavigationItem_LinkType.Descriptor instead.
-func (NavigationItem_LinkType) EnumDescriptor() ([]byte, []int) {
-	return file_site_service_v1_navigation_proto_rawDescGZIP(), []int{1, 0}
-}
-
 // 导航
 type Navigation struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -282,211 +223,6 @@ func (x *Navigation) GetDeletedAt() *timestamppb.Timestamp {
 	return nil
 }
 
-// 导航项
-type NavigationItem struct {
-	state              protoimpl.MessageState   `protogen:"open.v1"`
-	Id                 *uint32                  `protobuf:"varint,1,opt,name=id,proto3,oneof" json:"id,omitempty"`                                                                          // 导航项ID
-	NavigationId       *uint32                  `protobuf:"varint,2,opt,name=navigation_id,json=navigationId,proto3,oneof" json:"navigation_id,omitempty"`                                  // 所属导航菜单ID
-	Title              *string                  `protobuf:"bytes,3,opt,name=title,proto3,oneof" json:"title,omitempty"`                                                                     // 显示文本（单语言，多语言通过多套导航实现）
-	Description        *string                  `protobuf:"bytes,4,opt,name=description,proto3,oneof" json:"description,omitempty"`                                                         // 描述文本（用于悬停提示或移动端）
-	Icon               *string                  `protobuf:"bytes,5,opt,name=icon,proto3,oneof" json:"icon,omitempty"`                                                                       // 图标（支持 Font Awesome 格式如 'fas fa-home'，或 SVG URL）
-	Url                *string                  `protobuf:"bytes,6,opt,name=url,proto3,oneof" json:"url,omitempty"`                                                                         // 目标 URL（link_type=CUSTOM/EXTERNAL 时必填；关联类型可自动生成）
-	LinkType           *NavigationItem_LinkType `protobuf:"varint,7,opt,name=link_type,json=linkType,proto3,enum=site.service.v1.NavigationItem_LinkType,oneof" json:"link_type,omitempty"` // 链接类型
-	ObjectId           *uint32                  `protobuf:"varint,8,opt,name=object_id,json=objectId,proto3,oneof" json:"object_id,omitempty"`                                              // 关联对象ID（link_type=POST/PAGE/CATEGORY 时使用）
-	SortOrder          *uint32                  `protobuf:"varint,9,opt,name=sort_order,json=sortOrder,proto3,oneof" json:"sort_order,omitempty"`                                           // 排序优先级（数值越小越靠前）
-	IsOpenNewTab       *bool                    `protobuf:"varint,10,opt,name=is_open_new_tab,json=isOpenNewTab,proto3,oneof" json:"is_open_new_tab,omitempty"`                             // 是否在新标签页打开
-	IsInvalid          *bool                    `protobuf:"varint,11,opt,name=is_invalid,json=isInvalid,proto3,oneof" json:"is_invalid,omitempty"`                                          // 是否无效（如关联的文章/页面被删除或设置为不可见，前端可根据此字段决定是否隐藏该导航项）
-	CssClass           *string                  `protobuf:"bytes,12,opt,name=css_class,json=cssClass,proto3,oneof" json:"css_class,omitempty"`                                              // 额外的 CSS 类（前端可选地将此字段添加到导航项的 HTML class 属性中，便于自定义样式）
-	RequiredPermission *string                  `protobuf:"bytes,13,opt,name=required_permission,json=requiredPermission,proto3,oneof" json:"required_permission,omitempty"`                // 访问权限标识（如 "view_admin_panel"，前端可根据用户权限决定是否显示该导航项）
-	ParentId           *uint32                  `protobuf:"varint,50,opt,name=parent_id,json=parentId,proto3,oneof" json:"parent_id,omitempty"`                                             // 父菜单项ID（0 表示顶级项）
-	Children           []*NavigationItem        `protobuf:"bytes,51,rep,name=children,proto3" json:"children,omitempty"`                                                                    // 子节点树
-	CreatedBy          *uint32                  `protobuf:"varint,100,opt,name=created_by,json=createdBy,proto3,oneof" json:"created_by,omitempty"`                                         // 创建者用户ID
-	UpdatedBy          *uint32                  `protobuf:"varint,101,opt,name=updated_by,json=updatedBy,proto3,oneof" json:"updated_by,omitempty"`                                         // 更新者用户ID
-	DeletedBy          *uint32                  `protobuf:"varint,102,opt,name=deleted_by,json=deletedBy,proto3,oneof" json:"deleted_by,omitempty"`                                         // 删除者用户ID
-	CreatedAt          *timestamppb.Timestamp   `protobuf:"bytes,200,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`                                          // 创建时间
-	UpdatedAt          *timestamppb.Timestamp   `protobuf:"bytes,201,opt,name=updated_at,json=updatedAt,proto3,oneof" json:"updated_at,omitempty"`                                          // 更新时间
-	DeletedAt          *timestamppb.Timestamp   `protobuf:"bytes,202,opt,name=deleted_at,json=deletedAt,proto3,oneof" json:"deleted_at,omitempty"`                                          // 删除时间
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
-}
-
-func (x *NavigationItem) Reset() {
-	*x = NavigationItem{}
-	mi := &file_site_service_v1_navigation_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *NavigationItem) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*NavigationItem) ProtoMessage() {}
-
-func (x *NavigationItem) ProtoReflect() protoreflect.Message {
-	mi := &file_site_service_v1_navigation_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use NavigationItem.ProtoReflect.Descriptor instead.
-func (*NavigationItem) Descriptor() ([]byte, []int) {
-	return file_site_service_v1_navigation_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *NavigationItem) GetId() uint32 {
-	if x != nil && x.Id != nil {
-		return *x.Id
-	}
-	return 0
-}
-
-func (x *NavigationItem) GetNavigationId() uint32 {
-	if x != nil && x.NavigationId != nil {
-		return *x.NavigationId
-	}
-	return 0
-}
-
-func (x *NavigationItem) GetTitle() string {
-	if x != nil && x.Title != nil {
-		return *x.Title
-	}
-	return ""
-}
-
-func (x *NavigationItem) GetDescription() string {
-	if x != nil && x.Description != nil {
-		return *x.Description
-	}
-	return ""
-}
-
-func (x *NavigationItem) GetIcon() string {
-	if x != nil && x.Icon != nil {
-		return *x.Icon
-	}
-	return ""
-}
-
-func (x *NavigationItem) GetUrl() string {
-	if x != nil && x.Url != nil {
-		return *x.Url
-	}
-	return ""
-}
-
-func (x *NavigationItem) GetLinkType() NavigationItem_LinkType {
-	if x != nil && x.LinkType != nil {
-		return *x.LinkType
-	}
-	return NavigationItem_LINK_TYPE_UNSPECIFIED
-}
-
-func (x *NavigationItem) GetObjectId() uint32 {
-	if x != nil && x.ObjectId != nil {
-		return *x.ObjectId
-	}
-	return 0
-}
-
-func (x *NavigationItem) GetSortOrder() uint32 {
-	if x != nil && x.SortOrder != nil {
-		return *x.SortOrder
-	}
-	return 0
-}
-
-func (x *NavigationItem) GetIsOpenNewTab() bool {
-	if x != nil && x.IsOpenNewTab != nil {
-		return *x.IsOpenNewTab
-	}
-	return false
-}
-
-func (x *NavigationItem) GetIsInvalid() bool {
-	if x != nil && x.IsInvalid != nil {
-		return *x.IsInvalid
-	}
-	return false
-}
-
-func (x *NavigationItem) GetCssClass() string {
-	if x != nil && x.CssClass != nil {
-		return *x.CssClass
-	}
-	return ""
-}
-
-func (x *NavigationItem) GetRequiredPermission() string {
-	if x != nil && x.RequiredPermission != nil {
-		return *x.RequiredPermission
-	}
-	return ""
-}
-
-func (x *NavigationItem) GetParentId() uint32 {
-	if x != nil && x.ParentId != nil {
-		return *x.ParentId
-	}
-	return 0
-}
-
-func (x *NavigationItem) GetChildren() []*NavigationItem {
-	if x != nil {
-		return x.Children
-	}
-	return nil
-}
-
-func (x *NavigationItem) GetCreatedBy() uint32 {
-	if x != nil && x.CreatedBy != nil {
-		return *x.CreatedBy
-	}
-	return 0
-}
-
-func (x *NavigationItem) GetUpdatedBy() uint32 {
-	if x != nil && x.UpdatedBy != nil {
-		return *x.UpdatedBy
-	}
-	return 0
-}
-
-func (x *NavigationItem) GetDeletedBy() uint32 {
-	if x != nil && x.DeletedBy != nil {
-		return *x.DeletedBy
-	}
-	return 0
-}
-
-func (x *NavigationItem) GetCreatedAt() *timestamppb.Timestamp {
-	if x != nil {
-		return x.CreatedAt
-	}
-	return nil
-}
-
-func (x *NavigationItem) GetUpdatedAt() *timestamppb.Timestamp {
-	if x != nil {
-		return x.UpdatedAt
-	}
-	return nil
-}
-
-func (x *NavigationItem) GetDeletedAt() *timestamppb.Timestamp {
-	if x != nil {
-		return x.DeletedAt
-	}
-	return nil
-}
-
 // 回应 - 导航列表
 type ListNavigationResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -498,7 +234,7 @@ type ListNavigationResponse struct {
 
 func (x *ListNavigationResponse) Reset() {
 	*x = ListNavigationResponse{}
-	mi := &file_site_service_v1_navigation_proto_msgTypes[2]
+	mi := &file_site_service_v1_navigation_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -510,7 +246,7 @@ func (x *ListNavigationResponse) String() string {
 func (*ListNavigationResponse) ProtoMessage() {}
 
 func (x *ListNavigationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_site_service_v1_navigation_proto_msgTypes[2]
+	mi := &file_site_service_v1_navigation_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -523,7 +259,7 @@ func (x *ListNavigationResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListNavigationResponse.ProtoReflect.Descriptor instead.
 func (*ListNavigationResponse) Descriptor() ([]byte, []int) {
-	return file_site_service_v1_navigation_proto_rawDescGZIP(), []int{2}
+	return file_site_service_v1_navigation_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *ListNavigationResponse) GetItems() []*Navigation {
@@ -555,7 +291,7 @@ type GetNavigationRequest struct {
 
 func (x *GetNavigationRequest) Reset() {
 	*x = GetNavigationRequest{}
-	mi := &file_site_service_v1_navigation_proto_msgTypes[3]
+	mi := &file_site_service_v1_navigation_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -567,7 +303,7 @@ func (x *GetNavigationRequest) String() string {
 func (*GetNavigationRequest) ProtoMessage() {}
 
 func (x *GetNavigationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_site_service_v1_navigation_proto_msgTypes[3]
+	mi := &file_site_service_v1_navigation_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -580,7 +316,7 @@ func (x *GetNavigationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetNavigationRequest.ProtoReflect.Descriptor instead.
 func (*GetNavigationRequest) Descriptor() ([]byte, []int) {
-	return file_site_service_v1_navigation_proto_rawDescGZIP(), []int{3}
+	return file_site_service_v1_navigation_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetNavigationRequest) GetQueryBy() isGetNavigationRequest_QueryBy {
@@ -641,7 +377,7 @@ type CreateNavigationRequest struct {
 
 func (x *CreateNavigationRequest) Reset() {
 	*x = CreateNavigationRequest{}
-	mi := &file_site_service_v1_navigation_proto_msgTypes[4]
+	mi := &file_site_service_v1_navigation_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -653,7 +389,7 @@ func (x *CreateNavigationRequest) String() string {
 func (*CreateNavigationRequest) ProtoMessage() {}
 
 func (x *CreateNavigationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_site_service_v1_navigation_proto_msgTypes[4]
+	mi := &file_site_service_v1_navigation_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -666,7 +402,7 @@ func (x *CreateNavigationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateNavigationRequest.ProtoReflect.Descriptor instead.
 func (*CreateNavigationRequest) Descriptor() ([]byte, []int) {
-	return file_site_service_v1_navigation_proto_rawDescGZIP(), []int{4}
+	return file_site_service_v1_navigation_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *CreateNavigationRequest) GetData() *Navigation {
@@ -689,7 +425,7 @@ type UpdateNavigationRequest struct {
 
 func (x *UpdateNavigationRequest) Reset() {
 	*x = UpdateNavigationRequest{}
-	mi := &file_site_service_v1_navigation_proto_msgTypes[5]
+	mi := &file_site_service_v1_navigation_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -701,7 +437,7 @@ func (x *UpdateNavigationRequest) String() string {
 func (*UpdateNavigationRequest) ProtoMessage() {}
 
 func (x *UpdateNavigationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_site_service_v1_navigation_proto_msgTypes[5]
+	mi := &file_site_service_v1_navigation_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -714,7 +450,7 @@ func (x *UpdateNavigationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateNavigationRequest.ProtoReflect.Descriptor instead.
 func (*UpdateNavigationRequest) Descriptor() ([]byte, []int) {
-	return file_site_service_v1_navigation_proto_rawDescGZIP(), []int{5}
+	return file_site_service_v1_navigation_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *UpdateNavigationRequest) GetId() uint32 {
@@ -758,7 +494,7 @@ type DeleteNavigationRequest struct {
 
 func (x *DeleteNavigationRequest) Reset() {
 	*x = DeleteNavigationRequest{}
-	mi := &file_site_service_v1_navigation_proto_msgTypes[6]
+	mi := &file_site_service_v1_navigation_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -770,7 +506,7 @@ func (x *DeleteNavigationRequest) String() string {
 func (*DeleteNavigationRequest) ProtoMessage() {}
 
 func (x *DeleteNavigationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_site_service_v1_navigation_proto_msgTypes[6]
+	mi := &file_site_service_v1_navigation_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -783,7 +519,7 @@ func (x *DeleteNavigationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteNavigationRequest.ProtoReflect.Descriptor instead.
 func (*DeleteNavigationRequest) Descriptor() ([]byte, []int) {
-	return file_site_service_v1_navigation_proto_rawDescGZIP(), []int{6}
+	return file_site_service_v1_navigation_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *DeleteNavigationRequest) GetQueryBy() isDeleteNavigationRequest_QueryBy {
@@ -816,7 +552,7 @@ var File_site_service_v1_navigation_proto protoreflect.FileDescriptor
 
 const file_site_service_v1_navigation_proto_rawDesc = "" +
 	"\n" +
-	" site/service/v1/navigation.proto\x12\x0fsite.service.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a\x1epagination/v1/pagination.proto\"\x8f\n" +
+	" site/service/v1/navigation.proto\x12\x0fsite.service.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a google/protobuf/field_mask.proto\x1a\x1epagination/v1/pagination.proto\x1a%site/service/v1/navigation_item.proto\"\x8f\n" +
 	"\n" +
 	"\n" +
 	"Navigation\x12#\n" +
@@ -857,69 +593,6 @@ const file_site_service_v1_navigation_proto_rawDesc = "" +
 	"\a_localeB\f\n" +
 	"\n" +
 	"_is_activeB\r\n" +
-	"\v_created_byB\r\n" +
-	"\v_updated_byB\r\n" +
-	"\v_deleted_byB\r\n" +
-	"\v_created_atB\r\n" +
-	"\v_updated_atB\r\n" +
-	"\v_deleted_at\"\x82\x13\n" +
-	"\x0eNavigationItem\x12&\n" +
-	"\x02id\x18\x01 \x01(\rB\x11\xbaG\x0e\x92\x02\v导航项IDH\x00R\x02id\x88\x01\x01\x12D\n" +
-	"\rnavigation_id\x18\x02 \x01(\rB\x1a\xbaG\x17\x92\x02\x14所属导航菜单IDH\x01R\fnavigationId\x88\x01\x01\x12`\n" +
-	"\x05title\x18\x03 \x01(\tBE\xbaGB\x92\x02?显示文本（单语言，多语言通过多套导航实现）H\x02R\x05title\x88\x01\x01\x12]\n" +
-	"\vdescription\x18\x04 \x01(\tB6\xbaG3\x92\x020描述文本（用于悬停提示或移动端）H\x03R\vdescription\x88\x01\x01\x12d\n" +
-	"\x04icon\x18\x05 \x01(\tBK\xbaGH\x92\x02E图标（支持 Font Awesome 格式如 'fas fa-home'，或 SVG URL）H\x04R\x04icon\x88\x01\x01\x12n\n" +
-	"\x03url\x18\x06 \x01(\tBW\xbaGT\x92\x02Q目标 URL（link_type=CUSTOM/EXTERNAL 时必填；关联类型可自动生成）H\x05R\x03url\x88\x01\x01\x12^\n" +
-	"\tlink_type\x18\a \x01(\x0e2(.site.service.v1.NavigationItem.LinkTypeB\x12\xbaG\x0f\x92\x02\f链接类型H\x06R\blinkType\x88\x01\x01\x12b\n" +
-	"\tobject_id\x18\b \x01(\rB@\xbaG=\x92\x02:关联对象ID（link_type=POST/PAGE/CATEGORY 时使用）H\aR\bobjectId\x88\x01\x01\x12T\n" +
-	"\n" +
-	"sort_order\x18\t \x01(\rB0\xbaG-\x92\x02*排序优先级（数值越小越靠前）H\bR\tsortOrder\x88\x01\x01\x12M\n" +
-	"\x0fis_open_new_tab\x18\n" +
-	" \x01(\bB!\xbaG\x1e\x92\x02\x1b是否在新标签页打开H\tR\fisOpenNewTab\x88\x01\x01\x12\xaf\x01\n" +
-	"\n" +
-	"is_invalid\x18\v \x01(\bB\x8a\x01\xbaG\x86\x01\x92\x02\x82\x01是否无效（如关联的文章/页面被删除或设置为不可见，前端可根据此字段决定是否隐藏该导航项）H\n" +
-	"R\tisInvalid\x88\x01\x01\x12\x9c\x01\n" +
-	"\tcss_class\x18\f \x01(\tBz\xbaGw\x92\x02t额外的 CSS 类（前端可选地将此字段添加到导航项的 HTML class 属性中，便于自定义样式）H\vR\bcssClass\x88\x01\x01\x12\xa4\x01\n" +
-	"\x13required_permission\x18\r \x01(\tBn\xbaGk\x92\x02h访问权限标识（如 view_admin_panel，前端可根据用户权限决定是否显示该导航项）H\fR\x12requiredPermission\x88\x01\x01\x12M\n" +
-	"\tparent_id\x182 \x01(\rB+\xbaG(\x92\x02%父菜单项ID（0 表示顶级项）H\rR\bparentId\x88\x01\x01\x12O\n" +
-	"\bchildren\x183 \x03(\v2\x1f.site.service.v1.NavigationItemB\x12\xbaG\x0f\x92\x02\f子节点树R\bchildren\x12;\n" +
-	"\n" +
-	"created_by\x18d \x01(\rB\x17\xbaG\x14\x92\x02\x11创建者用户IDH\x0eR\tcreatedBy\x88\x01\x01\x12;\n" +
-	"\n" +
-	"updated_by\x18e \x01(\rB\x17\xbaG\x14\x92\x02\x11更新者用户IDH\x0fR\tupdatedBy\x88\x01\x01\x12;\n" +
-	"\n" +
-	"deleted_by\x18f \x01(\rB\x17\xbaG\x14\x92\x02\x11删除者用户IDH\x10R\tdeletedBy\x88\x01\x01\x12S\n" +
-	"\n" +
-	"created_at\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间H\x11R\tcreatedAt\x88\x01\x01\x12S\n" +
-	"\n" +
-	"updated_at\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间H\x12R\tupdatedAt\x88\x01\x01\x12S\n" +
-	"\n" +
-	"deleted_at\x18\xca\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f删除时间H\x13R\tdeletedAt\x88\x01\x01\"\x93\x01\n" +
-	"\bLinkType\x12\x19\n" +
-	"\x15LINK_TYPE_UNSPECIFIED\x10\x00\x12\x14\n" +
-	"\x10LINK_TYPE_CUSTOM\x10\x01\x12\x12\n" +
-	"\x0eLINK_TYPE_POST\x10\x02\x12\x12\n" +
-	"\x0eLINK_TYPE_PAGE\x10\x03\x12\x16\n" +
-	"\x12LINK_TYPE_CATEGORY\x10\x04\x12\x16\n" +
-	"\x12LINK_TYPE_EXTERNAL\x10\x05B\x05\n" +
-	"\x03_idB\x10\n" +
-	"\x0e_navigation_idB\b\n" +
-	"\x06_titleB\x0e\n" +
-	"\f_descriptionB\a\n" +
-	"\x05_iconB\x06\n" +
-	"\x04_urlB\f\n" +
-	"\n" +
-	"_link_typeB\f\n" +
-	"\n" +
-	"_object_idB\r\n" +
-	"\v_sort_orderB\x12\n" +
-	"\x10_is_open_new_tabB\r\n" +
-	"\v_is_invalidB\f\n" +
-	"\n" +
-	"_css_classB\x16\n" +
-	"\x14_required_permissionB\f\n" +
-	"\n" +
-	"_parent_idB\r\n" +
 	"\v_created_byB\r\n" +
 	"\v_updated_byB\r\n" +
 	"\v_deleted_byB\r\n" +
@@ -972,54 +645,48 @@ func file_site_service_v1_navigation_proto_rawDescGZIP() []byte {
 	return file_site_service_v1_navigation_proto_rawDescData
 }
 
-var file_site_service_v1_navigation_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_site_service_v1_navigation_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_site_service_v1_navigation_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_site_service_v1_navigation_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_site_service_v1_navigation_proto_goTypes = []any{
 	(Navigation_Location)(0),        // 0: site.service.v1.Navigation.Location
-	(NavigationItem_LinkType)(0),    // 1: site.service.v1.NavigationItem.LinkType
-	(*Navigation)(nil),              // 2: site.service.v1.Navigation
-	(*NavigationItem)(nil),          // 3: site.service.v1.NavigationItem
-	(*ListNavigationResponse)(nil),  // 4: site.service.v1.ListNavigationResponse
-	(*GetNavigationRequest)(nil),    // 5: site.service.v1.GetNavigationRequest
-	(*CreateNavigationRequest)(nil), // 6: site.service.v1.CreateNavigationRequest
-	(*UpdateNavigationRequest)(nil), // 7: site.service.v1.UpdateNavigationRequest
-	(*DeleteNavigationRequest)(nil), // 8: site.service.v1.DeleteNavigationRequest
-	(*timestamppb.Timestamp)(nil),   // 9: google.protobuf.Timestamp
-	(*fieldmaskpb.FieldMask)(nil),   // 10: google.protobuf.FieldMask
-	(*v1.PagingRequest)(nil),        // 11: pagination.PagingRequest
-	(*emptypb.Empty)(nil),           // 12: google.protobuf.Empty
+	(*Navigation)(nil),              // 1: site.service.v1.Navigation
+	(*ListNavigationResponse)(nil),  // 2: site.service.v1.ListNavigationResponse
+	(*GetNavigationRequest)(nil),    // 3: site.service.v1.GetNavigationRequest
+	(*CreateNavigationRequest)(nil), // 4: site.service.v1.CreateNavigationRequest
+	(*UpdateNavigationRequest)(nil), // 5: site.service.v1.UpdateNavigationRequest
+	(*DeleteNavigationRequest)(nil), // 6: site.service.v1.DeleteNavigationRequest
+	(*NavigationItem)(nil),          // 7: site.service.v1.NavigationItem
+	(*timestamppb.Timestamp)(nil),   // 8: google.protobuf.Timestamp
+	(*fieldmaskpb.FieldMask)(nil),   // 9: google.protobuf.FieldMask
+	(*v1.PagingRequest)(nil),        // 10: pagination.PagingRequest
+	(*emptypb.Empty)(nil),           // 11: google.protobuf.Empty
 }
 var file_site_service_v1_navigation_proto_depIdxs = []int32{
 	0,  // 0: site.service.v1.Navigation.location:type_name -> site.service.v1.Navigation.Location
-	3,  // 1: site.service.v1.Navigation.items:type_name -> site.service.v1.NavigationItem
-	9,  // 2: site.service.v1.Navigation.created_at:type_name -> google.protobuf.Timestamp
-	9,  // 3: site.service.v1.Navigation.updated_at:type_name -> google.protobuf.Timestamp
-	9,  // 4: site.service.v1.Navigation.deleted_at:type_name -> google.protobuf.Timestamp
-	1,  // 5: site.service.v1.NavigationItem.link_type:type_name -> site.service.v1.NavigationItem.LinkType
-	3,  // 6: site.service.v1.NavigationItem.children:type_name -> site.service.v1.NavigationItem
-	9,  // 7: site.service.v1.NavigationItem.created_at:type_name -> google.protobuf.Timestamp
-	9,  // 8: site.service.v1.NavigationItem.updated_at:type_name -> google.protobuf.Timestamp
-	9,  // 9: site.service.v1.NavigationItem.deleted_at:type_name -> google.protobuf.Timestamp
-	2,  // 10: site.service.v1.ListNavigationResponse.items:type_name -> site.service.v1.Navigation
-	10, // 11: site.service.v1.GetNavigationRequest.view_mask:type_name -> google.protobuf.FieldMask
-	2,  // 12: site.service.v1.CreateNavigationRequest.data:type_name -> site.service.v1.Navigation
-	2,  // 13: site.service.v1.UpdateNavigationRequest.data:type_name -> site.service.v1.Navigation
-	10, // 14: site.service.v1.UpdateNavigationRequest.update_mask:type_name -> google.protobuf.FieldMask
-	11, // 15: site.service.v1.NavigationService.List:input_type -> pagination.PagingRequest
-	5,  // 16: site.service.v1.NavigationService.Get:input_type -> site.service.v1.GetNavigationRequest
-	6,  // 17: site.service.v1.NavigationService.Create:input_type -> site.service.v1.CreateNavigationRequest
-	7,  // 18: site.service.v1.NavigationService.Update:input_type -> site.service.v1.UpdateNavigationRequest
-	8,  // 19: site.service.v1.NavigationService.Delete:input_type -> site.service.v1.DeleteNavigationRequest
-	4,  // 20: site.service.v1.NavigationService.List:output_type -> site.service.v1.ListNavigationResponse
-	2,  // 21: site.service.v1.NavigationService.Get:output_type -> site.service.v1.Navigation
-	2,  // 22: site.service.v1.NavigationService.Create:output_type -> site.service.v1.Navigation
-	2,  // 23: site.service.v1.NavigationService.Update:output_type -> site.service.v1.Navigation
-	12, // 24: site.service.v1.NavigationService.Delete:output_type -> google.protobuf.Empty
-	20, // [20:25] is the sub-list for method output_type
-	15, // [15:20] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	7,  // 1: site.service.v1.Navigation.items:type_name -> site.service.v1.NavigationItem
+	8,  // 2: site.service.v1.Navigation.created_at:type_name -> google.protobuf.Timestamp
+	8,  // 3: site.service.v1.Navigation.updated_at:type_name -> google.protobuf.Timestamp
+	8,  // 4: site.service.v1.Navigation.deleted_at:type_name -> google.protobuf.Timestamp
+	1,  // 5: site.service.v1.ListNavigationResponse.items:type_name -> site.service.v1.Navigation
+	9,  // 6: site.service.v1.GetNavigationRequest.view_mask:type_name -> google.protobuf.FieldMask
+	1,  // 7: site.service.v1.CreateNavigationRequest.data:type_name -> site.service.v1.Navigation
+	1,  // 8: site.service.v1.UpdateNavigationRequest.data:type_name -> site.service.v1.Navigation
+	9,  // 9: site.service.v1.UpdateNavigationRequest.update_mask:type_name -> google.protobuf.FieldMask
+	10, // 10: site.service.v1.NavigationService.List:input_type -> pagination.PagingRequest
+	3,  // 11: site.service.v1.NavigationService.Get:input_type -> site.service.v1.GetNavigationRequest
+	4,  // 12: site.service.v1.NavigationService.Create:input_type -> site.service.v1.CreateNavigationRequest
+	5,  // 13: site.service.v1.NavigationService.Update:input_type -> site.service.v1.UpdateNavigationRequest
+	6,  // 14: site.service.v1.NavigationService.Delete:input_type -> site.service.v1.DeleteNavigationRequest
+	2,  // 15: site.service.v1.NavigationService.List:output_type -> site.service.v1.ListNavigationResponse
+	1,  // 16: site.service.v1.NavigationService.Get:output_type -> site.service.v1.Navigation
+	1,  // 17: site.service.v1.NavigationService.Create:output_type -> site.service.v1.Navigation
+	1,  // 18: site.service.v1.NavigationService.Update:output_type -> site.service.v1.Navigation
+	11, // 19: site.service.v1.NavigationService.Delete:output_type -> google.protobuf.Empty
+	15, // [15:20] is the sub-list for method output_type
+	10, // [10:15] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_site_service_v1_navigation_proto_init() }
@@ -1027,14 +694,14 @@ func file_site_service_v1_navigation_proto_init() {
 	if File_site_service_v1_navigation_proto != nil {
 		return
 	}
+	file_site_service_v1_navigation_item_proto_init()
 	file_site_service_v1_navigation_proto_msgTypes[0].OneofWrappers = []any{}
-	file_site_service_v1_navigation_proto_msgTypes[1].OneofWrappers = []any{}
-	file_site_service_v1_navigation_proto_msgTypes[3].OneofWrappers = []any{
+	file_site_service_v1_navigation_proto_msgTypes[2].OneofWrappers = []any{
 		(*GetNavigationRequest_Id)(nil),
 		(*GetNavigationRequest_Name)(nil),
 	}
-	file_site_service_v1_navigation_proto_msgTypes[5].OneofWrappers = []any{}
-	file_site_service_v1_navigation_proto_msgTypes[6].OneofWrappers = []any{
+	file_site_service_v1_navigation_proto_msgTypes[4].OneofWrappers = []any{}
+	file_site_service_v1_navigation_proto_msgTypes[5].OneofWrappers = []any{
 		(*DeleteNavigationRequest_Id)(nil),
 	}
 	type x struct{}
@@ -1042,8 +709,8 @@ func file_site_service_v1_navigation_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_site_service_v1_navigation_proto_rawDesc), len(file_site_service_v1_navigation_proto_rawDesc)),
-			NumEnums:      2,
-			NumMessages:   7,
+			NumEnums:      1,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

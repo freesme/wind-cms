@@ -4804,7 +4804,7 @@ export type siteservicev1_Navigation_Location =
   // 可选扩展（按需添加）
   | "TOP_BAR"
   | "OFFCANVAS";
-// 导航项
+// 导航项目项
 export type siteservicev1_NavigationItem = {
   id?: number;
   navigationId?: number;
@@ -4859,6 +4859,219 @@ export type siteservicev1_UpdateNavigationRequest = {
 
 // 请求 - 删除导航
 export type siteservicev1_DeleteNavigationRequest = {
+  id?: number;
+};
+
+// 导航项目服务
+export interface NavigationItemService {
+  // 获取导航项目列表
+  List(request: pagination_PagingRequest): Promise<siteservicev1_ListNavigationItemResponse>;
+  // 获取导航项目数据
+  Get(request: siteservicev1_GetNavigationItemRequest): Promise<siteservicev1_NavigationItem>;
+  // 创建导航项目
+  Create(request: siteservicev1_CreateNavigationItemRequest): Promise<siteservicev1_NavigationItem>;
+  // 更新导航项目
+  Update(request: siteservicev1_UpdateNavigationItemRequest): Promise<siteservicev1_NavigationItem>;
+  // 删除导航
+  Delete(request: siteservicev1_DeleteNavigationItemRequest): Promise<wellKnownEmpty>;
+}
+
+export function createNavigationItemServiceClient(
+  handler: RequestHandler
+): NavigationItemService {
+  return {
+    List(request) { // eslint-disable-line @typescript-eslint/no-unused-vars
+      const path = `admin/v1/navigations`; // eslint-disable-line quotes
+      const body = null;
+      const queryParams: string[] = [];
+      if (request.page) {
+        queryParams.push(`page=${encodeURIComponent(request.page.toString())}`)
+      }
+      if (request.pageSize) {
+        queryParams.push(`pageSize=${encodeURIComponent(request.pageSize.toString())}`)
+      }
+      if (request.offset) {
+        queryParams.push(`offset=${encodeURIComponent(request.offset.toString())}`)
+      }
+      if (request.limit) {
+        queryParams.push(`limit=${encodeURIComponent(request.limit.toString())}`)
+      }
+      if (request.token) {
+        queryParams.push(`token=${encodeURIComponent(request.token.toString())}`)
+      }
+      if (request.noPaging) {
+        queryParams.push(`noPaging=${encodeURIComponent(request.noPaging.toString())}`)
+      }
+      if (request.query) {
+        queryParams.push(`query=${encodeURIComponent(request.query.toString())}`)
+      }
+      if (request.filter) {
+        queryParams.push(`filter=${encodeURIComponent(request.filter.toString())}`)
+      }
+      if (request.filterExpr?.type) {
+        queryParams.push(`filterExpr.type=${encodeURIComponent(request.filterExpr.type.toString())}`)
+      }
+      if (request.filterExpr?.conditions?.field) {
+        queryParams.push(`filterExpr.conditions.field=${encodeURIComponent(request.filterExpr.conditions.field.toString())}`)
+      }
+      if (request.filterExpr?.conditions?.op) {
+        queryParams.push(`filterExpr.conditions.op=${encodeURIComponent(request.filterExpr.conditions.op.toString())}`)
+      }
+      if (request.filterExpr?.conditions?.value) {
+        queryParams.push(`filterExpr.conditions.value=${encodeURIComponent(request.filterExpr.conditions.value.toString())}`)
+      }
+      if (request.filterExpr?.conditions?.jsonValue) {
+        queryParams.push(`filterExpr.conditions.jsonValue=${encodeURIComponent(request.filterExpr.conditions.jsonValue.toString())}`)
+      }
+      if (request.filterExpr?.conditions?.values) {
+        request.filterExpr.conditions.values.forEach((x) => {
+          queryParams.push(`filterExpr.conditions.values=${encodeURIComponent(x.toString())}`)
+        })
+      }
+      if (request.filterExpr?.conditions?.datePart) {
+        queryParams.push(`filterExpr.conditions.datePart=${encodeURIComponent(request.filterExpr.conditions.datePart.toString())}`)
+      }
+      if (request.filterExpr?.conditions?.jsonPath) {
+        queryParams.push(`filterExpr.conditions.jsonPath=${encodeURIComponent(request.filterExpr.conditions.jsonPath.toString())}`)
+      }
+      if (request.orderBy) {
+        queryParams.push(`orderBy=${encodeURIComponent(request.orderBy.toString())}`)
+      }
+      if (request.sorting?.field) {
+        queryParams.push(`sorting.field=${encodeURIComponent(request.sorting.field.toString())}`)
+      }
+      if (request.sorting?.direction) {
+        queryParams.push(`sorting.direction=${encodeURIComponent(request.sorting.direction.toString())}`)
+      }
+      if (request.fieldMask) {
+        queryParams.push(`fieldMask=${encodeURIComponent(request.fieldMask.toString())}`)
+      }
+      let uri = path;
+      if (queryParams.length > 0) {
+        uri += `?${queryParams.join("&")}`
+      }
+      return handler({
+        path: uri,
+        method: "GET",
+        body,
+      }, {
+        service: "NavigationItemService",
+        method: "List",
+      }) as Promise<siteservicev1_ListNavigationItemResponse>;
+    },
+    Get(request) { // eslint-disable-line @typescript-eslint/no-unused-vars
+      if (!request.id) {
+        throw new Error("missing required field request.id");
+      }
+      const path = `admin/v1/navigation-items/${request.id}`; // eslint-disable-line quotes
+      const body = null;
+      const queryParams: string[] = [];
+      if (request.title) {
+        queryParams.push(`title=${encodeURIComponent(request.title.toString())}`)
+      }
+      if (request.viewMask) {
+        queryParams.push(`viewMask=${encodeURIComponent(request.viewMask.toString())}`)
+      }
+      let uri = path;
+      if (queryParams.length > 0) {
+        uri += `?${queryParams.join("&")}`
+      }
+      return handler({
+        path: uri,
+        method: "GET",
+        body,
+      }, {
+        service: "NavigationItemService",
+        method: "Get",
+      }) as Promise<siteservicev1_NavigationItem>;
+    },
+    Create(request) { // eslint-disable-line @typescript-eslint/no-unused-vars
+      const path = `admin/v1/navigation-items`; // eslint-disable-line quotes
+      const body = JSON.stringify(request);
+      const queryParams: string[] = [];
+      let uri = path;
+      if (queryParams.length > 0) {
+        uri += `?${queryParams.join("&")}`
+      }
+      return handler({
+        path: uri,
+        method: "POST",
+        body,
+      }, {
+        service: "NavigationItemService",
+        method: "Create",
+      }) as Promise<siteservicev1_NavigationItem>;
+    },
+    Update(request) { // eslint-disable-line @typescript-eslint/no-unused-vars
+      if (!request.id) {
+        throw new Error("missing required field request.id");
+      }
+      const path = `admin/v1/navigation-items/${request.id}`; // eslint-disable-line quotes
+      const body = JSON.stringify(request);
+      const queryParams: string[] = [];
+      let uri = path;
+      if (queryParams.length > 0) {
+        uri += `?${queryParams.join("&")}`
+      }
+      return handler({
+        path: uri,
+        method: "PUT",
+        body,
+      }, {
+        service: "NavigationItemService",
+        method: "Update",
+      }) as Promise<siteservicev1_NavigationItem>;
+    },
+    Delete(request) { // eslint-disable-line @typescript-eslint/no-unused-vars
+      if (!request.id) {
+        throw new Error("missing required field request.id");
+      }
+      const path = `admin/v1/navigation-items/${request.id}`; // eslint-disable-line quotes
+      const body = null;
+      const queryParams: string[] = [];
+      let uri = path;
+      if (queryParams.length > 0) {
+        uri += `?${queryParams.join("&")}`
+      }
+      return handler({
+        path: uri,
+        method: "DELETE",
+        body,
+      }, {
+        service: "NavigationItemService",
+        method: "Delete",
+      }) as Promise<wellKnownEmpty>;
+    },
+  };
+}
+// 回应 - 导航项目列表
+export type siteservicev1_ListNavigationItemResponse = {
+  items: siteservicev1_NavigationItem[] | undefined;
+  total: number | undefined;
+};
+
+// 请求 - 导航项目数据
+export type siteservicev1_GetNavigationItemRequest = {
+  id?: number;
+  title?: string;
+  viewMask?: wellKnownFieldMask;
+};
+
+// 请求 - 创建导航项目
+export type siteservicev1_CreateNavigationItemRequest = {
+  data: siteservicev1_NavigationItem | undefined;
+};
+
+// 请求 - 更新导航项目
+export type siteservicev1_UpdateNavigationItemRequest = {
+  id: number | undefined;
+  data: siteservicev1_NavigationItem | undefined;
+  updateMask: wellKnownFieldMask | undefined;
+  allowMissing?: boolean;
+};
+
+// 请求 - 删除导航项目
+export type siteservicev1_DeleteNavigationItemRequest = {
   id?: number;
 };
 

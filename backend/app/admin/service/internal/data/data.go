@@ -386,6 +386,15 @@ func NewNavigationServiceClient(ctx *bootstrap.Context, r registry.Discovery) si
 	return siteV1.NewNavigationServiceClient(cli)
 }
 
+func NewNavigationItemServiceClient(ctx *bootstrap.Context, r registry.Discovery) siteV1.NavigationItemServiceClient {
+	cli, err := rpc.CreateGrpcClient(ctx.Context(), r, serviceid.NewDiscoveryName(serviceid.CoreService), ctx.GetConfig())
+	if err != nil {
+		return nil
+	}
+
+	return siteV1.NewNavigationItemServiceClient(cli)
+}
+
 func NewSiteSettingServiceClient(ctx *bootstrap.Context, r registry.Discovery) siteV1.SiteSettingServiceClient {
 	cli, err := rpc.CreateGrpcClient(ctx.Context(), r, serviceid.NewDiscoveryName(serviceid.CoreService), ctx.GetConfig())
 	if err != nil {

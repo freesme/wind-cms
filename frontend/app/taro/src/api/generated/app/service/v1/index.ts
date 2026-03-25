@@ -1389,7 +1389,7 @@ export type siteservicev1_Navigation_Location =
   // 可选扩展（按需添加）
   | "TOP_BAR"
   | "OFFCANVAS";
-// 导航项
+// 导航项目项
 export type siteservicev1_NavigationItem = {
   id?: number;
   navigationId?: number;
